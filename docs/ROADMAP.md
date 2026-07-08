@@ -12,16 +12,16 @@
 | 0.4 | Agent workspace: CLAUDE.md, AGENTS.md, `.claude/` skills & agents, `.mcp.json` | done |
 | 0.5 | Product docs: PRD, data model, security, roadmap | done |
 | 0.6 | Stripe MCP/CLI wired (test mode) — no product usage yet | done |
-| 0.7 | Resend account + domain setup | todo |
-| 0.8 | Google Maps Platform API key (browser + server, billing on) | todo — **founder** |
+| 0.7 | Resend: use founder's existing account — API key needed when Phase 2 emails ship | todo — **founder** |
+| 0.8 | Google Maps Platform API key + Google OAuth client (one Google Cloud Console sitting covers both) | todo — **founder** |
 
 ## Phase 1 — Auth, onboarding & profiles (B2C core)
 
 | # | Item | Status |
 |---|---|---|
-| 1.1 | DB migration 001: profiles, roles, legal_acceptances + RLS | todo |
-| 1.2 | Terms & Conditions + Privacy Policy pages (v1) + acceptance at signup | todo |
-| 1.3 | Auth: email OTP + Google sign-in (Supabase Auth), middleware, protected routes | todo |
+| 1.1 | DB migration 001: profiles, roles, legal_acceptances + RLS | done |
+| 1.2 | Terms & Conditions + Privacy Policy pages (v1 placeholder — needs counsel review) + acceptance at signup | done |
+| 1.3 | Auth: email OTP live; Google sign-in coded behind `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED`, blocked on Google OAuth credentials (item 0.8) | done (Google off) |
 | 1.4 | Client onboarding wizard (profile pic → name → phone → location → haircut method → 4 style photos) | todo |
 | 1.5 | Private storage buckets (avatars, style-photos) + signed URL access | todo |
 | 1.6 | Profile section: edit personal info + My Style photo management | todo |
