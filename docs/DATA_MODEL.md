@@ -1,0 +1,114 @@
+# Data Model
+
+> Target schema. Implemented incrementally via `supabase/migrations/` (see ROADMAP phases). Keep this file in sync with applied migrations. Every table: RLS enabled at creation.
+
+## Identity & roles
+
+```
+auth.users (Supabase managed)
+  └─ profiles (1:1, id = auth.users.id)
+       role        client | barbershop_owner | private_barber | event_manager | admin
+       tier        standard | premium            -- clients only
+       first_name, last_name, phone, avatar_path
+       haircut_method   scissors | machine | mixed   -- clients only
+       country, state, city, zip_code
+       onboarding_completed_at
+
+client_addresses          -- premium only; exact street address, separate table so RLS
+  profile_id → profiles   -- can lock it down harder than general profile fields
+  street_address, unit, lat/lng, is_default
+
+legal_acceptances
+  profile_id, document (terms | privacy), version, accepted_at
+```
+
+## Style photos
+
+```
+style_photos
+  profile_id → profiles
+  position   front | left | right | back
+  storage_path            -- private bucket 'style-photos'
+  updated_at
+-- Booking gate: bookings reference style_photos.updated_at to enforce the
+-- "is your style current?" check at booking time.
+```
+
+## Barbershops
+
+```
+barbershops
+  owner_id → profiles, name, phone, description
+  services_fulfilled_count   -- denormalized counter shown on profile
+
+barbershop_locations
+  barbershop_id, google_place_id, formatted_address, lat, lng,
+  country, state, city, zip_code
+
+services
+  barbershop_id NULLABLE | private_barber_id NULLABLE   -- one of the two
+  name, price_cents, currency, duration_minutes, active
+
+barbershop_staff
+  barbershop_id, full_name, email, phone
+  skills text[]              -- 'barber', 'stylist', ... extensible
+  profile_id NULLABLE        -- linked if/when they claim a login
+```
+
+## Private barbers
+
+```
+private_barbers
+  profile_id → profiles (1:1)
+  bio, self_photo_path, setup_photo_path   -- private bucket 'barber-photos'
+  base_price_cents
+
+coverage_areas
+  private_barber_id, country, state, city, zip_codes text[]  -- regions they reach
+```
+
+## Bookings
+
+```
+bookings
+  client_id → profiles
+  barbershop_id NULLABLE | private_barber_id NULLABLE
+  location_id NULLABLE       -- shop location, or client address for at-home
+  service_id, staff_id NULLABLE
+  scheduled_at, duration_minutes
+  status      pending | confirmed | completed | cancelled | no_show
+  style_confirmed_at         -- when client confirmed photos were current
+  address_snapshot jsonb NULLABLE  -- premium at-home: frozen copy at booking time
+```
+
+## B2B events
+
+```
+b2b_leads
+  company, contact_name, email, phone, message, status (new|contacted|closed)
+
+events
+  manager_id → profiles (role event_manager)
+  brand_name, title, venue, starts_at, ends_at
+  qr_slug UNIQUE             -- public registration URL behind the QR
+  status  draft | live | finished
+
+event_registrations
+  event_id, profile_id       -- attendee must have an account
+  registered_at, service_claimed_at NULLABLE
+```
+
+## Storage buckets (all private)
+
+| Bucket | Contents | Access |
+|---|---|---|
+| `avatars` | profile pictures | owner RW; short-lived signed URLs elsewhere |
+| `style-photos` | clients' 4 haircut photos | owner RW; barber of an active booking R via signed URL |
+| `barber-photos` | private barber self + setup photos | owner RW; public read via signed URL on profile |
+
+## RLS principles
+
+- Owner-only by default (`profile_id = auth.uid()`).
+- Barbershop data: owner writes; public reads limited to a safe view (name, locations, services, counters) — never staff emails/phones.
+- `client_addresses`: owner + assigned barber of a `confirmed` booking only.
+- Counters and cross-user reads go through `security definer` functions or views, not broad table grants.
