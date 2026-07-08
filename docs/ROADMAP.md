@@ -23,7 +23,7 @@
 | 1.2 | Terms & Conditions + Privacy Policy pages (v1 placeholder — needs counsel review) + acceptance at signup | done |
 | 1.3 | Auth: email OTP live; Google sign-in coded behind `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED`, blocked on Google OAuth credentials (item 0.8) | done (Google off) |
 | 1.4 | Client onboarding wizard (profile pic → name → phone → location → haircut method → 4 style photos) | todo |
-| 1.5 | Private storage buckets (avatars, style-photos) + signed URL access | todo |
+| 1.5 | Private storage buckets (avatars, style-photos) + signed URL access | done (schema/buckets; signed-URL UI lands with 1.4/1.6) |
 | 1.6 | Profile section: edit personal info + My Style photo management | todo |
 | 1.7 | Security pass: `get_advisors` clean, RLS tests | todo |
 

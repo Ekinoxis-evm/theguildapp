@@ -125,6 +125,35 @@ export type Database = {
         }
         Relationships: []
       }
+      style_photos: {
+        Row: {
+          position: Database["public"]["Enums"]["photo_position"]
+          profile_id: string
+          storage_path: string
+          updated_at: string
+        }
+        Insert: {
+          position: Database["public"]["Enums"]["photo_position"]
+          profile_id: string
+          storage_path: string
+          updated_at?: string
+        }
+        Update: {
+          position?: Database["public"]["Enums"]["photo_position"]
+          profile_id?: string
+          storage_path?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "style_photos_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -136,6 +165,7 @@ export type Database = {
       client_tier: "standard" | "premium"
       haircut_method: "scissors" | "machine" | "mixed"
       legal_document: "terms" | "privacy"
+      photo_position: "front" | "left" | "right" | "back"
       user_role:
         | "client"
         | "barbershop_owner"
@@ -275,6 +305,7 @@ export const Constants = {
       client_tier: ["standard", "premium"],
       haircut_method: ["scissors", "machine", "mixed"],
       legal_document: ["terms", "privacy"],
+      photo_position: ["front", "left", "right", "back"],
       user_role: [
         "client",
         "barbershop_owner",
