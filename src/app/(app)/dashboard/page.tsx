@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -30,14 +31,26 @@ export default async function DashboardPage() {
         {profile?.role === "client" ? ` (${profile?.tier})` : ""}
       </p>
 
-      {!profile?.onboarding_completed_at && (
+      {!profile?.onboarding_completed_at ? (
         <div className="mt-8 rounded border border-yellow-600/40 bg-yellow-50 p-4 text-sm">
           <p className="font-medium">Finish setting up your profile</p>
           <p className="mt-1 text-neutral-600">
-            The onboarding wizard (profile photo, contact info, your current
-            style) is coming next — roadmap item 1.4.
+            Add your contact info, profile photo, and four photos of your
+            current style so barbers know exactly what you want.
           </p>
+          <Link
+            href="/onboarding"
+            className="mt-3 inline-block rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
+          >
+            Set up my profile
+          </Link>
         </div>
+      ) : (
+        <p className="mt-8 text-sm">
+          <Link href="/profile" className="underline">
+            Edit profile &amp; My Style
+          </Link>
+        </p>
       )}
 
       <form action="/auth/signout" method="post" className="mt-10">

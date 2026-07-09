@@ -22,10 +22,10 @@
 | 1.1 | DB migration 001: profiles, roles, legal_acceptances + RLS | done |
 | 1.2 | Terms & Conditions + Privacy Policy pages (v1 placeholder — needs counsel review) + acceptance at signup | done |
 | 1.3 | Auth: email OTP live; Google sign-in coded behind `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED`, blocked on Google OAuth credentials (item 0.8) | done (Google off) |
-| 1.4 | Client onboarding wizard (profile pic → name → phone → location → haircut method → 4 style photos) | todo |
-| 1.5 | Private storage buckets (avatars, style-photos) + signed URL access | done (schema/buckets; signed-URL UI lands with 1.4/1.6) |
-| 1.6 | Profile section: edit personal info + My Style photo management | todo |
-| 1.7 | Security pass: `get_advisors` clean, RLS tests | todo |
+| 1.4 | Client onboarding wizard (profile pic → name → phone → location → haircut method → 4 style photos) | done |
+| 1.5 | Private storage buckets (avatars, style-photos) + signed URL access | done |
+| 1.6 | Profile section: edit personal info + My Style photo management | done |
+| 1.7 | Security pass: `get_advisors` clean, RLS tests | done — anon + cross-user probes pass; 2 advisor WARNs remain (leaked-password protection, MFA options — **founder** dashboard toggles, N/A while OTP-only) |
 
 ## Phase 2 — Barbershops & bookings
 
