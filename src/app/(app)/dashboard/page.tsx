@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   // Idempotent: links any staff roster rows matching this email to the account.
   await supabase.rpc("link_staff_by_email");
 
-  const [{ data: profile }, { data: staffRows }, { data: ownShop }] =
+  const [{ data: profile }, { data: staffRows }, { data: ownShop }, { data: ownBarber }] =
     await Promise.all([
       supabase
         .from("profiles")
@@ -24,6 +24,7 @@ export default async function DashboardPage() {
         .single(),
       supabase.from("barbershop_staff").select("barbershop_id").eq("profile_id", user.id),
       supabase.from("barbershops").select("id").eq("owner_id", user.id).maybeSingle(),
+      supabase.from("private_barbers").select("profile_id").eq("profile_id", user.id).maybeSingle(),
     ]);
 
   const isStaff = (staffRows?.length ?? 0) > 0;
@@ -31,9 +32,25 @@ export default async function DashboardPage() {
 
   const sections = [
     { href: "/shops", title: "Barbershops", blurb: "Find a shop and book your next cut." },
+    { href: "/barbers", title: "Private barbers", blurb: "At-home grooming (premium)." },
     { href: "/bookings", title: "Bookings", blurb: "Upcoming and past appointments." },
+    { href: "/events", title: "Events", blurb: "Guild activations you've joined." },
     { href: "/profile", title: "Profile", blurb: "Personal info and My Style photos." },
   ];
+  if (ownBarber) {
+    sections.push({
+      href: "/my-barber",
+      title: "My barber profile",
+      blurb: "Your at-home services, coverage, and bookings.",
+    });
+  }
+  if (profile?.role === "event_manager" || isAdmin) {
+    sections.push({
+      href: "/my-events",
+      title: "My events",
+      blurb: "Create activations and track registrations.",
+    });
+  }
   if (ownShop || isStaff) {
     sections.push({
       href: "/my-shop",

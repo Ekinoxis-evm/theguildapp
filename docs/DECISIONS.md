@@ -4,6 +4,9 @@ Newest first. One line of context beats archeology later.
 
 | Date | Decision | Why |
 |---|---|---|
+| 2026-07-10 | Premium tier granted manually by admin (`set_client_tier` at `/admin`) until Stripe subscriptions land | Unblocks at-home bookings; founder controls who is premium |
+| 2026-07-10 | Private barbers are founder-approved like shops (`approve_private_barber`); at-home booking freezes the address into `bookings.address_snapshot` — barbers never read `client_addresses` | Same curated model; narrowest address exposure |
+| 2026-07-10 | Supabase CLI auth intermittently hangs; migrations applied via MCP `apply_migration` when CLI stalls (local files renamed to match recorded versions) | Keeps migration history consistent either way |
 | 2026-07-09 | Booking model: shop + service + time; client does not pick a staff barber | Founder choice; simplest slot logic for MVP |
 | 2026-07-09 | Staff get logins: roster rows link to accounts by signup email (`link_staff_by_email`), keep `client` role, access via `barbershop_staff.profile_id` | Founder choice; no new role/invite flow needed |
 | 2026-07-09 | Barbershops are founder-approved: apply → `pending` → admin approves at `/admin` (`approve_barbershop` flips shop + owner role) | Founder choice: curated marketplace |

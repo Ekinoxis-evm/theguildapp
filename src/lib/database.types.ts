@@ -12,33 +12,41 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
-  graphql_public: {
-    Tables: {
-      [_ in never]: never
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      graphql: {
-        Args: {
-          extensions?: Json
-          operationName?: string
-          query?: string
-          variables?: Json
-        }
-        Returns: Json
-      }
-    }
-    Enums: {
-      [_ in never]: never
-    }
-    CompositeTypes: {
-      [_ in never]: never
-    }
-  }
   public: {
     Tables: {
+      b2b_leads: {
+        Row: {
+          company: string
+          contact_name: string
+          created_at: string
+          email: string
+          id: string
+          message: string | null
+          phone: string | null
+          status: Database["public"]["Enums"]["lead_status"]
+        }
+        Insert: {
+          company: string
+          contact_name: string
+          created_at?: string
+          email: string
+          id?: string
+          message?: string | null
+          phone?: string | null
+          status?: Database["public"]["Enums"]["lead_status"]
+        }
+        Update: {
+          company?: string
+          contact_name?: string
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string | null
+          phone?: string | null
+          status?: Database["public"]["Enums"]["lead_status"]
+        }
+        Relationships: []
+      }
       barbershop_locations: {
         Row: {
           barbershop_id: string
@@ -183,12 +191,14 @@ export type Database = {
       }
       bookings: {
         Row: {
-          barbershop_id: string
+          address_snapshot: Json | null
+          barbershop_id: string | null
           client_id: string
           created_at: string
           duration_minutes: number
           id: string
           location_id: string | null
+          private_barber_id: string | null
           scheduled_at: string
           service_id: string
           status: Database["public"]["Enums"]["booking_status"]
@@ -196,12 +206,14 @@ export type Database = {
           updated_at: string
         }
         Insert: {
-          barbershop_id: string
+          address_snapshot?: Json | null
+          barbershop_id?: string | null
           client_id: string
           created_at?: string
           duration_minutes: number
           id?: string
           location_id?: string | null
+          private_barber_id?: string | null
           scheduled_at: string
           service_id: string
           status?: Database["public"]["Enums"]["booking_status"]
@@ -209,12 +221,14 @@ export type Database = {
           updated_at?: string
         }
         Update: {
-          barbershop_id?: string
+          address_snapshot?: Json | null
+          barbershop_id?: string | null
           client_id?: string
           created_at?: string
           duration_minutes?: number
           id?: string
           location_id?: string | null
+          private_barber_id?: string | null
           scheduled_at?: string
           service_id?: string
           status?: Database["public"]["Enums"]["booking_status"]
@@ -244,10 +258,188 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "bookings_private_barber_id_fkey"
+            columns: ["private_barber_id"]
+            isOneToOne: false
+            referencedRelation: "private_barbers"
+            referencedColumns: ["profile_id"]
+          },
+          {
             foreignKeyName: "bookings_service_id_fkey"
             columns: ["service_id"]
             isOneToOne: false
             referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      client_addresses: {
+        Row: {
+          city: string
+          created_at: string
+          id: string
+          is_default: boolean
+          lat: number | null
+          lng: number | null
+          profile_id: string
+          state: string
+          street_address: string
+          unit: string | null
+          zip_code: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          lat?: number | null
+          lng?: number | null
+          profile_id: string
+          state: string
+          street_address: string
+          unit?: string | null
+          zip_code: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          lat?: number | null
+          lng?: number | null
+          profile_id?: string
+          state?: string
+          street_address?: string
+          unit?: string | null
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "client_addresses_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coverage_areas: {
+        Row: {
+          city: string
+          country: string
+          created_at: string
+          id: string
+          private_barber_id: string
+          state: string
+          zip_codes: string[]
+        }
+        Insert: {
+          city: string
+          country: string
+          created_at?: string
+          id?: string
+          private_barber_id: string
+          state: string
+          zip_codes?: string[]
+        }
+        Update: {
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          private_barber_id?: string
+          state?: string
+          zip_codes?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coverage_areas_private_barber_id_fkey"
+            columns: ["private_barber_id"]
+            isOneToOne: false
+            referencedRelation: "private_barbers"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
+      event_registrations: {
+        Row: {
+          event_id: string
+          profile_id: string
+          registered_at: string
+          service_claimed_at: string | null
+        }
+        Insert: {
+          event_id: string
+          profile_id: string
+          registered_at?: string
+          service_claimed_at?: string | null
+        }
+        Update: {
+          event_id?: string
+          profile_id?: string
+          registered_at?: string
+          service_claimed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registrations_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          brand_name: string
+          created_at: string
+          ends_at: string
+          id: string
+          manager_id: string
+          qr_slug: string
+          starts_at: string
+          status: Database["public"]["Enums"]["event_status"]
+          title: string
+          venue: string
+        }
+        Insert: {
+          brand_name: string
+          created_at?: string
+          ends_at: string
+          id?: string
+          manager_id: string
+          qr_slug?: string
+          starts_at: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title: string
+          venue: string
+        }
+        Update: {
+          brand_name?: string
+          created_at?: string
+          ends_at?: string
+          id?: string
+          manager_id?: string
+          qr_slug?: string
+          starts_at?: string
+          status?: Database["public"]["Enums"]["event_status"]
+          title?: string
+          venue?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -279,6 +471,50 @@ export type Database = {
             foreignKeyName: "legal_acceptances_profile_id_fkey"
             columns: ["profile_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      private_barbers: {
+        Row: {
+          base_price_cents: number
+          bio: string | null
+          created_at: string
+          profile_id: string
+          self_photo_path: string | null
+          services_fulfilled_count: number
+          setup_photo_path: string | null
+          status: Database["public"]["Enums"]["barbershop_status"]
+          updated_at: string
+        }
+        Insert: {
+          base_price_cents?: number
+          bio?: string | null
+          created_at?: string
+          profile_id: string
+          self_photo_path?: string | null
+          services_fulfilled_count?: number
+          setup_photo_path?: string | null
+          status?: Database["public"]["Enums"]["barbershop_status"]
+          updated_at?: string
+        }
+        Update: {
+          base_price_cents?: number
+          bio?: string | null
+          created_at?: string
+          profile_id?: string
+          self_photo_path?: string | null
+          services_fulfilled_count?: number
+          setup_photo_path?: string | null
+          status?: Database["public"]["Enums"]["barbershop_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "private_barbers_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -348,6 +584,7 @@ export type Database = {
           id: string
           name: string
           price_cents: number
+          private_barber_id: string | null
         }
         Insert: {
           active?: boolean
@@ -358,6 +595,7 @@ export type Database = {
           id?: string
           name: string
           price_cents: number
+          private_barber_id?: string | null
         }
         Update: {
           active?: boolean
@@ -368,6 +606,7 @@ export type Database = {
           id?: string
           name?: string
           price_cents?: number
+          private_barber_id?: string | null
         }
         Relationships: [
           {
@@ -376,6 +615,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "barbershops"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "services_private_barber_id_fkey"
+            columns: ["private_barber_id"]
+            isOneToOne: false
+            referencedRelation: "private_barbers"
+            referencedColumns: ["profile_id"]
           },
         ]
       }
@@ -414,8 +660,32 @@ export type Database = {
     }
     Functions: {
       approve_barbershop: { Args: { shop_id: string }; Returns: undefined }
+      approve_private_barber: {
+        Args: { barber_id: string }
+        Returns: undefined
+      }
+      event_attendees: {
+        Args: { p_event_id: string }
+        Returns: {
+          first_name: string
+          last_name: string
+          profile_id: string
+          registered_at: string
+          service_claimed_at: string
+        }[]
+      }
+      is_admin: { Args: never; Returns: boolean }
       link_staff_by_email: { Args: never; Returns: number }
+      my_event_ids: { Args: never; Returns: string[] }
       my_shop_ids: { Args: never; Returns: string[] }
+      set_client_tier: {
+        Args: {
+          new_tier: Database["public"]["Enums"]["client_tier"]
+          user_email: string
+        }
+        Returns: undefined
+      }
+      set_event_manager: { Args: { user_email: string }; Returns: undefined }
     }
     Enums: {
       barbershop_status: "pending" | "approved" | "suspended"
@@ -426,7 +696,9 @@ export type Database = {
         | "cancelled"
         | "no_show"
       client_tier: "standard" | "premium"
+      event_status: "draft" | "live" | "finished"
       haircut_method: "scissors" | "machine" | "mixed"
+      lead_status: "new" | "contacted" | "closed"
       legal_document: "terms" | "privacy"
       photo_position: "front" | "left" | "right" | "back"
       user_role:
@@ -560,9 +832,6 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
-  graphql_public: {
-    Enums: {},
-  },
   public: {
     Enums: {
       barbershop_status: ["pending", "approved", "suspended"],
@@ -574,7 +843,9 @@ export const Constants = {
         "no_show",
       ],
       client_tier: ["standard", "premium"],
+      event_status: ["draft", "live", "finished"],
       haircut_method: ["scissors", "machine", "mixed"],
+      lead_status: ["new", "contacted", "closed"],
       legal_document: ["terms", "privacy"],
       photo_position: ["front", "left", "right", "back"],
       user_role: [

@@ -32,7 +32,7 @@ function extensionFor(file: File): string {
 }
 
 async function uploadOwned(
-  bucket: "avatars" | "style-photos",
+  bucket: "avatars" | "style-photos" | "barber-photos",
   path: string,
   file: File,
   previousPath: string | null
@@ -61,6 +61,23 @@ export async function uploadAvatar(
     .from("profiles")
     .update({ avatar_path: path })
     .eq("id", userId);
+  if (error) throw new Error(error.message);
+  return path;
+}
+
+export async function uploadBarberPhoto(
+  userId: string,
+  kind: "self" | "setup",
+  file: File,
+  previousPath: string | null
+): Promise<string> {
+  const path = `${userId}/${kind}.${extensionFor(file)}`;
+  await uploadOwned("barber-photos", path, file, previousPath);
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("private_barbers")
+    .update(kind === "self" ? { self_photo_path: path } : { setup_photo_path: path })
+    .eq("profile_id", userId);
   if (error) throw new Error(error.message);
   return path;
 }

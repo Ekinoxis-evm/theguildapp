@@ -45,21 +45,21 @@
 
 | # | Item | Status |
 |---|---|---|
-| 3.1 | Migration 003: private_barbers, coverage_areas + RLS | todo |
-| 3.2 | Private barber onboarding (profile, self photo, setup photo, prices, coverage regions) | todo |
-| 3.3 | Premium client tier: exact-address collection, at-home booking with private barbers | todo |
-| 3.4 | Stripe: checkout for bookings/deposits + premium subscription; webhooks | todo |
-| 3.5 | Payout/pricing model decision for private barbers (founder input) | todo |
+| 3.1 | Migration 003: private_barbers, coverage_areas + RLS | done — incl. client_addresses, at-home bookings, barber-photos bucket |
+| 3.2 | Private barber onboarding (profile, self photo, setup photo, prices, coverage regions) | done — `/my-barber`, founder-approved at `/admin` |
+| 3.3 | Premium client tier: exact-address collection, at-home booking with private barbers | done — premium granted manually at `/admin` until Stripe (3.4) |
+| 3.4 | Stripe: checkout for bookings/deposits + premium subscription; webhooks | todo — **founder** (Stripe keys + pricing decisions) |
+| 3.5 | Payout/pricing model decision for private barbers (founder input) | todo — **founder** |
 
 ## Phase 4 — B2B events
 
 | # | Item | Status |
 |---|---|---|
-| 4.1 | Migration 004: b2b_leads, events, event_registrations + RLS | todo |
-| 4.2 | Public B2B lead form → sales notification (Resend) | todo |
-| 4.3 | `event_manager` role + event creation with QR registration form | todo |
-| 4.4 | Attendee flow: QR → signup → event registration → service claim | todo |
-| 4.5 | Events section (current + historical) for attendees | todo |
+| 4.1 | Migration 004: b2b_leads, events, event_registrations + RLS | done |
+| 4.2 | Public B2B lead form → sales notification (Resend) | done — `/partners`; email sends once RESEND_API_KEY + SALES_EMAIL set |
+| 4.3 | `event_manager` role + event creation with QR registration form | done — admin promotes at `/admin`; QR at `/my-events` |
+| 4.4 | Attendee flow: QR → signup → event registration → service claim | done — `/e/[slug]` |
+| 4.5 | Events section (current + historical) for attendees | done — `/events` |
 
 ## Phase 5 — Brand & expansion
 

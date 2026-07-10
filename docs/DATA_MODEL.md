@@ -90,10 +90,11 @@ b2b_leads
   company, contact_name, email, phone, message, status (new|contacted|closed)
 
 events
-  manager_id → profiles (role event_manager)
+  manager_id → profiles (role event_manager | admin; provisioned via set_event_manager)
   brand_name, title, venue, starts_at, ends_at
-  qr_slug UNIQUE             -- public registration URL behind the QR
-  status  draft | live | finished
+  qr_slug UNIQUE             -- public registration URL /e/[slug] behind the QR
+  status  draft | live | finished   -- live events are publicly readable
+  -- manager reads attendee names via event_attendees() definer fn (no profile row access)
 
 event_registrations
   event_id, profile_id       -- attendee must have an account
