@@ -1,0 +1,93 @@
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { formatPrice } from "@/lib/format";
+
+export const metadata = { title: "Barbershop — The Guild" };
+
+export default async function ShopPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect(`/login?next=/shops/${id}`);
+
+  const { data: shop } = await supabase
+    .from("barbershops")
+    .select(
+      "id, name, phone, description, status, services_fulfilled_count, barbershop_locations(id, formatted_address, city, state, zip_code), services(id, name, price_cents, currency, duration_minutes, active)"
+    )
+    .eq("id", id)
+    .eq("status", "approved")
+    .maybeSingle();
+
+  if (!shop) notFound();
+
+  const services = shop.services.filter((s) => s.active);
+
+  return (
+    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
+      <p className="text-sm">
+        <Link href="/shops" className="underline">
+          ← All barbershops
+        </Link>
+      </p>
+      <h1 className="mt-2 text-2xl font-semibold">{shop.name}</h1>
+      <p className="mt-1 text-sm text-yellow-600">
+        {shop.services_fulfilled_count} services fulfilled
+      </p>
+      {shop.description && (
+        <p className="mt-3 text-sm text-neutral-600">{shop.description}</p>
+      )}
+      {shop.phone && (
+        <p className="mt-1 text-sm text-neutral-600">{shop.phone}</p>
+      )}
+
+      <h2 className="mt-8 text-lg font-medium">Locations</h2>
+      <ul className="mt-3 space-y-2 text-sm">
+        {shop.barbershop_locations.map((l) => (
+          <li key={l.id} className="rounded border border-neutral-300 p-3">
+            {l.formatted_address}
+            <span className="block text-neutral-500">
+              {l.city}, {l.state} {l.zip_code}
+            </span>
+          </li>
+        ))}
+        {shop.barbershop_locations.length === 0 && (
+          <li className="text-neutral-500">No locations listed.</li>
+        )}
+      </ul>
+
+      <h2 className="mt-8 text-lg font-medium">Services</h2>
+      <ul className="mt-3 space-y-2">
+        {services.map((s) => (
+          <li
+            key={s.id}
+            className="flex items-center justify-between gap-3 rounded border border-neutral-300 p-3 text-sm"
+          >
+            <span>
+              {s.name}
+              <span className="block text-neutral-500">
+                {formatPrice(s.price_cents, s.currency)} · {s.duration_minutes} min
+              </span>
+            </span>
+            <Link
+              href={`/shops/${shop.id}/book?service=${s.id}`}
+              className="shrink-0 rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white"
+            >
+              Book
+            </Link>
+          </li>
+        ))}
+        {services.length === 0 && (
+          <li className="text-sm text-neutral-500">No bookable services yet.</li>
+        )}
+      </ul>
+    </main>
+  );
+}

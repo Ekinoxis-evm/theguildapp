@@ -31,14 +31,15 @@
 
 | # | Item | Status |
 |---|---|---|
-| 2.1 | Migration 002: barbershops, locations, services, staff + RLS | todo |
-| 2.2 | Barbershop signup + profile builder (Google Maps place picker for locations) | todo |
-| 2.3 | Services portfolio CRUD (name, price, duration) | todo |
-| 2.4 | Staff roster (name, email, phone, skills) | todo |
-| 2.5 | Client: Barbershops map + shop profile page (services, prices, fulfilled-services count) | todo |
-| 2.6 | Booking flow incl. **style-check gate** (confirm/update 4 photos) | todo |
-| 2.7 | Bookings section (current + history) + Add-to-calendar (ICS + Google link) | todo |
-| 2.8 | Booking notifications: email via Resend + calendar attachment | todo |
+| 2.1 | Migration 002: barbershops, locations, services, staff + RLS | done |
+| 2.2 | Barbershop signup + profile builder (Google Maps place picker for locations) | done — manual address entry; Maps place picker blocked on 0.8 |
+| 2.3 | Services portfolio CRUD (name, price, duration) | done |
+| 2.4 | Staff roster (name, email, phone, skills) | done — staff link by signup email |
+| 2.5 | Client: Barbershops map + shop profile page (services, prices, fulfilled-services count) | done — list view; map blocked on 0.8 |
+| 2.6 | Booking flow incl. **style-check gate** (confirm/update 4 photos) | done |
+| 2.7 | Bookings section (current + history) + Add-to-calendar (ICS + Google link) | done |
+| 2.8 | Booking notifications: email via Resend + calendar attachment | done — sends once RESEND_API_KEY set (0.7) |
+| 2.9 | Admin: barbershop application approvals (`/admin`) | done |
 
 ## Phase 3 — Private barbers, premium & payments
 

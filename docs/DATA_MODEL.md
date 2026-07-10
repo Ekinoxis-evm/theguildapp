@@ -38,8 +38,9 @@ style_photos
 
 ```
 barbershops
-  owner_id → profiles, name, phone, description
-  services_fulfilled_count   -- denormalized counter shown on profile
+  owner_id → profiles (unique: one shop per owner), name, phone, description
+  status  pending | approved | suspended   -- founder-approved; approve_barbershop()
+  services_fulfilled_count   -- denormalized counter, bumped on booking completion
 
 barbershop_locations
   barbershop_id, google_place_id, formatted_address, lat, lng,
@@ -70,15 +71,16 @@ coverage_areas
 ## Bookings
 
 ```
-bookings
+bookings                     -- shop+service+time model (2026-07-09); staff pick deferred
   client_id → profiles
-  barbershop_id NULLABLE | private_barber_id NULLABLE
-  location_id NULLABLE       -- shop location, or client address for at-home
-  service_id, staff_id NULLABLE
+  barbershop_id              -- private_barber_id joins in Phase 3
+  location_id NULLABLE → barbershop_locations
+  service_id
   scheduled_at, duration_minutes
   status      pending | confirmed | completed | cancelled | no_show
-  style_confirmed_at         -- when client confirmed photos were current
-  address_snapshot jsonb NULLABLE  -- premium at-home: frozen copy at booking time
+              -- transitions guarded: client cancels; shop confirms/completes/no-shows
+  style_confirmed_at NOT NULL -- style gate: set when client confirms photos current
+  -- Phase 3: address_snapshot jsonb for premium at-home bookings
 ```
 
 ## B2B events

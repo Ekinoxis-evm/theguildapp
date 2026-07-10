@@ -4,6 +4,11 @@ Newest first. One line of context beats archeology later.
 
 | Date | Decision | Why |
 |---|---|---|
+| 2026-07-09 | Booking model: shop + service + time; client does not pick a staff barber | Founder choice; simplest slot logic for MVP |
+| 2026-07-09 | Staff get logins: roster rows link to accounts by signup email (`link_staff_by_email`), keep `client` role, access via `barbershop_staff.profile_id` | Founder choice; no new role/invite flow needed |
+| 2026-07-09 | Barbershops are founder-approved: apply → `pending` → admin approves at `/admin` (`approve_barbershop` flips shop + owner role) | Founder choice: curated marketplace |
+| 2026-07-09 | Admin account = wmb81321@gmail.com (founder's app login); ekinoxis.evm@gmail.com can be promoted when it signs up | Only real account in the app |
+| 2026-07-09 | Booked shop can read a client's style photos only while the booking is pending/confirmed | Narrowest grant that satisfies the product need |
 | 2026-07-09 | Repo found **public** again during 1.4–1.7 ship (Vercel deploy metadata flagged it); set back to private via `gh repo edit` | Standing decision (2026-07-08) is private; history re-scanned, no sensitive files present |
 | 2026-07-09 | E2E verified with disposable users `e2e-onboarding@`/`e2e-other@example.com` (admin-generated OTP, no email delivery); their 5 storage objects + rows still need deletion — Supabase CLI login expired, storage API blocks SQL deletes | Full wizard + RLS probes without touching founder account; cleanup pending `supabase login` |
 | 2026-07-08 | Sign-in emails use a 6-digit OTP code (custom `magic_link` template with `{{ .Token }}`), not a magic link | Code entry works regardless of which device opens the email |
