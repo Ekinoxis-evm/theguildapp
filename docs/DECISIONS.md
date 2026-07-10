@@ -4,6 +4,7 @@ Newest first. One line of context beats archeology later.
 
 | Date | Decision | Why |
 |---|---|---|
+| 2026-07-10 | Repo is **PUBLIC** by founder decision — supersedes the 2026-07-08 private decision and the 07-09/07-10 re-privatizations (those were the agent enforcing the stale decision). Never store secrets or brand assets in the repo. | Founder wants it public; history verified clean of secrets |
 | 2026-07-10 | Premium tier granted manually by admin (`set_client_tier` at `/admin`) until Stripe subscriptions land | Unblocks at-home bookings; founder controls who is premium |
 | 2026-07-10 | Private barbers are founder-approved like shops (`approve_private_barber`); at-home booking freezes the address into `bookings.address_snapshot` — barbers never read `client_addresses` | Same curated model; narrowest address exposure |
 | 2026-07-10 | Supabase CLI auth intermittently hangs; migrations applied via MCP `apply_migration` when CLI stalls (local files renamed to match recorded versions) | Keeps migration history consistent either way |
