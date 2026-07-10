@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { ShopsMap, type ShopPin } from "@/components/maps/shops-map";
 
 export const metadata = { title: "Barbershops — The Guild" };
 
@@ -13,9 +14,17 @@ export default async function ShopsPage() {
 
   const { data: shops } = await supabase
     .from("barbershops")
-    .select("id, name, description, services_fulfilled_count, barbershop_locations(city, state)")
+    .select(
+      "id, name, description, services_fulfilled_count, barbershop_locations(city, state, lat, lng)"
+    )
     .eq("status", "approved")
     .order("services_fulfilled_count", { ascending: false });
+
+  const pins: ShopPin[] = (shops ?? []).flatMap((shop) =>
+    shop.barbershop_locations
+      .filter((l) => l.lat !== null && l.lng !== null)
+      .map((l) => ({ shopId: shop.id, name: shop.name, lat: l.lat!, lng: l.lng! }))
+  );
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
@@ -25,9 +34,8 @@ export default async function ShopsPage() {
         </Link>
       </p>
       <h1 className="mt-2 text-2xl font-semibold">Barbershops</h1>
-      <p className="mt-1 text-sm text-neutral-500">
-        Map view arrives with the Google Maps key — browse the list meanwhile.
-      </p>
+
+      <ShopsMap pins={pins} />
 
       <ul className="mt-8 space-y-3">
         {(shops ?? []).map((shop) => {

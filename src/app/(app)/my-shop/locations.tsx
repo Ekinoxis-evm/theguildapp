@@ -3,6 +3,8 @@
 import { FormEvent, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/lib/database.types";
+import { PlacePicker } from "@/components/maps/place-picker";
+import { mapsEnabled, type ParsedPlace } from "@/lib/maps";
 
 type Location = Database["public"]["Tables"]["barbershop_locations"]["Row"];
 
@@ -27,6 +29,18 @@ export function LocationsManager({
     city: "",
     zip_code: "",
   });
+  const [picked, setPicked] = useState<ParsedPlace | null>(null);
+
+  function applyPlace(place: ParsedPlace) {
+    setPicked(place);
+    setForm({
+      formatted_address: place.formatted_address,
+      country: place.country || "United States",
+      state: place.state,
+      city: place.city,
+      zip_code: place.zip_code,
+    });
+  }
 
   async function add(e: FormEvent) {
     e.preventDefault();
@@ -35,7 +49,14 @@ export function LocationsManager({
     const supabase = createClient();
     const { data, error } = await supabase
       .from("barbershop_locations")
-      .insert({ barbershop_id: shopId, ...form })
+      .insert({
+        barbershop_id: shopId,
+        ...form,
+        // Only trust the pin if the address wasn't hand-edited afterwards.
+        ...(picked && picked.formatted_address === form.formatted_address
+          ? { google_place_id: picked.google_place_id, lat: picked.lat, lng: picked.lng }
+          : {}),
+      })
       .select()
       .single();
     setSaving(false);
@@ -45,6 +66,7 @@ export function LocationsManager({
     }
     setLocations([...locations, data]);
     setAdding(false);
+    setPicked(null);
     setForm({ formatted_address: "", country: "United States", state: "", city: "", zip_code: "" });
   }
 
@@ -88,6 +110,7 @@ export function LocationsManager({
 
       {adding ? (
         <form onSubmit={add} className="mt-4 space-y-3 rounded border border-neutral-300 p-4">
+          <PlacePicker onSelect={applyPlace} />
           <label className="block text-sm">
             Street address
             <input
@@ -162,10 +185,11 @@ export function LocationsManager({
         </button>
       )}
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-      <p className="mt-2 text-xs text-neutral-500">
-        Google Maps pin selection arrives once the Maps key is configured;
-        addresses entered now will be geocoded then.
-      </p>
+      {!mapsEnabled() && (
+        <p className="mt-2 text-xs text-neutral-500">
+          Google Maps search is unavailable — enter the address manually.
+        </p>
+      )}
     </section>
   );
 }

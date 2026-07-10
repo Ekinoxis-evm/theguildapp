@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatPrice } from "@/lib/format";
+import { navigationUrl } from "@/lib/maps";
 
 export const metadata = { title: "Barbershop — The Guild" };
 
@@ -20,7 +21,7 @@ export default async function ShopPage({
   const { data: shop } = await supabase
     .from("barbershops")
     .select(
-      "id, name, phone, description, status, services_fulfilled_count, barbershop_locations(id, formatted_address, city, state, zip_code), services(id, name, price_cents, currency, duration_minutes, active)"
+      "id, name, phone, description, status, services_fulfilled_count, barbershop_locations(id, formatted_address, city, state, zip_code, google_place_id), services(id, name, price_cents, currency, duration_minutes, active)"
     )
     .eq("id", id)
     .eq("status", "approved")
@@ -51,11 +52,24 @@ export default async function ShopPage({
       <h2 className="mt-8 text-lg font-medium">Locations</h2>
       <ul className="mt-3 space-y-2 text-sm">
         {shop.barbershop_locations.map((l) => (
-          <li key={l.id} className="rounded border border-neutral-300 p-3">
-            {l.formatted_address}
-            <span className="block text-neutral-500">
-              {l.city}, {l.state} {l.zip_code}
+          <li
+            key={l.id}
+            className="flex items-center justify-between gap-3 rounded border border-neutral-300 p-3"
+          >
+            <span>
+              {l.formatted_address}
+              <span className="block text-neutral-500">
+                {l.city}, {l.state} {l.zip_code}
+              </span>
             </span>
+            <a
+              href={navigationUrl(l)}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 text-xs underline"
+            >
+              Navigate
+            </a>
           </li>
         ))}
         {shop.barbershop_locations.length === 0 && (
