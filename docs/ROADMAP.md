@@ -14,6 +14,7 @@
 | 0.6 | Stripe MCP/CLI wired (test mode) — no product usage yet | done |
 | 0.7 | Resend: use founder's existing account — API key needed when Phase 2 emails ship | done — RESEND_API_KEY + SALES_EMAIL in Vercel (2026-07-10) |
 | 0.8 | Google Maps Platform API key + Google OAuth client (one Google Cloud Console sitting covers both) | Maps keys done (2026-07-10); OAuth client + Supabase provider config still **founder** |
+| 0.9 | Test harness: Vitest unit tests + anonymous RLS security probes (`pnpm test`, `pnpm test:security`) | done (2026-07-14) — 9 unit + 19 security probes green |
 
 ## Phase 1 — Auth, onboarding & profiles (B2C core)
 

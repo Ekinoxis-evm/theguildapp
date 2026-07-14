@@ -23,6 +23,18 @@ Copy `.env.example` → `.env.local` and fill in:
 
 Sync with Vercel: `vercel env pull .env.local` / add prod vars with `vercel env add`.
 
+## Testing
+
+```bash
+pnpm test            # offline unit tests (tests/unit/) — pure logic: format, ICS
+pnpm test:security   # anonymous RLS probes against the live project (tests/security/)
+                     # read-only; asserts anon users see zero sensitive rows,
+                     # cannot write, cannot call admin RPCs, buckets stay private
+```
+
+Run both before every deploy alongside `pnpm build` + `pnpm lint`. Add a
+`tests/security` probe whenever a migration adds a table or bucket.
+
 ## MCP servers (for AI agents — `.mcp.json`, project scope)
 
 - `supabase` → `https://mcp.supabase.com/mcp?project_ref=<ref>` (OAuth on first use)
