@@ -61,6 +61,20 @@
 | 4.4 | Attendee flow: QR → signup → event registration → service claim | done — `/e/[slug]` |
 | 4.5 | Events section (current + historical) for attendees | done — `/events` |
 
+## Phase 6 — Barber-centric platform _(founder vision 2026-07-14, sequencing TBD)_
+
+> Barbers are the main asset. Every barber gets a first-class, self-managed profile (LinkedIn-style), independent of — but linkable to — a barbershop.
+
+| # | Item | Status |
+|---|---|---|
+| 6.1 | Barber identity: promote staff to self-owned `barber` profiles (bio, photo, certifications, specialties, years of experience) — barber edits their own, shop can no longer fully manage them | todo |
+| 6.2 | Certifications & credentials: uploads (private bucket + signed URLs), issuer/date, admin or issuer verification badge | todo |
+| 6.3 | Service history: per-barber track record from completed bookings (counts, services, tenure per shop) — public stats, private details | todo |
+| 6.4 | Employment/enrollment model: barber ↔ barbershop affiliations with history (joined/left), replacing owner-managed roster rows | todo |
+| 6.5 | Public barber profile page (portfolio, certifications, history, current shop) — the "LinkedIn" view | todo |
+| 6.6 | Shop-enrolled barbers may also offer private services (merges/reuses `private_barbers`) — pricing & approval rules **founder** | todo |
+| 6.7 | Booking flow: option to pick a specific barber at a shop (supersedes 2026-07-09 shop+time decision) — **founder** confirm | todo |
+
 ## Phase 5 — Brand & expansion
 
 | # | Item | Status |
