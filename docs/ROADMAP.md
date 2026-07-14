@@ -67,13 +67,13 @@
 
 | # | Item | Status |
 |---|---|---|
-| 6.1 | Barber identity: promote staff to self-owned `barber` profiles (bio, photo, certifications, specialties, years of experience) — barber edits their own, shop can no longer fully manage them | todo |
-| 6.2 | Certifications & credentials: uploads (private bucket + signed URLs), issuer/date, admin or issuer verification badge | todo |
-| 6.3 | Service history: per-barber track record from completed bookings (counts, services, tenure per shop) — public stats, private details | todo |
-| 6.4 | Employment/enrollment model: barber ↔ barbershop affiliations with history (joined/left), replacing owner-managed roster rows | todo |
-| 6.5 | Public barber profile page (portfolio, certifications, history, current shop) — the "LinkedIn" view | todo |
-| 6.6 | Shop-enrolled barbers may also offer private services (merges/reuses `private_barbers`) — pricing & approval rules **founder** | todo |
-| 6.7 | Booking flow: option to pick a specific barber at a shop (supersedes 2026-07-09 shop+time decision) — **founder** confirm | todo |
+| 6.1 | Barber identity: self-owned profiles (headline, bio, specialties, years, photos); `offers_home_service` flag — shop enrollment optional, pure at-home professionals supported | done (2026-07-14) — built on `private_barbers`; staff-roster merge deferred |
+| 6.2 | Certifications & credentials: uploads (private `barber-certs` bucket, owner+admin only), issuer/date, admin verification badge (`verify_certification`) | done (2026-07-14) |
+| 6.3 | Service history: per-barber track record from completed bookings (counts, services, tenure per shop) — public stats, private details | partial — fulfilled count + affiliation history live; per-service breakdown todo |
+| 6.4 | Enrollment model: `barber_affiliations` (barber ↔ shop, role, started/ended history), self-declared LinkedIn-style, optional | done (2026-07-14) — shop-side confirmation todo |
+| 6.5 | Public barber profile page (headline, specialties, certifications w/ badge, work history, current shop) + barber directory open to all signed-in users; premium gates only at-home booking | done (2026-07-14) |
+| 6.6 | Shop-enrolled barbers may also offer private services (merges/reuses `private_barbers`) — pricing & approval rules **founder** | partial — same profile supports both; approval rules pending founder |
+| 6.7 | Booking flow: option to pick a specific barber at a shop (supersedes 2026-07-09 shop+time decision) | todo — founder confirmed direction 2026-07-14; needs staff↔barber-profile link first |
 
 ## Phase 5 — Brand & expansion
 

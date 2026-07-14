@@ -11,6 +11,7 @@ export function ApplyBarberForm({ profileId }: { profileId: string }) {
   const router = useRouter();
   const [bio, setBio] = useState("");
   const [price, setPrice] = useState("");
+  const [offersHome, setOffersHome] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,6 +24,7 @@ export function ApplyBarberForm({ profileId }: { profileId: string }) {
       profile_id: profileId,
       bio: bio.trim() || null,
       base_price_cents: Math.round(parseFloat(price || "0") * 100),
+      offers_home_service: offersHome,
     });
     setSaving(false);
     if (error) {
@@ -56,6 +58,14 @@ export function ApplyBarberForm({ profileId }: { profileId: string }) {
           className={inputClass}
           placeholder="80.00"
         />
+      </label>
+      <label className="flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={offersHome}
+          onChange={(e) => setOffersHome(e.target.checked)}
+        />
+        I offer at-home service
       </label>
       <button
         type="submit"

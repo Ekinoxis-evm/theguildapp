@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
 import { formatPrice } from "@/lib/format";
 
-export const metadata = { title: "Private barbers — The Guild" };
+export const metadata = { title: "Barbers — The Guild" };
 
 export default async function BarbersPage() {
   const supabase = await createClient();
@@ -13,12 +13,14 @@ export default async function BarbersPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/barbers");
 
+  // Barber-centric directory (2026-07-14): every approved barber is listed
+  // and viewable; premium only gates the at-home booking itself.
   const [{ data: profile }, { data: barbers }] = await Promise.all([
     supabase.from("profiles").select("tier").eq("id", user.id).single(),
     supabase
       .from("private_barbers")
       .select(
-        "profile_id, bio, self_photo_path, base_price_cents, services_fulfilled_count, coverage_areas(city, state), profiles!private_barbers_profile_id_fkey(first_name, last_name)"
+        "profile_id, bio, headline, specialties, years_experience, offers_home_service, self_photo_path, base_price_cents, services_fulfilled_count, coverage_areas(city, state), profiles!private_barbers_profile_id_fkey(first_name, last_name), barber_certifications(id, verified_at), barber_affiliations(ended_on, barbershops(name))"
       )
       .eq("status", "approved")
       .order("services_fulfilled_count", { ascending: false }),
@@ -45,14 +47,15 @@ export default async function BarbersPage() {
           ← Dashboard
         </Link>
       </p>
-      <h1 className="mt-2 text-2xl font-semibold">Private barbers</h1>
+      <h1 className="mt-2 text-2xl font-semibold">Barbers</h1>
       <p className="mt-1 text-sm text-neutral-500">
-        At-home grooming, wherever you are.
+        The professionals of The Guild — browse profiles, certifications, and
+        track records.
       </p>
 
       {!isPremium && (
         <p className="mt-4 rounded border border-yellow-600/40 bg-yellow-50 p-3 text-sm">
-          At-home service is a <strong>premium</strong> feature.{" "}
+          At-home booking is a <strong>premium</strong> feature.{" "}
           <Link href="/premium" className="font-medium underline">
             Upgrade for $19.99/month →
           </Link>
@@ -67,6 +70,12 @@ export default async function BarbersPage() {
           const cities = [
             ...new Set(b.coverage_areas.map((c) => `${c.city}, ${c.state}`)),
           ].join(" · ");
+          const verifiedCount = b.barber_certifications.filter(
+            (c) => c.verified_at
+          ).length;
+          const currentShop = b.barber_affiliations.find(
+            (a) => !a.ended_on
+          )?.barbershops?.name;
           return (
             <li key={b.profile_id} className="rounded border border-neutral-300 p-4">
               <div className="flex items-start gap-4">
@@ -88,27 +97,51 @@ export default async function BarbersPage() {
                     </p>
                   </div>
                   <p className="mt-0.5 text-sm text-neutral-600">
-                    From {formatPrice(b.base_price_cents)}
-                    {cities ? ` · ${cities}` : ""}
+                    {b.headline ??
+                      (b.bio ? b.bio.slice(0, 80) : "Guild professional")}
                   </p>
-                  {b.bio && (
-                    <p className="mt-1 line-clamp-2 text-sm text-neutral-500">{b.bio}</p>
+                  <p className="mt-0.5 text-xs text-neutral-500">
+                    {[
+                      currentShop ? `at ${currentShop}` : null,
+                      b.years_experience != null
+                        ? `${b.years_experience} yrs`
+                        : null,
+                      verifiedCount > 0
+                        ? `✓ ${verifiedCount} verified cert${verifiedCount > 1 ? "s" : ""}`
+                        : null,
+                      b.offers_home_service
+                        ? `at-home from ${formatPrice(b.base_price_cents)}`
+                        : null,
+                      cities || null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                  {b.specialties.length > 0 && (
+                    <p className="mt-1.5 flex flex-wrap gap-1">
+                      {b.specialties.slice(0, 4).map((s) => (
+                        <span
+                          key={s}
+                          className="rounded-full border border-neutral-300 px-2 py-0.5 text-xs text-neutral-600"
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </p>
                   )}
-                  {isPremium && (
-                    <Link
-                      href={`/barbers/${b.profile_id}`}
-                      className="mt-2 inline-block rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white"
-                    >
-                      View & book
-                    </Link>
-                  )}
+                  <Link
+                    href={`/barbers/${b.profile_id}`}
+                    className="mt-2 inline-block rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white"
+                  >
+                    View profile
+                  </Link>
                 </div>
               </div>
             </li>
           );
         })}
         {enriched.length === 0 && (
-          <li className="text-sm text-neutral-500">No private barbers live yet.</li>
+          <li className="text-sm text-neutral-500">No barbers live yet.</li>
         )}
       </ul>
     </main>

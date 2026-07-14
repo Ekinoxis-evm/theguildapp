@@ -31,8 +31,13 @@ function extensionFor(file: File): string {
   return ext;
 }
 
+const CERT_EXTENSIONS: Record<string, string> = {
+  ...EXTENSIONS,
+  "application/pdf": "pdf",
+};
+
 async function uploadOwned(
-  bucket: "avatars" | "style-photos" | "barber-photos",
+  bucket: "avatars" | "style-photos" | "barber-photos" | "barber-certs",
   path: string,
   file: File,
   previousPath: string | null
@@ -80,6 +85,21 @@ export async function uploadBarberPhoto(
     .eq("profile_id", userId);
   if (error) throw new Error(error.message);
   return path;
+}
+
+// Certification documents: one file per cert row, keyed by cert id so
+// multiple certs never collide. Caller persists the returned path on the
+// barber_certifications row.
+export async function uploadBarberCert(
+  userId: string,
+  certKey: string,
+  file: File,
+  previousPath: string | null
+): Promise<string> {
+  const ext = CERT_EXTENSIONS[file.type];
+  if (!ext) throw new Error("Please use a JPEG, PNG, WebP, or PDF file.");
+  const path = `${userId}/cert-${certKey}.${ext}`;
+  return uploadOwned("barber-certs", path, file, previousPath);
 }
 
 export async function uploadStylePhoto(

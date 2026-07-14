@@ -20,6 +20,12 @@ export function BarberProfileEditor({
   setupUrl: string | null;
 }) {
   const [bio, setBio] = useState(barber.bio ?? "");
+  const [headline, setHeadline] = useState(barber.headline ?? "");
+  const [years, setYears] = useState(
+    barber.years_experience != null ? String(barber.years_experience) : ""
+  );
+  const [specialties, setSpecialties] = useState(barber.specialties.join(", "));
+  const [offersHome, setOffersHome] = useState(barber.offers_home_service);
   const [price, setPrice] = useState((barber.base_price_cents / 100).toFixed(2));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -35,6 +41,13 @@ export function BarberProfileEditor({
       .from("private_barbers")
       .update({
         bio: bio.trim() || null,
+        headline: headline.trim() || null,
+        years_experience: years === "" ? null : Math.round(Number(years)),
+        specialties: specialties
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        offers_home_service: offersHome,
         base_price_cents: Math.round(parseFloat(price || "0") * 100),
       })
       .eq("profile_id", barber.profile_id);
@@ -67,6 +80,17 @@ export function BarberProfileEditor({
       </div>
       <form onSubmit={save} className="mt-4 space-y-3">
         <label className="block text-sm">
+          Headline
+          <input
+            type="text"
+            maxLength={120}
+            placeholder="Master barber · fades & classic cuts"
+            value={headline}
+            onChange={(e) => setHeadline(e.target.value)}
+            className={inputClass}
+          />
+        </label>
+        <label className="block text-sm">
           About you
           <textarea
             rows={3}
@@ -74,6 +98,37 @@ export function BarberProfileEditor({
             onChange={(e) => setBio(e.target.value)}
             className={inputClass}
           />
+        </label>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block text-sm">
+            Years of experience
+            <input
+              type="number"
+              min="0"
+              max="80"
+              value={years}
+              onChange={(e) => setYears(e.target.value)}
+              className={inputClass}
+            />
+          </label>
+          <label className="block text-sm">
+            Specialties (comma-separated)
+            <input
+              type="text"
+              placeholder="fades, beard sculpting"
+              value={specialties}
+              onChange={(e) => setSpecialties(e.target.value)}
+              className={inputClass}
+            />
+          </label>
+        </div>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            type="checkbox"
+            checked={offersHome}
+            onChange={(e) => setOffersHome(e.target.checked)}
+          />
+          I offer at-home service (premium clients can book me to come to them)
         </label>
         <label className="block text-sm">
           Base price (USD)

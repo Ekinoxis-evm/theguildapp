@@ -47,6 +47,102 @@ export type Database = {
         }
         Relationships: []
       }
+      barber_affiliations: {
+        Row: {
+          barber_id: string
+          barbershop_id: string
+          created_at: string
+          ended_on: string | null
+          id: string
+          role_title: string | null
+          started_on: string
+        }
+        Insert: {
+          barber_id: string
+          barbershop_id: string
+          created_at?: string
+          ended_on?: string | null
+          id?: string
+          role_title?: string | null
+          started_on?: string
+        }
+        Update: {
+          barber_id?: string
+          barbershop_id?: string
+          created_at?: string
+          ended_on?: string | null
+          id?: string
+          role_title?: string | null
+          started_on?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "barber_affiliations_barber_id_fkey"
+            columns: ["barber_id"]
+            isOneToOne: false
+            referencedRelation: "private_barbers"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "barber_affiliations_barbershop_id_fkey"
+            columns: ["barbershop_id"]
+            isOneToOne: false
+            referencedRelation: "barbershops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      barber_certifications: {
+        Row: {
+          barber_id: string
+          created_at: string
+          file_path: string | null
+          id: string
+          issued_on: string | null
+          issuer: string
+          title: string
+          verified_at: string | null
+          verified_by: string | null
+        }
+        Insert: {
+          barber_id: string
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          issued_on?: string | null
+          issuer: string
+          title: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Update: {
+          barber_id?: string
+          created_at?: string
+          file_path?: string | null
+          id?: string
+          issued_on?: string | null
+          issuer?: string
+          title?: string
+          verified_at?: string | null
+          verified_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "barber_certifications_barber_id_fkey"
+            columns: ["barber_id"]
+            isOneToOne: false
+            referencedRelation: "private_barbers"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "barber_certifications_verified_by_fkey"
+            columns: ["verified_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       barbershop_locations: {
         Row: {
           barbershop_id: string
@@ -496,34 +592,46 @@ export type Database = {
           base_price_cents: number
           bio: string | null
           created_at: string
+          headline: string | null
+          offers_home_service: boolean
           profile_id: string
           self_photo_path: string | null
           services_fulfilled_count: number
           setup_photo_path: string | null
+          specialties: string[]
           status: Database["public"]["Enums"]["barbershop_status"]
           updated_at: string
+          years_experience: number | null
         }
         Insert: {
           base_price_cents?: number
           bio?: string | null
           created_at?: string
+          headline?: string | null
+          offers_home_service?: boolean
           profile_id: string
           self_photo_path?: string | null
           services_fulfilled_count?: number
           setup_photo_path?: string | null
+          specialties?: string[]
           status?: Database["public"]["Enums"]["barbershop_status"]
           updated_at?: string
+          years_experience?: number | null
         }
         Update: {
           base_price_cents?: number
           bio?: string | null
           created_at?: string
+          headline?: string | null
+          offers_home_service?: boolean
           profile_id?: string
           self_photo_path?: string | null
           services_fulfilled_count?: number
           setup_photo_path?: string | null
+          specialties?: string[]
           status?: Database["public"]["Enums"]["barbershop_status"]
           updated_at?: string
+          years_experience?: number | null
         }
         Relationships: [
           {
@@ -710,6 +818,7 @@ export type Database = {
         Returns: undefined
       }
       set_event_manager: { Args: { user_email: string }; Returns: undefined }
+      verify_certification: { Args: { cert_id: string }; Returns: undefined }
     }
     Enums: {
       barbershop_status: "pending" | "approved" | "suspended"

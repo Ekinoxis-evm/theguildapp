@@ -59,13 +59,25 @@ barbershop_staff
   profile_id NULLABLE        -- linked if/when they claim a login
 ```
 
-## Private barbers
+## Barbers (barber-centric since 2026-07-14)
 
 ```
-private_barbers
+private_barbers               -- the professional barber profile, self-managed
   profile_id → profiles (1:1)
   bio, self_photo_path, setup_photo_path   -- private bucket 'barber-photos'
   base_price_cents
+  headline, years_experience, specialties text[]
+  offers_home_service boolean  -- false = shop-only professional (no at-home booking)
+
+barber_certifications         -- LinkedIn-style credentials
+  barber_id → private_barbers
+  title, issuer, issued_on
+  file_path                    -- private bucket 'barber-certs'; owner + admin read only
+  verified_at, verified_by     -- admin-only via verify_certification(); owner edits clear it
+
+barber_affiliations           -- optional, self-declared shop enrollment with history
+  barber_id → private_barbers, barbershop_id → barbershops (approved shops only)
+  role_title, started_on, ended_on   -- one open enrollment per barber+shop
 
 coverage_areas
   private_barber_id, country, state, city, zip_codes text[]  -- regions they reach
