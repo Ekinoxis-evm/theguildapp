@@ -52,8 +52,10 @@ export default async function BarbersPage() {
 
       {!isPremium && (
         <p className="mt-4 rounded border border-yellow-600/40 bg-yellow-50 p-3 text-sm">
-          At-home service is a <strong>premium</strong> feature. Contact The
-          Guild team to upgrade your account.
+          At-home service is a <strong>premium</strong> feature.{" "}
+          <Link href="/premium" className="font-medium underline">
+            Upgrade for $19.99/month →
+          </Link>
         </p>
       )}
 

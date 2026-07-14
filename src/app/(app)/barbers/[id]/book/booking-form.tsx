@@ -2,7 +2,6 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { formatDate, formatPrice } from "@/lib/format";
 import { createAtHomeBooking, type AddressInput } from "./actions";
 
@@ -32,7 +31,6 @@ export function AtHomeBookingForm({
   photoUrls: { position: string; url: string }[];
   savedAddress: AddressInput | { unit: string | null } & Omit<AddressInput, "unit"> | null;
 }) {
-  const router = useRouter();
   const [styleConfirmed, setStyleConfirmed] = useState(false);
   const [when, setWhen] = useState("");
   const [address, setAddress] = useState<AddressInput>({
@@ -111,13 +109,13 @@ export function AtHomeBookingForm({
       address,
       saveAddress,
     });
-    setSaving(false);
     if (!result.ok) {
+      setSaving(false);
       setError(result.error);
       return;
     }
-    router.push("/bookings");
-    router.refresh();
+    // Booking created — hand off to Stripe Checkout to pay in full.
+    window.location.assign(result.checkoutUrl);
   }
 
   return (
@@ -125,7 +123,7 @@ export function AtHomeBookingForm({
       <p className="rounded border border-neutral-300 p-3 text-sm">
         {serviceName}
         <span className="block text-neutral-500">
-          {formatPrice(priceCents, currency)} · {durationMinutes} min · pay in person
+          {formatPrice(priceCents, currency)} · {durationMinutes} min · paid online at booking
         </span>
       </p>
 
@@ -204,7 +202,7 @@ export function AtHomeBookingForm({
         disabled={saving || !when}
         className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
       >
-        {saving ? "Requesting…" : "Request at-home booking"}
+        {saving ? "Redirecting to payment…" : "Book at-home & pay"}
       </button>
       <p className="text-xs text-neutral-500">
         Your address is shared only with this barber, only for this booking.

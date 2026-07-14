@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Database } from "@/lib/database.types";
-import { formatDateTime } from "@/lib/format";
+import { formatDateTime, formatPrice } from "@/lib/format";
+import { payBooking } from "./actions";
 
 type Booking = Database["public"]["Tables"]["bookings"]["Row"] & {
   services: { name: string } | null;
@@ -28,6 +29,18 @@ export function ClientBookings({ bookings: initial }: { bookings: Booking[] }) {
   const [bookings, setBookings] = useState(initial);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  async function payNow(booking: Booking) {
+    setError(null);
+    setBusy(booking.id);
+    const result = await payBooking(booking.id);
+    if (!result.ok) {
+      setBusy(null);
+      setError(result.error);
+      return;
+    }
+    window.location.assign(result.checkoutUrl);
+  }
 
   async function cancel(booking: Booking) {
     setError(null);
@@ -60,9 +73,17 @@ export function ClientBookings({ bookings: initial }: { bookings: Booking[] }) {
         emptyText="No upcoming bookings."
         busy={busy}
         onCancel={cancel}
+        onPay={payNow}
       />
       {past.length > 0 && (
-        <Section title="History" bookings={past} emptyText="" busy={busy} onCancel={cancel} />
+        <Section
+          title="History"
+          bookings={past}
+          emptyText=""
+          busy={busy}
+          onCancel={cancel}
+          onPay={payNow}
+        />
       )}
       {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
@@ -75,12 +96,14 @@ function Section({
   emptyText,
   busy,
   onCancel,
+  onPay,
 }: {
   title: string;
   bookings: Booking[];
   emptyText: string;
   busy: string | null;
   onCancel: (b: Booking) => void;
+  onPay: (b: Booking) => void;
 }) {
   return (
     <section>
@@ -91,11 +114,20 @@ function Section({
         <ul className="mt-3 space-y-2">
           {bookings.map((b) => {
             const cancellable = ["pending", "confirmed"].includes(b.status);
+            const payable = cancellable && !b.paid_at;
             return (
               <li key={b.id} className="rounded border border-neutral-300 p-3 text-sm">
                 <div className="flex items-baseline justify-between gap-3">
                   <strong>{b.services?.name ?? "Service"}</strong>
                   <span className="shrink-0 text-xs uppercase tracking-wide text-neutral-500">
+                    {b.paid_at && (
+                      <span className="mr-2 text-emerald-700">
+                        Paid
+                        {b.amount_cents != null
+                          ? ` ${formatPrice(b.amount_cents, b.currency ?? "USD")}`
+                          : ""}
+                      </span>
+                    )}
                     {STATUS_LABEL[b.status] ?? b.status}
                   </span>
                 </div>
@@ -109,6 +141,15 @@ function Section({
                   </p>
                 )}
                 <div className="mt-2 flex flex-wrap gap-3 text-xs">
+                  {payable && (
+                    <button
+                      disabled={busy === b.id}
+                      onClick={() => onPay(b)}
+                      className="rounded bg-neutral-900 px-3 py-1 font-medium text-white disabled:opacity-50"
+                    >
+                      {busy === b.id ? "Opening checkout…" : "Pay now"}
+                    </button>
+                  )}
                   {cancellable && (
                     <>
                       <a href={`/bookings/${b.id}/ics`} className="underline">

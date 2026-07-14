@@ -192,46 +192,61 @@ export type Database = {
       bookings: {
         Row: {
           address_snapshot: Json | null
+          amount_cents: number | null
           barbershop_id: string | null
           client_id: string
           created_at: string
+          currency: string | null
           duration_minutes: number
           id: string
           location_id: string | null
+          paid_at: string | null
           private_barber_id: string | null
           scheduled_at: string
           service_id: string
           status: Database["public"]["Enums"]["booking_status"]
+          stripe_checkout_session_id: string | null
+          stripe_payment_intent_id: string | null
           style_confirmed_at: string
           updated_at: string
         }
         Insert: {
           address_snapshot?: Json | null
+          amount_cents?: number | null
           barbershop_id?: string | null
           client_id: string
           created_at?: string
+          currency?: string | null
           duration_minutes: number
           id?: string
           location_id?: string | null
+          paid_at?: string | null
           private_barber_id?: string | null
           scheduled_at: string
           service_id: string
           status?: Database["public"]["Enums"]["booking_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
           style_confirmed_at: string
           updated_at?: string
         }
         Update: {
           address_snapshot?: Json | null
+          amount_cents?: number | null
           barbershop_id?: string | null
           client_id?: string
           created_at?: string
+          currency?: string | null
           duration_minutes?: number
           id?: string
           location_id?: string | null
+          paid_at?: string | null
           private_barber_id?: string | null
           scheduled_at?: string
           service_id?: string
           status?: Database["public"]["Enums"]["booking_status"]
+          stripe_checkout_session_id?: string | null
+          stripe_payment_intent_id?: string | null
           style_confirmed_at?: string
           updated_at?: string
         }
@@ -534,6 +549,9 @@ export type Database = {
           phone: string | null
           role: Database["public"]["Enums"]["user_role"]
           state: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_status: string | null
           tier: Database["public"]["Enums"]["client_tier"]
           updated_at: string
           zip_code: string | null
@@ -551,6 +569,9 @@ export type Database = {
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           state?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?: string | null
           tier?: Database["public"]["Enums"]["client_tier"]
           updated_at?: string
           zip_code?: string | null
@@ -568,6 +589,9 @@ export type Database = {
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           state?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_status?: string | null
           tier?: Database["public"]["Enums"]["client_tier"]
           updated_at?: string
           zip_code?: string | null

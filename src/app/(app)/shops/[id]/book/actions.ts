@@ -1,16 +1,14 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { sendEmail } from "@/lib/email";
-import { bookingIcs } from "@/lib/ics";
-import { formatDateTime } from "@/lib/format";
+import { createBookingCheckout } from "@/lib/booking-checkout";
 
 export async function createBooking(input: {
   shopId: string;
   serviceId: string;
   locationId: string | null;
   scheduledAt: string;
-}): Promise<{ ok: true } | { ok: false; error: string }> {
+}): Promise<{ ok: true; checkoutUrl: string } | { ok: false; error: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -28,7 +26,9 @@ export async function createBooking(input: {
 
   const { data: service } = await supabase
     .from("services")
-    .select("id, name, duration_minutes, barbershop_id, active, barbershops(name)")
+    .select(
+      "id, name, price_cents, currency, duration_minutes, barbershop_id, active, barbershops(name)"
+    )
     .eq("id", input.serviceId)
     .eq("barbershop_id", input.shopId)
     .single();
@@ -40,7 +40,8 @@ export async function createBooking(input: {
   }
 
   // Inserted under the caller's session — RLS enforces client_id, approved
-  // shop, active service, pending status.
+  // shop, active service, pending status. Payment columns are stamped by the
+  // Stripe webhook only.
   const { data: booking, error } = await supabase
     .from("bookings")
     .insert({
@@ -52,37 +53,19 @@ export async function createBooking(input: {
       duration_minutes: service.duration_minutes,
       style_confirmed_at: new Date().toISOString(),
     })
-    .select("id, barbershop_locations(formatted_address, city, state)")
+    .select("id")
     .single();
   if (error) return { ok: false, error: error.message };
 
-  // Best-effort confirmation email (no-op until RESEND_API_KEY is set).
   const shopName = service.barbershops?.name ?? "your barbershop";
-  const location = booking.barbershop_locations
-    ? `${booking.barbershop_locations.formatted_address}, ${booking.barbershop_locations.city}, ${booking.barbershop_locations.state}`
-    : undefined;
-  if (user.email) {
-    await sendEmail({
-      to: user.email,
-      subject: `Booking requested — ${shopName}`,
-      text: [
-        `Your booking request was sent to ${shopName}.`,
-        ``,
-        `Service: ${service.name}`,
-        `When: ${formatDateTime(scheduledAt.toISOString())}`,
-        ...(location ? [`Where: ${location}`] : []),
-        ``,
-        `The shop will confirm shortly. Track it at /bookings.`,
-      ].join("\n"),
-      icsContent: bookingIcs({
-        id: booking.id,
-        scheduledAt: scheduledAt.toISOString(),
-        durationMinutes: service.duration_minutes,
-        summary: `${service.name} — ${shopName}`,
-        location,
-      }),
-    });
-  }
-
-  return { ok: true };
+  const checkout = await createBookingCheckout({
+    bookingId: booking.id,
+    userId: user.id,
+    email: user.email,
+    label: `${service.name} — ${shopName}`,
+    priceCents: service.price_cents,
+    currency: service.currency,
+  });
+  if (!checkout.ok) return checkout;
+  return { ok: true, checkoutUrl: checkout.checkoutUrl };
 }

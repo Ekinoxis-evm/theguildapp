@@ -4,6 +4,9 @@ Newest first. One line of context beats archeology later.
 
 | Date | Decision | Why |
 |---|---|---|
+| 2026-07-14 | Stripe live (test mode): bookings paid **in full upfront** via hosted Checkout Sessions; premium = **$19.99/mo subscription** (price `premium_monthly`); Customer Portal for self-service; webhook (`/api/stripe/webhook`, signature-verified) is the only writer of payment/subscription columns — DB triggers strip/reject them on authenticated inserts/updates | Founder pricing decisions 2026-07-14; keeps payment truth server-side only |
+| 2026-07-14 | Unpaid bookings: Checkout Session expires after 30 min → webhook auto-cancels the still-unpaid pending booking; "Pay now" retry on /bookings for abandoned checkouts; confirmation email moved from booking creation to payment confirmation | No zombie unpaid bookings in shop consoles; email only after money moves |
+| 2026-07-14 | Subscription cancellation (webhook `customer.subscription.updated/deleted`) downgrades tier to standard by `stripe_customer_id` match; admin manual grants (no Stripe link) are never touched | Manual premium and paid premium coexist |
 | 2026-07-10 | Repo is **PUBLIC** by founder decision — supersedes the 2026-07-08 private decision and the 07-09/07-10 re-privatizations (those were the agent enforcing the stale decision). Never store secrets or brand assets in the repo. | Founder wants it public; history verified clean of secrets |
 | 2026-07-10 | Premium tier granted manually by admin (`set_client_tier` at `/admin`) until Stripe subscriptions land | Unblocks at-home bookings; founder controls who is premium |
 | 2026-07-10 | Private barbers are founder-approved like shops (`approve_private_barber`); at-home booking freezes the address into `bookings.address_snapshot` — barbers never read `client_addresses` | Same curated model; narrowest address exposure |

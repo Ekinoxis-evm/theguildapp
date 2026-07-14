@@ -2,7 +2,6 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { formatDate, formatPrice } from "@/lib/format";
 import { createBooking } from "./actions";
 
@@ -39,7 +38,6 @@ export function BookingForm({
   oldestPhotoUpdate: string | null;
   photoUrls: { position: string; url: string }[];
 }) {
-  const router = useRouter();
   // Style gate first: the client confirms their four photos are current
   // before picking a slot (PRODUCT.md "style check on every booking").
   const [styleConfirmed, setStyleConfirmed] = useState(false);
@@ -114,13 +112,13 @@ export function BookingForm({
       locationId,
       scheduledAt: new Date(when).toISOString(),
     });
-    setSaving(false);
     if (!result.ok) {
+      setSaving(false);
       setError(result.error);
       return;
     }
-    router.push("/bookings");
-    router.refresh();
+    // Booking created — hand off to Stripe Checkout to pay in full.
+    window.location.assign(result.checkoutUrl);
   }
 
   return (
@@ -128,8 +126,8 @@ export function BookingForm({
       <p className="rounded border border-neutral-300 p-3 text-sm">
         {serviceName}
         <span className="block text-neutral-500">
-          {formatPrice(priceCents, currency)} · {durationMinutes} min · pay at
-          the shop
+          {formatPrice(priceCents, currency)} · {durationMinutes} min · paid
+          online at booking
         </span>
       </p>
 
@@ -166,11 +164,11 @@ export function BookingForm({
         disabled={saving || !when}
         className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
       >
-        {saving ? "Requesting…" : "Request booking"}
+        {saving ? "Redirecting to payment…" : "Book & pay"}
       </button>
       <p className="text-xs text-neutral-500">
-        The shop confirms your request — you&apos;ll see the status in
-        Bookings.
+        You&apos;ll pay securely via Stripe. The shop confirms your request —
+        track the status in Bookings.
       </p>
       {error && <p className="text-sm text-red-600">{error}</p>}
     </form>

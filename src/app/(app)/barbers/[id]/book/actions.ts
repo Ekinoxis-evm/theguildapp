@@ -1,9 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
-import { sendEmail } from "@/lib/email";
-import { bookingIcs } from "@/lib/ics";
-import { formatDateTime } from "@/lib/format";
+import { createBookingCheckout } from "@/lib/booking-checkout";
 
 export type AddressInput = {
   street_address: string;
@@ -19,7 +17,7 @@ export async function createAtHomeBooking(input: {
   scheduledAt: string;
   address: AddressInput;
   saveAddress: boolean;
-}): Promise<{ ok: true } | { ok: false; error: string }> {
+}): Promise<{ ok: true; checkoutUrl: string } | { ok: false; error: string }> {
   const supabase = await createClient();
   const {
     data: { user },
@@ -45,7 +43,7 @@ export async function createAtHomeBooking(input: {
 
   const { data: service } = await supabase
     .from("services")
-    .select("id, name, duration_minutes, private_barber_id, active")
+    .select("id, name, price_cents, currency, duration_minutes, private_barber_id, active")
     .eq("id", input.serviceId)
     .eq("private_barber_id", input.barberId)
     .single();
@@ -88,29 +86,14 @@ export async function createAtHomeBooking(input: {
     .single();
   if (error) return { ok: false, error: error.message };
 
-  if (user.email) {
-    const location = `${address.street_address}${address.unit ? ` ${address.unit}` : ""}, ${address.city}, ${address.state} ${address.zip_code}`;
-    await sendEmail({
-      to: user.email,
-      subject: "At-home booking requested — The Guild",
-      text: [
-        `Your at-home booking request was sent.`,
-        ``,
-        `Service: ${service.name}`,
-        `When: ${formatDateTime(scheduledAt.toISOString())}`,
-        `Where: ${location}`,
-        ``,
-        `The barber will confirm shortly. Track it at /bookings.`,
-      ].join("\n"),
-      icsContent: bookingIcs({
-        id: booking.id,
-        scheduledAt: scheduledAt.toISOString(),
-        durationMinutes: service.duration_minutes,
-        summary: `${service.name} — The Guild at home`,
-        location,
-      }),
-    });
-  }
-
-  return { ok: true };
+  const checkout = await createBookingCheckout({
+    bookingId: booking.id,
+    userId: user.id,
+    email: user.email,
+    label: `${service.name} — The Guild at home`,
+    priceCents: service.price_cents,
+    currency: service.currency,
+  });
+  if (!checkout.ok) return checkout;
+  return { ok: true, checkoutUrl: checkout.checkoutUrl };
 }

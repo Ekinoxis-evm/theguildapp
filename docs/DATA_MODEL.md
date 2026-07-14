@@ -13,6 +13,9 @@ auth.users (Supabase managed)
        haircut_method   scissors | machine | mixed   -- clients only
        country, state, city, zip_code
        onboarding_completed_at
+       stripe_customer_id UNIQUE, stripe_subscription_id UNIQUE, subscription_status
+         -- written only by the Stripe webhook (service role); triggers strip
+         -- them on authenticated inserts and reject authenticated updates
 
 client_addresses          -- premium only; exact street address, separate table so RLS
   profile_id → profiles   -- can lock it down harder than general profile fields
@@ -81,6 +84,10 @@ bookings                     -- shop+service+time model (2026-07-09); staff pick
               -- transitions guarded: client cancels; shop confirms/completes/no-shows
   style_confirmed_at NOT NULL -- style gate: set when client confirms photos current
   -- Phase 3: address_snapshot jsonb for premium at-home bookings
+  amount_cents, currency, paid_at,
+  stripe_checkout_session_id UNIQUE, stripe_payment_intent_id
+    -- full payment upfront (2026-07-14); stamped only by the Stripe webhook.
+    -- Checkout expires in 30 min → webhook cancels still-unpaid pending bookings
 ```
 
 ## B2B events
