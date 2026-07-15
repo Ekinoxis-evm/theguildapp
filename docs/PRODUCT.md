@@ -87,17 +87,31 @@ Collected step-by-step after signup:
 - Acceptance is mandatory at signup (all roles) and recorded (`legal_acceptances`).
 - Data protection posture documented in `SECURITY.md` (photos, addresses, phones).
 
+## Payments (live since 2026-07-14, test mode)
+
+- Bookings are paid **in full upfront** via Stripe-hosted Checkout (founder decision 2026-07-14). Unpaid checkouts expire in 30 min and the booking auto-cancels; "Pay now" retry on /bookings.
+- **Premium = $19.99/mo Stripe subscription** at `/premium` (Customer Portal for self-service), or manual admin grant at `/admin`. Premium unlocks at-home booking with barbers who offer it.
+
+## Barber-centric model (founder direction 2026-07-14)
+
+Barbers are the main asset. Every Guild barber owns a LinkedIn-style profile: headline, specialties, years, certifications (admin-verified badge; documents private), optional self-declared barbershop enrollment with history, and an at-home-service flag — independent at-home professionals need no shop. The barber directory and profiles are open to all signed-in users; premium gates only at-home booking. See ROADMAP Phase 6 for what remains (staff↔profile merge, pick-a-barber shop bookings).
+
 ## Later / explicitly deferred
 
 - **Privy** wallet integration (founder: "we could do it later").
-- **Stripe payments** (booking deposits/payments + premium subscription) — Phase 2 decision 2026-07-08; workspace is wired but no checkout in MVP.
+- **Stripe live keys** at launch (test mode now; recreate price + webhook in live mode).
 - **Figma branding** pass — founder will connect Figma MCP and provide brand package.
 - **Spanish (ES) localization** — English-only MVP, keep copy i18n-friendly.
 
+## Open questions — answered
+
+- ~~Premium: subscription or manual?~~ → Both: $19.99/mo Stripe subscription, plus manual admin grant (2026-07-14).
+- ~~Booking model: pick a specific staff barber?~~ → Yes, barber-centric direction confirmed 2026-07-14; shop+time remains until the staff↔barber-profile merge lands (roadmap 6.7).
+- ~~Staff logins?~~ → Staff link to accounts by signup email (2026-07-09); full barber profiles are self-owned (Phase 6).
+- ~~Private barber discovery: map or zip-match?~~ → Directory list of all approved barbers with coverage cities shown (2026-07-14); zip-matching may come later.
+
 ## Open questions (ask the founder before building the affected feature)
 
-- Premium: how does a client become premium — paid subscription (Stripe) or invite/manual? What's included besides at-home service?
-- Booking model: pick a specific staff barber, or just shop + time slot? Duration/slots per service?
-- Do barbershop staff members get their own logins, or are they managed records under the owner account?
-- Private barber discovery: on the same map as shops, or matched by client zip within coverage area?
-- B2B: does the event's brand get reporting (headcount, services delivered)?
+- B2B: does the event's brand get reporting (headcount, services delivered)? (roadmap 5.4)
+- Private barber payout/pricing model — revenue share vs. full pass-through (roadmap 3.5).
+- Shop-enrolled barbers offering private services: does the shop owner get approval rights or a cut? (roadmap 6.6)
