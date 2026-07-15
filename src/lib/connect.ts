@@ -24,25 +24,20 @@ export async function getOrCreateConnectAccount(
     .maybeSingle();
   if (existing) return existing.stripe_account_id;
 
+  // Controller-based classic API — Accounts v2 is not yet enabled on this
+  // Stripe account (verified 2026-07-15). Same marketplace semantics:
+  // Express dashboard, platform collects fees and owns losses. Migrate to
+  // stripe.v2.core.accounts once Stripe enables Accounts v2.
   const stripe = stripeClient();
-  const account = await stripe.v2.core.accounts.create({
-    contact_email: email,
-    dashboard: "express",
-    identity: { country: "US" },
-    defaults: {
-      responsibilities: {
-        fees_collector: "application",
-        losses_collector: "application",
-      },
+  const account = await stripe.accounts.create({
+    controller: {
+      fees: { payer: "application" },
+      losses: { payments: "application" },
+      stripe_dashboard: { type: "express" },
     },
-    configuration: {
-      recipient: {
-        capabilities: {
-          stripe_balance: { stripe_transfers: { requested: true } },
-        },
-      },
-    },
-    include: ["configuration.recipient"],
+    country: "US",
+    email,
+    capabilities: { transfers: { requested: true } },
     metadata: { supabase_user_id: profileId },
   });
 
@@ -88,14 +83,8 @@ export async function refreshPayoutReadiness(profileId: string): Promise<boolean
   if (row.payouts_ready_at) return true;
 
   try {
-    const account = await stripeClient().v2.core.accounts.retrieve(
-      row.stripe_account_id,
-      { include: ["configuration.recipient"] }
-    );
-    const status =
-      account.configuration?.recipient?.capabilities?.stripe_balance
-        ?.stripe_transfers?.status;
-    if (status === "active") {
+    const account = await stripeClient().accounts.retrieve(row.stripe_account_id);
+    if (account.capabilities?.transfers === "active") {
       await admin
         .from("connect_accounts")
         .update({ payouts_ready_at: new Date().toISOString() })
