@@ -17,7 +17,7 @@ export async function payBooking(
   const { data: booking } = await supabase
     .from("bookings")
     .select(
-      "id, status, paid_at, private_barber_id, services(name, price_cents, currency), barbershops(name)"
+      "id, status, paid_at, private_barber_id, services(name, price_cents, currency), barbershops(name, owner_id)"
     )
     .eq("id", bookingId)
     .eq("client_id", user.id)
@@ -40,5 +40,6 @@ export async function payBooking(
     label,
     priceCents: booking.services.price_cents,
     currency: booking.services.currency,
+    payeeProfileId: booking.private_barber_id ?? booking.barbershops?.owner_id ?? null,
   });
 }

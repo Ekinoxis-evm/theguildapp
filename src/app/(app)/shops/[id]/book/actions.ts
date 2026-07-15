@@ -28,7 +28,7 @@ export async function createBooking(input: {
   const { data: service } = await supabase
     .from("services")
     .select(
-      "id, name, price_cents, currency, duration_minutes, barbershop_id, active, barbershops(name)"
+      "id, name, price_cents, currency, duration_minutes, barbershop_id, active, barbershops(name, owner_id)"
     )
     .eq("id", input.serviceId)
     .eq("barbershop_id", input.shopId)
@@ -67,6 +67,7 @@ export async function createBooking(input: {
     label: `${service.name} — ${shopName}`,
     priceCents: service.price_cents,
     currency: service.currency,
+    payeeProfileId: service.barbershops?.owner_id ?? null,
   });
   if (!checkout.ok) return checkout;
   return { ok: true, checkoutUrl: checkout.checkoutUrl };

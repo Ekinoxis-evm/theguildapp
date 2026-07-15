@@ -83,6 +83,12 @@ barber_affiliations           -- optional, self-declared shop enrollment with hi
 
 coverage_areas
   private_barber_id, country, state, city, zip_codes text[]  -- regions they reach
+
+connect_accounts             -- Stripe Connect payouts (3.5): one per user,
+  profile_id → profiles (1:1)  -- covers their barber profile and/or owned shop
+  stripe_account_id UNIQUE, payouts_ready_at
+  -- service-role writes only; RLS select = owner + admin. Ready accounts get
+  -- destination charges minus the 15% platform fee at checkout
 ```
 
 ## Bookings

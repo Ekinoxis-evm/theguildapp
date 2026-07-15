@@ -9,10 +9,18 @@ import { BarberServicesManager } from "./barber-services";
 import { CertificationsManager } from "./certifications";
 import { AffiliationsManager } from "./affiliations";
 import { ShopBookings } from "../my-shop/shop-bookings";
+import { PayoutsSection } from "../payouts-section";
+import { startBarberPayoutOnboarding } from "../payout-actions";
+import { refreshPayoutReadiness } from "@/lib/connect";
 
 export const metadata = { title: "My barber profile — The Guild" };
 
-export default async function MyBarberPage() {
+export default async function MyBarberPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ payouts?: string }>;
+}) {
+  const { payouts } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -94,6 +102,18 @@ export default async function MyBarberPage() {
     signedUrl(barber.setup_photo_path),
   ]);
 
+  // Own row via RLS; readiness re-checked lazily until Stripe confirms.
+  const { data: connectRow } = await supabase
+    .from("connect_accounts")
+    .select("payouts_ready_at")
+    .eq("profile_id", user.id)
+    .maybeSingle();
+  const payoutsReady = connectRow?.payouts_ready_at
+    ? true
+    : connectRow
+      ? await refreshPayoutReadiness(user.id)
+      : false;
+
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <BackLink />
@@ -112,6 +132,12 @@ export default async function MyBarberPage() {
 
       <div className="mt-10 space-y-12">
         <ShopBookings bookings={bookings ?? []} />
+        <PayoutsSection
+          ready={payoutsReady}
+          hasAccount={Boolean(connectRow)}
+          action={startBarberPayoutOnboarding}
+          unavailable={payouts === "unavailable"}
+        />
         <BarberProfileEditor barber={barber} selfUrl={selfUrl} setupUrl={setupUrl} />
         <CertificationsManager barberId={user.id} initial={certifications ?? []} />
         <AffiliationsManager

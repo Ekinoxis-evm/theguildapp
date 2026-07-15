@@ -93,6 +93,7 @@ export async function createAtHomeBooking(input: {
     label: `${service.name} — The Guild at home`,
     priceCents: service.price_cents,
     currency: service.currency,
+    payeeProfileId: input.barberId,
   });
   if (!checkout.ok) return checkout;
   return { ok: true, checkoutUrl: checkout.checkoutUrl };

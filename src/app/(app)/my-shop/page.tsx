@@ -7,10 +7,18 @@ import { ServicesManager } from "./services";
 import { StaffManager } from "./staff";
 import { ShopBookings } from "./shop-bookings";
 import { EnrollmentsManager } from "./enrollments";
+import { PayoutsSection } from "../payouts-section";
+import { startShopPayoutOnboarding } from "../payout-actions";
+import { refreshPayoutReadiness } from "@/lib/connect";
 
 export const metadata = { title: "My shop — The Guild" };
 
-export default async function MyShopPage() {
+export default async function MyShopPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ payouts?: string }>;
+}) {
+  const { payouts } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -110,6 +118,17 @@ export default async function MyShopPage() {
       .order("started_on", { ascending: false }),
   ]);
 
+  const { data: connectRow } = await supabase
+    .from("connect_accounts")
+    .select("payouts_ready_at")
+    .eq("profile_id", user.id)
+    .maybeSingle();
+  const payoutsReady = connectRow?.payouts_ready_at
+    ? true
+    : connectRow
+      ? await refreshPayoutReadiness(user.id)
+      : false;
+
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <BackLink />
@@ -133,6 +152,12 @@ export default async function MyShopPage() {
 
       <div className="mt-10 space-y-12">
         <ShopBookings bookings={bookings ?? []} />
+        <PayoutsSection
+          ready={payoutsReady}
+          hasAccount={Boolean(connectRow)}
+          action={startShopPayoutOnboarding}
+          unavailable={payouts === "unavailable"}
+        />
         <LocationsManager shopId={shop.id} initial={locations ?? []} />
         <ServicesManager shopId={shop.id} initial={services ?? []} />
         <StaffManager shopId={shop.id} initial={staff ?? []} />

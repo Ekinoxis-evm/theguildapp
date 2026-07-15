@@ -50,7 +50,7 @@
 | 3.2 | Private barber onboarding (profile, self photo, setup photo, prices, coverage regions) | done — `/my-barber`, founder-approved at `/admin` |
 | 3.3 | Premium client tier: exact-address collection, at-home booking with private barbers | done — premium granted manually at `/admin` until Stripe (3.4) |
 | 3.4 | Stripe: checkout for bookings/deposits + premium subscription; webhooks | done (2026-07-14) — test mode; full payment upfront, premium $19.99/mo, webhook syncs paid_at/tier; **founder**: SUPABASE_SECRET_KEY env + live keys at launch |
-| 3.5 | Payout/pricing model decision for private barbers (founder input) | todo — **founder** |
+| 3.5 | Payouts: 15% platform fee, rest to barber/shop via Stripe Connect (Accounts v2 recipient, Express dashboard, destination charges) | done (2026-07-15) — code live; **founder**: enable Connect platform in Stripe dashboard (Settings → Connect → platform setup), until then bookings settle to the platform account |
 
 ## Phase 4 — B2B events
 

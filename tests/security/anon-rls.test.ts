@@ -42,6 +42,7 @@ const FULLY_PRIVATE_TABLES = [
   "b2b_leads",
   "event_registrations",
   "barbershop_staff",
+  "connect_accounts", // Stripe Connect account ids: owner + admin only
 ] as const;
 
 describe("anonymous reads", () => {

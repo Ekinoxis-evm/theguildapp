@@ -450,6 +450,35 @@ export type Database = {
           },
         ]
       }
+      connect_accounts: {
+        Row: {
+          created_at: string
+          payouts_ready_at: string | null
+          profile_id: string
+          stripe_account_id: string
+        }
+        Insert: {
+          created_at?: string
+          payouts_ready_at?: string | null
+          profile_id: string
+          stripe_account_id: string
+        }
+        Update: {
+          created_at?: string
+          payouts_ready_at?: string | null
+          profile_id?: string
+          stripe_account_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "connect_accounts_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       coverage_areas: {
         Row: {
           city: string
