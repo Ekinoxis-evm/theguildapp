@@ -20,17 +20,19 @@ export default async function BarberPage({
 
   // Profiles are public to every signed-in user (barber-centric, 2026-07-14);
   // only the at-home booking action itself is premium-gated.
-  const [{ data: profile }, { data: barber }] = await Promise.all([
-    supabase.from("profiles").select("tier").eq("id", user.id).single(),
-    supabase
-      .from("private_barbers")
-      .select(
-        "profile_id, bio, headline, years_experience, specialties, offers_home_service, self_photo_path, setup_photo_path, base_price_cents, services_fulfilled_count, coverage_areas(city, state, zip_codes), services(id, name, price_cents, currency, duration_minutes, active), profiles!private_barbers_profile_id_fkey(first_name, last_name), barber_certifications(id, title, issuer, issued_on, verified_at), barber_affiliations(id, role_title, started_on, ended_on, barbershops(id, name))"
-      )
-      .eq("profile_id", id)
-      .eq("status", "approved")
-      .maybeSingle(),
-  ]);
+  const [{ data: profile }, { data: barber }, { data: serviceHistory }] =
+    await Promise.all([
+      supabase.from("profiles").select("tier").eq("id", user.id).single(),
+      supabase
+        .from("private_barbers")
+        .select(
+          "profile_id, bio, headline, years_experience, specialties, offers_home_service, self_photo_path, setup_photo_path, base_price_cents, services_fulfilled_count, coverage_areas(city, state, zip_codes), services(id, name, price_cents, currency, duration_minutes, active), profiles!private_barbers_profile_id_fkey(first_name, last_name), barber_certifications(id, title, issuer, issued_on, verified_at), barber_affiliations(id, role_title, started_on, ended_on, confirmed_at, barbershops(id, name))"
+        )
+        .eq("profile_id", id)
+        .eq("status", "approved")
+        .maybeSingle(),
+      supabase.rpc("barber_service_history", { p_barber_id: id }),
+    ]);
   if (!barber) notFound();
 
   const isPremium = profile?.tier === "premium";
@@ -91,6 +93,11 @@ export default async function BarberPage({
                 "a Guild barbershop"
               )}
               {a.role_title ? ` (${a.role_title})` : ""}
+              {a.confirmed_at && (
+                <span className="ml-1 text-xs font-medium text-emerald-700">
+                  ✓ shop-confirmed
+                </span>
+              )}
             </span>
           ))}
         </p>
@@ -141,6 +148,22 @@ export default async function BarberPage({
                 <span className="block text-neutral-500">
                   {c.issuer}
                   {c.issued_on ? ` · ${formatDate(c.issued_on)}` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {(serviceHistory ?? []).length > 0 && (
+        <>
+          <h2 className="mt-8 text-lg font-medium">Track record</h2>
+          <ul className="mt-3 space-y-1 text-sm text-neutral-600">
+            {(serviceHistory ?? []).map((h) => (
+              <li key={h.service_name} className="flex justify-between gap-3">
+                <span>{h.service_name}</span>
+                <span className="text-neutral-500">
+                  {h.completed_count} completed
                 </span>
               </li>
             ))}

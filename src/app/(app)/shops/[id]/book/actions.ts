@@ -7,6 +7,7 @@ export async function createBooking(input: {
   shopId: string;
   serviceId: string;
   locationId: string | null;
+  staffId: string | null;
   scheduledAt: string;
 }): Promise<{ ok: true; checkoutUrl: string } | { ok: false; error: string }> {
   const supabase = await createClient();
@@ -48,6 +49,7 @@ export async function createBooking(input: {
       client_id: user.id,
       barbershop_id: input.shopId,
       location_id: input.locationId,
+      staff_id: input.staffId, // DB trigger verifies the barber works at this shop
       service_id: input.serviceId,
       scheduled_at: scheduledAt.toISOString(),
       duration_minutes: service.duration_minutes,

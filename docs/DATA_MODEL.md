@@ -78,6 +78,8 @@ barber_certifications         -- LinkedIn-style credentials
 barber_affiliations           -- optional, self-declared shop enrollment with history
   barber_id → private_barbers, barbershop_id → barbershops (approved shops only)
   role_title, started_on, ended_on   -- one open enrollment per barber+shop
+  confirmed_at, confirmed_by   -- shop-owner trust badge (trigger: owners touch only
+                               -- these fields; barber substance edits clear it)
 
 coverage_areas
   private_barber_id, country, state, city, zip_codes text[]  -- regions they reach
@@ -95,6 +97,8 @@ bookings                     -- shop+service+time model (2026-07-09); staff pick
   status      pending | confirmed | completed | cancelled | no_show
               -- transitions guarded: client cancels; shop confirms/completes/no-shows
   style_confirmed_at NOT NULL -- style gate: set when client confirms photos current
+  staff_id NULLABLE → barbershop_staff  -- pick-a-barber (6.7); trigger-validated to
+                               -- the booked shop, immutable after creation
   -- Phase 3: address_snapshot jsonb for premium at-home bookings
   amount_cents, currency, paid_at,
   stripe_checkout_session_id UNIQUE, stripe_payment_intent_id

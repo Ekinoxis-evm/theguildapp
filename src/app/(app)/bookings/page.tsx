@@ -16,7 +16,7 @@ export default async function BookingsPage() {
   const { data: bookings } = await supabase
     .from("bookings")
     .select(
-      "*, services(name), barbershops(name), barbershop_locations(formatted_address, city, state)"
+      "*, services(name), barbershops(name), barbershop_locations(formatted_address, city, state), barbershop_staff(full_name)"
     )
     .eq("client_id", user.id)
     .order("scheduled_at", { ascending: false });

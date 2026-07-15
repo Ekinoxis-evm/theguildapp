@@ -6,6 +6,7 @@ import { LocationsManager } from "./locations";
 import { ServicesManager } from "./services";
 import { StaffManager } from "./staff";
 import { ShopBookings } from "./shop-bookings";
+import { EnrollmentsManager } from "./enrollments";
 
 export const metadata = { title: "My shop — The Guild" };
 
@@ -39,7 +40,9 @@ export default async function MyShopPage() {
         .single();
       const { data: bookings } = await supabase
         .from("bookings")
-        .select("*, services(name, duration_minutes), profiles!bookings_client_id_fkey(first_name, last_name)")
+        .select(
+          "*, services(name, duration_minutes), profiles!bookings_client_id_fkey(first_name, last_name), barbershop_staff(full_name)"
+        )
         .eq("barbershop_id", staffRow.barbershop_id)
         .order("scheduled_at", { ascending: true });
 
@@ -68,29 +71,44 @@ export default async function MyShopPage() {
     );
   }
 
-  const [{ data: locations }, { data: services }, { data: staff }, { data: bookings }] =
-    await Promise.all([
-      supabase
-        .from("barbershop_locations")
-        .select("*")
-        .eq("barbershop_id", shop.id)
-        .order("created_at"),
-      supabase
-        .from("services")
-        .select("*")
-        .eq("barbershop_id", shop.id)
-        .order("created_at"),
-      supabase
-        .from("barbershop_staff")
-        .select("*")
-        .eq("barbershop_id", shop.id)
-        .order("created_at"),
-      supabase
-        .from("bookings")
-        .select("*, services(name, duration_minutes), profiles!bookings_client_id_fkey(first_name, last_name)")
-        .eq("barbershop_id", shop.id)
-        .order("scheduled_at", { ascending: true }),
-    ]);
+  const [
+    { data: locations },
+    { data: services },
+    { data: staff },
+    { data: bookings },
+    { data: enrollments },
+  ] = await Promise.all([
+    supabase
+      .from("barbershop_locations")
+      .select("*")
+      .eq("barbershop_id", shop.id)
+      .order("created_at"),
+    supabase
+      .from("services")
+      .select("*")
+      .eq("barbershop_id", shop.id)
+      .order("created_at"),
+    supabase
+      .from("barbershop_staff")
+      .select("*")
+      .eq("barbershop_id", shop.id)
+      .order("created_at"),
+    supabase
+      .from("bookings")
+      .select(
+        "*, services(name, duration_minutes), profiles!bookings_client_id_fkey(first_name, last_name), barbershop_staff(full_name)"
+      )
+      .eq("barbershop_id", shop.id)
+      .order("scheduled_at", { ascending: true }),
+    supabase
+      .from("barber_affiliations")
+      .select(
+        "id, role_title, started_on, ended_on, confirmed_at, private_barbers!barber_affiliations_barber_id_fkey(profiles!private_barbers_profile_id_fkey(first_name, last_name))"
+      )
+      .eq("barbershop_id", shop.id)
+      .is("ended_on", null)
+      .order("started_on", { ascending: false }),
+  ]);
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
@@ -118,6 +136,7 @@ export default async function MyShopPage() {
         <LocationsManager shopId={shop.id} initial={locations ?? []} />
         <ServicesManager shopId={shop.id} initial={services ?? []} />
         <StaffManager shopId={shop.id} initial={staff ?? []} />
+        <EnrollmentsManager initial={enrollments ?? []} />
       </div>
     </main>
   );

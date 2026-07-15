@@ -111,6 +111,22 @@ describe("anonymous writes are rejected", () => {
     });
     expect(error).not.toBeNull();
   });
+
+  it("cannot read the staff directory (signed-in only)", async () => {
+    const { data, error } = await anon.rpc("shop_staff_directory", {
+      p_shop_id: "00000000-0000-0000-0000-000000000000",
+    });
+    expect(error).not.toBeNull();
+    expect(data ?? []).toHaveLength(0);
+  });
+
+  it("cannot read barber service history (signed-in only)", async () => {
+    const { data, error } = await anon.rpc("barber_service_history", {
+      p_barber_id: "00000000-0000-0000-0000-000000000000",
+    });
+    expect(error).not.toBeNull();
+    expect(data ?? []).toHaveLength(0);
+  });
 });
 
 describe("storage buckets stay private", () => {

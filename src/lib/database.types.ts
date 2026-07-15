@@ -51,6 +51,8 @@ export type Database = {
         Row: {
           barber_id: string
           barbershop_id: string
+          confirmed_at: string | null
+          confirmed_by: string | null
           created_at: string
           ended_on: string | null
           id: string
@@ -60,6 +62,8 @@ export type Database = {
         Insert: {
           barber_id: string
           barbershop_id: string
+          confirmed_at?: string | null
+          confirmed_by?: string | null
           created_at?: string
           ended_on?: string | null
           id?: string
@@ -69,6 +73,8 @@ export type Database = {
         Update: {
           barber_id?: string
           barbershop_id?: string
+          confirmed_at?: string | null
+          confirmed_by?: string | null
           created_at?: string
           ended_on?: string | null
           id?: string
@@ -300,6 +306,7 @@ export type Database = {
           private_barber_id: string | null
           scheduled_at: string
           service_id: string
+          staff_id: string | null
           status: Database["public"]["Enums"]["booking_status"]
           stripe_checkout_session_id: string | null
           stripe_payment_intent_id: string | null
@@ -320,6 +327,7 @@ export type Database = {
           private_barber_id?: string | null
           scheduled_at: string
           service_id: string
+          staff_id?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
           stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
@@ -340,6 +348,7 @@ export type Database = {
           private_barber_id?: string | null
           scheduled_at?: string
           service_id?: string
+          staff_id?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
           stripe_checkout_session_id?: string | null
           stripe_payment_intent_id?: string | null
@@ -380,6 +389,13 @@ export type Database = {
             columns: ["service_id"]
             isOneToOne: false
             referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "barbershop_staff"
             referencedColumns: ["id"]
           },
         ]
@@ -796,6 +812,13 @@ export type Database = {
         Args: { barber_id: string }
         Returns: undefined
       }
+      barber_service_history: {
+        Args: { p_barber_id: string }
+        Returns: {
+          completed_count: number
+          service_name: string
+        }[]
+      }
       event_attendees: {
         Args: { p_event_id: string }
         Returns: {
@@ -818,6 +841,16 @@ export type Database = {
         Returns: undefined
       }
       set_event_manager: { Args: { user_email: string }; Returns: undefined }
+      shop_staff_directory: {
+        Args: { p_shop_id: string }
+        Returns: {
+          full_name: string
+          guild_headline: string | null
+          guild_profile_id: string | null
+          id: string
+          skills: string[]
+        }[]
+      }
       verify_certification: { Args: { cert_id: string }; Returns: undefined }
     }
     Enums: {

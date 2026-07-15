@@ -12,6 +12,14 @@ type LocationOption = {
   state: string;
 };
 
+type StaffOption = {
+  id: string;
+  full_name: string;
+  skills: string[];
+  guild_profile_id: string | null;
+  guild_headline: string | null;
+};
+
 const inputClass =
   "mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900";
 
@@ -23,6 +31,7 @@ export function BookingForm({
   currency,
   durationMinutes,
   locations,
+  staff,
   photosComplete,
   oldestPhotoUpdate,
   photoUrls,
@@ -34,6 +43,7 @@ export function BookingForm({
   currency: string;
   durationMinutes: number;
   locations: LocationOption[];
+  staff: StaffOption[];
   photosComplete: boolean;
   oldestPhotoUpdate: string | null;
   photoUrls: { position: string; url: string }[];
@@ -42,6 +52,7 @@ export function BookingForm({
   // before picking a slot (PRODUCT.md "style check on every booking").
   const [styleConfirmed, setStyleConfirmed] = useState(false);
   const [locationId, setLocationId] = useState(locations[0]?.id ?? null);
+  const [staffId, setStaffId] = useState<string | null>(null);
   const [when, setWhen] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -110,6 +121,7 @@ export function BookingForm({
       shopId,
       serviceId,
       locationId,
+      staffId,
       scheduledAt: new Date(when).toISOString(),
     });
     if (!result.ok) {
@@ -142,6 +154,25 @@ export function BookingForm({
             {locations.map((l) => (
               <option key={l.id} value={l.id}>
                 {l.formatted_address} — {l.city}, {l.state}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+
+      {staff.length > 0 && (
+        <label className="block text-sm">
+          Barber
+          <select
+            value={staffId ?? ""}
+            onChange={(e) => setStaffId(e.target.value || null)}
+            className={inputClass}
+          >
+            <option value="">Any available barber</option>
+            {staff.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.full_name}
+                {s.skills.length > 0 ? ` — ${s.skills.join(", ")}` : ""}
               </option>
             ))}
           </select>

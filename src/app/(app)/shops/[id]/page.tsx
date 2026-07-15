@@ -18,18 +18,22 @@ export default async function ShopPage({
   } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/shops/${id}`);
 
-  const { data: shop } = await supabase
-    .from("barbershops")
-    .select(
-      "id, name, phone, description, status, services_fulfilled_count, barbershop_locations(id, formatted_address, city, state, zip_code, google_place_id), services(id, name, price_cents, currency, duration_minutes, active)"
-    )
-    .eq("id", id)
-    .eq("status", "approved")
-    .maybeSingle();
+  const [{ data: shop }, { data: staff }] = await Promise.all([
+    supabase
+      .from("barbershops")
+      .select(
+        "id, name, phone, description, status, services_fulfilled_count, barbershop_locations(id, formatted_address, city, state, zip_code, google_place_id), services(id, name, price_cents, currency, duration_minutes, active)"
+      )
+      .eq("id", id)
+      .eq("status", "approved")
+      .maybeSingle(),
+    supabase.rpc("shop_staff_directory", { p_shop_id: id }),
+  ]);
 
   if (!shop) notFound();
 
   const services = shop.services.filter((s) => s.active);
+  const barbers = staff ?? [];
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
@@ -76,6 +80,39 @@ export default async function ShopPage({
           <li className="text-neutral-500">No locations listed.</li>
         )}
       </ul>
+
+      {barbers.length > 0 && (
+        <>
+          <h2 className="mt-8 text-lg font-medium">Barbers</h2>
+          <ul className="mt-3 space-y-2 text-sm">
+            {barbers.map((b) => (
+              <li
+                key={b.id}
+                className="flex items-center justify-between gap-3 rounded border border-neutral-300 p-3"
+              >
+                <span>
+                  {b.full_name}
+                  <span className="block text-neutral-500">
+                    {b.guild_headline ??
+                      (b.skills.length > 0 ? b.skills.join(", ") : "Barber")}
+                  </span>
+                </span>
+                {b.guild_profile_id && (
+                  <Link
+                    href={`/barbers/${b.guild_profile_id}`}
+                    className="shrink-0 text-xs underline"
+                  >
+                    Guild profile
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-neutral-500">
+            Pick your barber when booking any service below.
+          </p>
+        </>
+      )}
 
       <h2 className="mt-8 text-lg font-medium">Services</h2>
       <ul className="mt-3 space-y-2">

@@ -14,6 +14,7 @@ type Booking = Database["public"]["Tables"]["bookings"]["Row"] & {
     city: string;
     state: string;
   } | null;
+  barbershop_staff: { full_name: string } | null;
   googleCalendarUrl: string;
 };
 
@@ -132,7 +133,11 @@ function Section({
                   </span>
                 </div>
                 <p className="mt-1 text-neutral-600">
-                  {b.barbershops?.name} · {formatDateTime(b.scheduled_at)}
+                  {b.barbershops?.name}
+                  {b.barbershop_staff?.full_name
+                    ? ` · with ${b.barbershop_staff.full_name}`
+                    : ""}{" "}
+                  · {formatDateTime(b.scheduled_at)}
                 </p>
                 {b.barbershop_locations && (
                   <p className="text-neutral-500">

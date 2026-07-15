@@ -8,6 +8,7 @@ import { formatDateTime } from "@/lib/format";
 type Booking = Database["public"]["Tables"]["bookings"]["Row"] & {
   services: { name: string; duration_minutes: number } | null;
   profiles: { first_name: string | null; last_name: string | null } | null;
+  barbershop_staff?: { full_name: string } | null;
 };
 type Status = Database["public"]["Enums"]["booking_status"];
 
@@ -97,8 +98,12 @@ function BookingList({
               <span>
                 <strong>{formatDateTime(b.scheduled_at)}</strong> — {client}
                 <span className="block text-neutral-500">
-                  {b.services?.name ?? "Service"} · {b.duration_minutes} min ·{" "}
-                  <span className="uppercase">{b.status.replace("_", " ")}</span>
+                  {b.services?.name ?? "Service"} · {b.duration_minutes} min
+                  {b.barbershop_staff?.full_name
+                    ? ` · with ${b.barbershop_staff.full_name}`
+                    : ""}{" "}
+                  · <span className="uppercase">{b.status.replace("_", " ")}</span>
+                  {b.paid_at && <span className="text-emerald-700"> · PAID</span>}
                 </span>
               </span>
               <span className="flex shrink-0 gap-2">

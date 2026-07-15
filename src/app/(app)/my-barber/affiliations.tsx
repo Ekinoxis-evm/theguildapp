@@ -95,6 +95,15 @@ export function AffiliationsManager({
             >
               <div>
                 <strong>{a.barbershops?.name ?? "Barbershop"}</strong>
+                {a.confirmed_at ? (
+                  <span className="ml-2 text-xs font-medium text-emerald-700">
+                    ✓ Confirmed by shop
+                  </span>
+                ) : (
+                  <span className="ml-2 text-xs text-neutral-500">
+                    Awaiting shop confirmation
+                  </span>
+                )}
                 <p className="text-neutral-600">
                   {a.role_title ? `${a.role_title} · ` : ""}since{" "}
                   {formatDate(a.started_on)}

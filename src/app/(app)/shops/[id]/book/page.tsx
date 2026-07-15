@@ -23,7 +23,7 @@ export default async function BookPage({
   } = await supabase.auth.getUser();
   if (!user) redirect(`/login?next=/shops/${id}/book?service=${serviceId}`);
 
-  const [{ data: shop }, { data: stylePhotos }, { data: profile }] =
+  const [{ data: shop }, { data: stylePhotos }, { data: profile }, { data: staff }] =
     await Promise.all([
       supabase
         .from("barbershops")
@@ -42,6 +42,7 @@ export default async function BookPage({
         .select("onboarding_completed_at")
         .eq("id", user.id)
         .single(),
+      supabase.rpc("shop_staff_directory", { p_shop_id: id }),
     ]);
 
   if (!shop) notFound();
@@ -82,6 +83,7 @@ export default async function BookPage({
         currency={service.currency}
         durationMinutes={service.duration_minutes}
         locations={shop.barbershop_locations}
+        staff={staff ?? []}
         photosComplete={photosComplete}
         oldestPhotoUpdate={oldestUpdate}
         photoUrls={photoUrls}
