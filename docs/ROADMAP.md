@@ -81,6 +81,6 @@
 | # | Item | Status |
 |---|---|---|
 | 5.1 | Figma MCP branding pass (founder provides brand package) | todo |
-| 5.2 | Spanish (ES) localization | todo |
+| 5.2 | Spanish (ES) localization | in-progress (2026-07-15) — cookie locale + typed dictionaries (`src/lib/dictionaries.ts`) + EN/ES switcher; landing, dashboard, premium translated; remaining surfaces pending (extend the dict per page) |
 | 5.3 | Privy integration (wallets) — scope TBD | todo |
 | 5.4 | B2B reporting for partner brands | todo |

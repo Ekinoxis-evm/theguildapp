@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getLang } from "@/lib/i18n";
+import { dict } from "@/lib/dictionaries";
+import { LangSwitcher } from "../../lang-switcher";
 
 export const metadata = { title: "Dashboard — The Guild" };
 
@@ -11,6 +14,9 @@ export default async function DashboardPage() {
   } = await supabase.auth.getUser();
 
   if (!user) redirect("/login");
+
+  const lang = await getLang();
+  const t = dict(lang).dashboard;
 
   // Idempotent: links any staff roster rows matching this email to the account.
   await supabase.rpc("link_staff_by_email");
@@ -31,68 +37,59 @@ export default async function DashboardPage() {
   const isAdmin = profile?.role === "admin";
 
   const sections = [
-    { href: "/shops", title: "Barbershops", blurb: "Find a shop and book your next cut." },
-    { href: "/barbers", title: "Private barbers", blurb: "At-home grooming (premium)." },
-    { href: "/bookings", title: "Bookings", blurb: "Upcoming and past appointments." },
-    { href: "/events", title: "Events", blurb: "Guild activations you've joined." },
-    { href: "/profile", title: "Profile", blurb: "Personal info and My Style photos." },
+    { href: "/shops", ...t.sections.shops },
+    { href: "/barbers", ...t.sections.barbers },
+    { href: "/bookings", ...t.sections.bookings },
+    { href: "/events", ...t.sections.events },
+    { href: "/profile", ...t.sections.profile },
   ];
+  if (profile?.role === "client" && profile.tier !== "premium") {
+    sections.push({ href: "/premium", ...t.sections.premium });
+  }
   if (ownBarber) {
-    sections.push({
-      href: "/my-barber",
-      title: "My barber profile",
-      blurb: "Your at-home services, coverage, and bookings.",
-    });
+    sections.push({ href: "/my-barber", ...t.sections.myBarber });
   }
   if (profile?.role === "event_manager" || isAdmin) {
-    sections.push({
-      href: "/my-events",
-      title: "My events",
-      blurb: "Create activations and track registrations.",
-    });
+    sections.push({ href: "/my-events", ...t.sections.myEvents });
   }
   if (ownShop || isStaff) {
     sections.push({
       href: "/my-shop",
-      title: "My shop",
-      blurb: ownShop ? "Manage your barbershop." : "Your shop's bookings.",
+      ...(ownShop ? t.sections.myShop : t.sections.myShopStaff),
     });
   } else {
-    sections.push({
-      href: "/my-shop",
-      title: "List your barbershop",
-      blurb: "Own a shop? Apply to join The Guild.",
-    });
+    sections.push({ href: "/my-shop", ...t.sections.listShop });
   }
   if (isAdmin) {
-    sections.push({ href: "/admin", title: "Admin", blurb: "Approve barbershop applications." });
+    sections.push({ href: "/admin", ...t.sections.admin });
   }
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-xs uppercase tracking-widest text-yellow-600">
-        The Guild — Grooming Standard
-      </p>
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="text-xs uppercase tracking-widest text-yellow-600">
+          The Guild — Grooming Standard
+        </p>
+        <LangSwitcher current={lang} />
+      </div>
       <h1 className="mt-2 text-2xl font-semibold">
-        Welcome{profile?.first_name ? `, ${profile.first_name}` : ""}
+        {t.welcome}
+        {profile?.first_name ? `, ${profile.first_name}` : ""}
       </h1>
       <p className="mt-2 text-sm text-neutral-600">
-        Signed in as {user.email} · {profile?.role ?? "client"}
+        {t.signedInAs} {user.email} · {profile?.role ?? "client"}
         {profile?.role === "client" ? ` (${profile?.tier})` : ""}
       </p>
 
       {!profile?.onboarding_completed_at ? (
         <div className="mt-8 rounded border border-yellow-600/40 bg-yellow-50 p-4 text-sm">
-          <p className="font-medium">Finish setting up your profile</p>
-          <p className="mt-1 text-neutral-600">
-            Add your contact info, profile photo, and four photos of your
-            current style so barbers know exactly what you want.
-          </p>
+          <p className="font-medium">{t.finishProfileTitle}</p>
+          <p className="mt-1 text-neutral-600">{t.finishProfileBlurb}</p>
           <Link
             href="/onboarding"
             className="mt-3 inline-block rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
           >
-            Set up my profile
+            {t.finishProfileCta}
           </Link>
         </div>
       ) : (
@@ -115,7 +112,7 @@ export default async function DashboardPage() {
           type="submit"
           className="rounded border border-neutral-300 px-4 py-2 text-sm"
         >
-          Sign out
+          {t.signOut}
         </button>
       </form>
     </main>
