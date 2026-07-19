@@ -81,6 +81,8 @@
 | # | Item | Status |
 |---|---|---|
 | 5.1 | Figma MCP branding pass (founder provides brand package) | todo |
+| 5.5 | Per-role dashboard consoles: role-specific stats + role-ordered sections on `/dashboard` for client / shop owner / private barber / event manager / admin (EN + ES) | done (2026-07-19) |
+| 5.6 | Role test accounts: `pnpm seed:test-users` seeds one account per role (founder-inbox plus-aliases) + sample approved shop, at-home barber, live event | done (2026-07-19) |
 | 5.2 | Spanish (ES) localization | in-progress (2026-07-15) — cookie locale + typed dictionaries (`src/lib/dictionaries.ts`) + EN/ES switcher; landing, dashboard, premium translated; remaining surfaces pending (extend the dict per page) |
 | 5.3 | Privy integration (wallets) — scope TBD | todo |
 | 5.4 | B2B reporting for partner brands | todo |
