@@ -32,6 +32,16 @@ const admin = createClient(url, secret, {
   auth: { autoRefreshToken: false, persistSession: false },
 });
 
+// Passwords let testers without access to the founder inbox sign in
+// ("Sign in with password" on /login). Admin gets its own, never shared.
+function requireEnv(name: string): string {
+  const v = process.env[name];
+  if (!v) throw new Error(`Missing ${name} in .env.local`);
+  return v;
+}
+const testerPassword = requireEnv("TEST_USER_PASSWORD");
+const adminPassword = requireEnv("TEST_ADMIN_PASSWORD");
+
 const LEGAL_VERSIONS = { terms: "2026-07-08.v1", privacy: "2026-07-08.v1" };
 
 type Role = "client" | "barbershop_owner" | "private_barber" | "event_manager" | "admin";
@@ -62,13 +72,19 @@ async function findUserByEmail(email: string): Promise<string | null> {
   return null;
 }
 
-async function ensureUser(email: string): Promise<string> {
+async function ensureUser(email: string, password: string): Promise<string> {
   const existing = await findUserByEmail(email);
   if (existing) {
-    console.log(`  auth user exists: ${email}`);
+    const { error } = await admin.auth.admin.updateUserById(existing, { password });
+    if (error) throw error;
+    console.log(`  auth user exists (password refreshed): ${email}`);
     return existing;
   }
-  const { data, error } = await admin.auth.admin.createUser({ email, email_confirm: true });
+  const { data, error } = await admin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+  });
   if (error) throw error;
   console.log(`  auth user created: ${email}`);
   return data.user.id;
@@ -97,7 +113,7 @@ async function main() {
 
   for (const u of TEST_USERS) {
     console.log(`\n${u.role}${u.tier ? ` (${u.tier})` : ""} — ${u.email}`);
-    const id = await ensureUser(u.email);
+    const id = await ensureUser(u.email, u.role === "admin" ? adminPassword : testerPassword);
     ids[u.email] = id;
 
     const { error } = await admin

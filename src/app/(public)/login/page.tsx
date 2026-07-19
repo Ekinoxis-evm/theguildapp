@@ -14,12 +14,39 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const next = searchParams.get("next") ?? "/dashboard";
 
-  const [step, setStep] = useState<"email" | "code">("email");
+  const [step, setStep] = useState<"email" | "code" | "password">("email");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
+  const [password, setPassword] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Record acceptance of the current legal versions, then continue.
+  // Unique constraint makes the upsert idempotent across sign-ins.
+  async function recordLegalAndGo(supabase: ReturnType<typeof createClient>) {
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData.user?.id;
+    if (userId) {
+      await supabase.from("legal_acceptances").upsert(
+        [
+          {
+            profile_id: userId,
+            document: "terms" as const,
+            version: LEGAL_VERSIONS.terms,
+          },
+          {
+            profile_id: userId,
+            document: "privacy" as const,
+            version: LEGAL_VERSIONS.privacy,
+          },
+        ],
+        { onConflict: "profile_id,document,version", ignoreDuplicates: true }
+      );
+    }
+    router.push(next);
+    router.refresh();
+  }
 
   async function sendCode(e: FormEvent) {
     e.preventDefault();
@@ -57,29 +84,25 @@ function LoginForm() {
       setError(error.message);
       return;
     }
-    // Record legal acceptance for the current document versions.
-    // Unique constraint makes this idempotent across sign-ins.
-    const { data: userData } = await supabase.auth.getUser();
-    const userId = userData.user?.id;
-    if (userId) {
-      await supabase.from("legal_acceptances").upsert(
-        [
-          {
-            profile_id: userId,
-            document: "terms" as const,
-            version: LEGAL_VERSIONS.terms,
-          },
-          {
-            profile_id: userId,
-            document: "privacy" as const,
-            version: LEGAL_VERSIONS.privacy,
-          },
-        ],
-        { onConflict: "profile_id,document,version", ignoreDuplicates: true }
-      );
+    await recordLegalAndGo(supabase);
+  }
+
+  async function signInWithPassword(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+    if (!accepted) {
+      setError("Please accept the Terms & Conditions and Privacy Policy.");
+      return;
     }
-    router.push(next);
-    router.refresh();
+    setLoading(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setLoading(false);
+      setError(error.message);
+      return;
+    }
+    await recordLegalAndGo(supabase);
   }
 
   async function signInWithGoogle() {
@@ -151,6 +174,79 @@ function LoginForm() {
               Continue with Google
             </button>
           )}
+
+          <button
+            type="button"
+            onClick={() => setStep("password")}
+            className="w-full text-xs text-neutral-500 underline"
+          >
+            Have a password? Sign in with password
+          </button>
+        </form>
+      ) : step === "password" ? (
+        <form onSubmit={signInWithPassword} className="mt-8 space-y-4">
+          <label className="block text-sm">
+            Email
+            <input
+              type="email"
+              required
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900"
+              placeholder="you@example.com"
+            />
+          </label>
+          <label className="block text-sm">
+            Password
+            <input
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900"
+              placeholder="••••••••"
+            />
+          </label>
+
+          <label className="flex items-start gap-2 text-xs text-neutral-600">
+            <input
+              type="checkbox"
+              checked={accepted}
+              onChange={(e) => setAccepted(e.target.checked)}
+              className="mt-0.5"
+            />
+            <span>
+              I accept the{" "}
+              <Link href="/terms" className="underline" target="_blank">
+                Terms &amp; Conditions
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="underline" target="_blank">
+                Privacy Policy
+              </Link>
+              .
+            </span>
+          </label>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          >
+            {loading ? "Signing in…" : "Sign in"}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setStep("email");
+              setPassword("");
+            }}
+            className="w-full text-xs text-neutral-500 underline"
+          >
+            Use a one-time code instead
+          </button>
         </form>
       ) : (
         <form onSubmit={verifyCode} className="mt-8 space-y-4">
