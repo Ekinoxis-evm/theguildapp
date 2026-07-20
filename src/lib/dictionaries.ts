@@ -5,12 +5,58 @@ import type { Lang } from "@/lib/i18n";
 
 const en = {
   home: {
-    tagline: "Grooming Standard",
+    tagline: "Miami — Grooming Standard",
+    heroA: "The standard isn't communicated.",
+    heroB: "It's executed.",
     blurb:
-      "Premium barbershops and private barbers. Book your next cut, keep your style on file, arrive game-ready.",
-    cta: "Sign in / Join",
+      "Curated barbershops and verified at-home barbers. Your style on file, booked and paid in minutes.",
+    ctaBook: "Book your cut",
+    ctaBarber: "I'm a barber",
+    doors: {
+      clients: {
+        label: "For clients",
+        title: "Sit down already understood",
+        blurb:
+          "Every shop is approved before it appears. Four photos of your style travel with every booking — the barber knows the work before you're in the chair.",
+        cta: "Find your shop",
+      },
+      barbers: {
+        label: "For barbers",
+        title: "A profile that works for you",
+        blurb:
+          "Certifications verified by The Guild. A track record counted from completed bookings. Clients book you — at the shop or at their home.",
+        cta: "Join The Guild",
+      },
+      brands: {
+        label: "For brands",
+        title: "Grooming at your event",
+        blurb:
+          "The Guild runs the chairs at your activation — QR registration, real headcounts, professional barbers.",
+        cta: "Talk to us",
+      },
+    },
+    how: {
+      title: "How it works",
+      s1: {
+        title: "Your style on file",
+        blurb: "Four photos — front, sides, back. Updated when your style changes.",
+      },
+      s2: {
+        title: "Book and pay upfront",
+        blurb: "Pick the shop, the service, the time. One secure payment. Done.",
+      },
+      s3: {
+        title: "Arrive expected",
+        blurb: "The barber already knows your cut. Nothing to explain from the chair.",
+      },
+    },
+    filter: {
+      line: "The Guild is not for everyone.",
+      sub: "It's for those who are at the level.",
+    },
     terms: "Terms & Conditions",
     privacy: "Privacy Policy",
+    partners: "Events for brands",
   },
   dashboard: {
     welcome: "Welcome",
@@ -108,12 +154,58 @@ export type Dict = DeepStringShape<typeof en>;
 
 const es: Dict = {
   home: {
-    tagline: "Grooming Standard",
+    tagline: "Miami — Grooming Standard",
+    heroA: "El estándar no se comunica.",
+    heroB: "Se ejecuta.",
     blurb:
-      "Barberías premium y barberos privados. Reserva tu próximo corte, guarda tu estilo y llega listo para el juego.",
-    cta: "Inicia sesión / Únete",
+      "Barberías curadas y barberos a domicilio verificados. Tu estilo en archivo, reservado y pagado en minutos.",
+    ctaBook: "Reserva tu corte",
+    ctaBarber: "Soy barbero",
+    doors: {
+      clients: {
+        label: "Para clientes",
+        title: "Siéntate ya entendido",
+        blurb:
+          "Cada barbería se aprueba antes de aparecer. Cuatro fotos de tu estilo viajan con cada reserva — el barbero conoce el trabajo antes de que llegues a la silla.",
+        cta: "Encuentra tu barbería",
+      },
+      barbers: {
+        label: "Para barberos",
+        title: "Un perfil que trabaja para ti",
+        blurb:
+          "Certificaciones verificadas por The Guild. Historial contado desde reservas completadas. Los clientes te reservan — en la barbería o en su casa.",
+        cta: "Únete a The Guild",
+      },
+      brands: {
+        label: "Para marcas",
+        title: "Grooming en tu evento",
+        blurb:
+          "The Guild opera las sillas de tu activación — registro por QR, asistencia real, barberos profesionales.",
+        cta: "Hablemos",
+      },
+    },
+    how: {
+      title: "Cómo funciona",
+      s1: {
+        title: "Tu estilo en archivo",
+        blurb: "Cuatro fotos — frente, lados, atrás. Se actualizan cuando cambias de estilo.",
+      },
+      s2: {
+        title: "Reserva y paga por adelantado",
+        blurb: "Elige la barbería, el servicio, la hora. Un pago seguro. Listo.",
+      },
+      s3: {
+        title: "Llega esperado",
+        blurb: "El barbero ya conoce tu corte. Nada que explicar desde la silla.",
+      },
+    },
+    filter: {
+      line: "The Guild no es para todos.",
+      sub: "Es para quienes están a la altura.",
+    },
     terms: "Términos y Condiciones",
     privacy: "Política de Privacidad",
+    partners: "Eventos para marcas",
   },
   dashboard: {
     welcome: "Bienvenido",

@@ -40,3 +40,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 TheGuild_InterMiami_*.pdf
+
+# Brand source files never enter the repo (decision 2026-07-08)
+BRANDING*/
+*.psd
+*.ai
+*.zip

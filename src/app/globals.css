@@ -8,8 +8,15 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  /* Brand doctrine 2026 — negro domina, blanco estructura, amarillo aparece */
+  --color-guild-black: #0b0b0c;
+  --color-guild-yellow: #ffc300;
+  --color-guild-bone: #e6e1d8;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  /* Display = KUMO once Diana sends the licensed files; until then a neutral
+     heavy grotesk stack. Swap by defining --font-kumo in an @font-face block. */
+  --font-display: var(--font-kumo, "Helvetica Neue", Helvetica, Arial, sans-serif);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +30,12 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* The brand's corte diagonal: section top edge rising to the right,
+   echoing the slash in the wordmark. Overlap the section above by the
+   same height so the cut reveals it. */
+.guild-cut {
+  clip-path: polygon(0 3.5rem, 100% 0, 100% 100%, 0 100%);
+  margin-top: -3.5rem;
 }
