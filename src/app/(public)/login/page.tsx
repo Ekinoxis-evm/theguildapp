@@ -116,11 +116,11 @@ function LoginForm() {
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-6 py-16">
-      <p className="text-xs uppercase tracking-widest text-yellow-600">
+    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center bg-guild-black px-6 py-16 text-white">
+      <p className="text-xs uppercase tracking-[0.3em] text-guild-yellow">
         The Guild — Grooming Standard
       </p>
-      <h1 className="mt-2 text-2xl font-semibold">Sign in or create account</h1>
+      <h1 className="mt-2 font-display text-2xl font-extrabold uppercase tracking-wide">Sign in or create account</h1>
 
       {step === "email" ? (
         <form onSubmit={sendCode} className="mt-8 space-y-4">
@@ -132,12 +132,12 @@ function LoginForm() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900"
+              className="mt-1 w-full border border-neutral-700 bg-transparent px-3 py-2 text-base outline-none focus:border-guild-yellow"
               placeholder="you@example.com"
             />
           </label>
 
-          <label className="flex items-start gap-2 text-xs text-neutral-600">
+          <label className="flex items-start gap-2 text-xs text-neutral-400">
             <input
               type="checkbox"
               checked={accepted}
@@ -160,7 +160,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full bg-guild-yellow px-4 py-2.5 text-sm font-bold uppercase tracking-widest text-guild-black disabled:opacity-50"
           >
             {loading ? "Sending code…" : "Send me a code"}
           </button>
@@ -169,7 +169,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={signInWithGoogle}
-              className="w-full rounded border border-neutral-300 px-4 py-2 text-sm font-medium"
+              className="w-full border border-neutral-700 px-4 py-2.5 text-sm font-bold uppercase tracking-widest hover:border-white"
             >
               Continue with Google
             </button>
@@ -178,7 +178,7 @@ function LoginForm() {
           <button
             type="button"
             onClick={() => setStep("password")}
-            className="w-full text-xs text-neutral-500 underline"
+            className="w-full text-xs text-neutral-500 underline hover:text-neutral-300"
           >
             Have a password? Sign in with password
           </button>
@@ -193,7 +193,7 @@ function LoginForm() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900"
+              className="mt-1 w-full border border-neutral-700 bg-transparent px-3 py-2 text-base outline-none focus:border-guild-yellow"
               placeholder="you@example.com"
             />
           </label>
@@ -205,12 +205,12 @@ function LoginForm() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900"
+              className="mt-1 w-full border border-neutral-700 bg-transparent px-3 py-2 text-base outline-none focus:border-guild-yellow"
               placeholder="••••••••"
             />
           </label>
 
-          <label className="flex items-start gap-2 text-xs text-neutral-600">
+          <label className="flex items-start gap-2 text-xs text-neutral-400">
             <input
               type="checkbox"
               checked={accepted}
@@ -233,7 +233,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full bg-guild-yellow px-4 py-2.5 text-sm font-bold uppercase tracking-widest text-guild-black disabled:opacity-50"
           >
             {loading ? "Signing in…" : "Sign in"}
           </button>
@@ -243,14 +243,14 @@ function LoginForm() {
               setStep("email");
               setPassword("");
             }}
-            className="w-full text-xs text-neutral-500 underline"
+            className="w-full text-xs text-neutral-500 underline hover:text-neutral-300"
           >
             Use a one-time code instead
           </button>
         </form>
       ) : (
         <form onSubmit={verifyCode} className="mt-8 space-y-4">
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-neutral-400">
             We sent a 6-digit code to <strong>{email}</strong>.
           </p>
           <label className="block text-sm">
@@ -262,14 +262,14 @@ function LoginForm() {
               required
               value={code}
               onChange={(e) => setCode(e.target.value)}
-              className="mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-center text-lg tracking-[0.5em] outline-none focus:border-neutral-900"
+              className="mt-1 w-full border border-neutral-700 bg-transparent px-3 py-2 text-center text-lg tracking-[0.5em] outline-none focus:border-guild-yellow"
               placeholder="••••••"
             />
           </label>
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full bg-guild-yellow px-4 py-2.5 text-sm font-bold uppercase tracking-widest text-guild-black disabled:opacity-50"
           >
             {loading ? "Verifying…" : "Verify & sign in"}
           </button>
@@ -279,14 +279,14 @@ function LoginForm() {
               setStep("email");
               setCode("");
             }}
-            className="w-full text-xs text-neutral-500 underline"
+            className="w-full text-xs text-neutral-500 underline hover:text-neutral-300"
           >
             Use a different email
           </button>
         </form>
       )}
 
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
     </main>
   );
 }

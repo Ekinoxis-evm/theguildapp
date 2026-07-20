@@ -9,9 +9,9 @@ export const metadata = { title: "Dashboard — The Guild" };
 
 function StatTile({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="rounded border border-neutral-300 p-4">
-      <p className="text-2xl font-semibold">{value}</p>
-      <p className="mt-1 text-xs uppercase tracking-wide text-neutral-600">{label}</p>
+    <div className="border border-neutral-800 p-4">
+      <p className="font-display text-2xl font-extrabold text-guild-yellow">{value}</p>
+      <p className="mt-1 text-xs uppercase tracking-wide text-neutral-500">{label}</p>
     </div>
   );
 }
@@ -79,11 +79,11 @@ export default async function DashboardPage() {
     const shopName = (next as { barbershops?: { name?: string } | null } | null)?.barbershops
       ?.name;
     consoleBlock = (
-      <div className="mt-8 rounded border border-neutral-300 p-4">
+      <div className="mt-8 border border-neutral-800 p-4">
         <div className="flex items-baseline justify-between gap-3">
-          <p className="text-xs uppercase tracking-wide text-neutral-600">{c.client.heading}</p>
+          <p className="text-xs uppercase tracking-wide text-neutral-500">{c.client.heading}</p>
           {profile?.tier === "premium" && (
-            <span className="text-xs font-medium text-yellow-600">{c.client.premiumBadge}</span>
+            <span className="text-xs font-medium text-guild-yellow">{c.client.premiumBadge}</span>
           )}
         </div>
         {next ? (
@@ -96,8 +96,8 @@ export default async function DashboardPage() {
           </p>
         ) : (
           <div className="mt-2">
-            <p className="text-sm text-neutral-600">{c.client.noUpcoming}</p>
-            <Link href="/shops" className="mt-1 inline-block text-sm font-medium underline">
+            <p className="text-sm text-neutral-400">{c.client.noUpcoming}</p>
+            <Link href="/shops" className="mt-1 inline-block text-sm font-bold uppercase tracking-wide underline decoration-guild-yellow decoration-2 underline-offset-4">
               {c.client.bookCta}
             </Link>
           </div>
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
       : [{ count: null }, { count: null }, { count: null }];
     consoleBlock = (
       <section className="mt-8">
-        <p className="text-xs uppercase tracking-wide text-neutral-600">{c.shopOwner.heading}</p>
+        <p className="text-xs uppercase tracking-wide text-neutral-500">{c.shopOwner.heading}</p>
         <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatTile label={c.shopOwner.status} value={ownShop?.status ?? c.shopOwner.noShop} />
           <StatTile label={c.shopOwner.upcoming} value={upcoming ?? 0} />
@@ -156,7 +156,7 @@ export default async function DashboardPage() {
     ]);
     consoleBlock = (
       <section className="mt-8">
-        <p className="text-xs uppercase tracking-wide text-neutral-600">{c.barber.heading}</p>
+        <p className="text-xs uppercase tracking-wide text-neutral-500">{c.barber.heading}</p>
         <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <StatTile label={c.barber.status} value={ownBarber?.status ?? c.barber.noProfile} />
           <StatTile label={c.barber.upcoming} value={upcoming ?? 0} />
@@ -179,7 +179,7 @@ export default async function DashboardPage() {
       : { count: 0 };
     consoleBlock = (
       <section className="mt-8">
-        <p className="text-xs uppercase tracking-wide text-neutral-600">
+        <p className="text-xs uppercase tracking-wide text-neutral-500">
           {c.eventManager.heading}
         </p>
         <div className="mt-2 grid grid-cols-3 gap-3">
@@ -207,7 +207,7 @@ export default async function DashboardPage() {
       ]);
     consoleBlock = (
       <section className="mt-8">
-        <p className="text-xs uppercase tracking-wide text-neutral-600">{c.admin.heading}</p>
+        <p className="text-xs uppercase tracking-wide text-neutral-500">{c.admin.heading}</p>
         <div className="mt-2 grid grid-cols-3 gap-3">
           <StatTile label={c.admin.pendingShops} value={pendingShops ?? 0} />
           <StatTile label={c.admin.pendingBarbers} value={pendingBarbers ?? 0} />
@@ -266,9 +266,9 @@ export default async function DashboardPage() {
   }
 
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
+    <main className="mx-auto w-full max-w-2xl flex-1 bg-guild-black px-6 py-16 text-white">
       <div className="flex items-baseline justify-between gap-3">
-        <p className="text-xs uppercase tracking-widest text-yellow-600">
+        <p className="text-xs uppercase tracking-widest text-guild-yellow">
           The Guild — Grooming Standard
         </p>
         <LangSwitcher current={lang} />
@@ -277,18 +277,18 @@ export default async function DashboardPage() {
         {t.welcome}
         {profile?.first_name ? `, ${profile.first_name}` : ""}
       </h1>
-      <p className="mt-2 text-sm text-neutral-600">
+      <p className="mt-2 text-sm text-neutral-400">
         {t.signedInAs} {user.email} · {role}
         {role === "client" ? ` (${profile?.tier})` : ""}
       </p>
 
       {!profile?.onboarding_completed_at ? (
-        <div className="mt-8 rounded border border-yellow-600/40 bg-yellow-50 p-4 text-sm">
+        <div className="mt-8 border border-guild-yellow/40 p-4 text-sm">
           <p className="font-medium">{t.finishProfileTitle}</p>
-          <p className="mt-1 text-neutral-600">{t.finishProfileBlurb}</p>
+          <p className="mt-1 text-neutral-400">{t.finishProfileBlurb}</p>
           <Link
             href="/onboarding"
-            className="mt-3 inline-block rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
+            className="mt-3 inline-block bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
           >
             {t.finishProfileCta}
           </Link>
@@ -301,10 +301,10 @@ export default async function DashboardPage() {
               <Link
                 key={sec.href + sec.title}
                 href={sec.href}
-                className="rounded border border-neutral-300 p-4 hover:border-neutral-900"
+                className="border border-neutral-800 p-4 hover:border-guild-yellow"
               >
-                <p className="font-medium">{sec.title}</p>
-                <p className="mt-1 text-sm text-neutral-600">{sec.blurb}</p>
+                <p className="font-bold uppercase tracking-wide">{sec.title}</p>
+                <p className="mt-1 text-sm text-neutral-400">{sec.blurb}</p>
               </Link>
             ))}
           </div>
@@ -314,7 +314,7 @@ export default async function DashboardPage() {
       <form action="/auth/signout" method="post" className="mt-10">
         <button
           type="submit"
-          className="rounded border border-neutral-300 px-4 py-2 text-sm"
+          className="border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:border-white"
         >
           {t.signOut}
         </button>
