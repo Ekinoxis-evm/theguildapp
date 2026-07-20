@@ -81,7 +81,7 @@
 | # | Item | Status |
 |---|---|---|
 | 5.1 | Branding pass (brand package received 2026-07-20: doctrine PDF + logos) | in-progress — tokens (#0B0B0C/#FFC300/bone) + branded landing shipped 2026-07-20; KUMO font files pending from Diana; app-shell restyle next |
-| 5.7 | Entry role-choice flow: after first sign-in, pick Person / Barber / Business → routed onboarding per path | todo |
+| 5.7 | Entry role-choice flow: after first sign-in, pick Person / Barber / Business → routed onboarding per path | done (2026-07-20) — `/welcome` (branded, EN/ES); dashboard redirects brand-new accounts there; routes to /onboarding, /my-barber, /partners |
 | 5.8 | Role-branded mobile app shell (bottom nav per role) + surface-by-surface restyle onto brand tokens | todo |
 | 5.5 | Per-role dashboard consoles: role-specific stats + role-ordered sections on `/dashboard` for client / shop owner / private barber / event manager / admin (EN + ES) | done (2026-07-19) |
 | 5.6 | Role test accounts: `pnpm seed:test-users` seeds one account per role (founder-inbox plus-aliases) + sample approved shop, at-home barber, live event | done (2026-07-19) |

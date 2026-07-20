@@ -52,6 +52,17 @@ export default async function DashboardPage() {
   const isAdmin = role === "admin";
   const nowIso = new Date().toISOString();
 
+  // Brand-new account with no chosen path yet → role-choice screen.
+  if (
+    role === "client" &&
+    !profile?.onboarding_completed_at &&
+    !ownBarber &&
+    !ownShop &&
+    !isStaff
+  ) {
+    redirect("/welcome");
+  }
+
   // ── Role console stats (only the queries the role needs) ──────────────────
   let consoleBlock: React.ReactNode = null;
 

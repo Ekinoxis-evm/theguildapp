@@ -58,6 +58,31 @@ const en = {
     privacy: "Privacy Policy",
     partners: "Events for brands",
   },
+  welcome: {
+    eyebrow: "Welcome to The Guild",
+    title: "Choose your path.",
+    person: {
+      label: "For clients",
+      title: "I'm here for the cut",
+      blurb:
+        "Book curated barbershops and verified at-home barbers. Your style stays on file.",
+      cta: "Set up my profile",
+    },
+    barber: {
+      label: "For barbers",
+      title: "I'm a barber",
+      blurb:
+        "Build your professional profile — certifications, track record, bookings at the shop or at home.",
+      cta: "Create my barber profile",
+    },
+    business: {
+      label: "For brands",
+      title: "We're a brand",
+      blurb: "Grooming activations for your events — QR registration, real headcounts.",
+      cta: "Talk to our team",
+    },
+    signOut: "Sign out",
+  },
   dashboard: {
     welcome: "Welcome",
     signedInAs: "Signed in as",
@@ -206,6 +231,31 @@ const es: Dict = {
     terms: "Términos y Condiciones",
     privacy: "Política de Privacidad",
     partners: "Eventos para marcas",
+  },
+  welcome: {
+    eyebrow: "Bienvenido a The Guild",
+    title: "Elige tu camino.",
+    person: {
+      label: "Para clientes",
+      title: "Vengo por el corte",
+      blurb:
+        "Reserva barberías curadas y barberos a domicilio verificados. Tu estilo queda en archivo.",
+      cta: "Configurar mi perfil",
+    },
+    barber: {
+      label: "Para barberos",
+      title: "Soy barbero",
+      blurb:
+        "Construye tu perfil profesional — certificaciones, historial, reservas en barbería o a domicilio.",
+      cta: "Crear mi perfil de barbero",
+    },
+    business: {
+      label: "Para marcas",
+      title: "Somos una marca",
+      blurb: "Activaciones de grooming para tus eventos — registro por QR, asistencia real.",
+      cta: "Hablar con el equipo",
+    },
+    signOut: "Cerrar sesión",
   },
   dashboard: {
     welcome: "Bienvenido",
