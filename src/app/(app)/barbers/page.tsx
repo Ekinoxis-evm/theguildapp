@@ -54,7 +54,7 @@ export default async function BarbersPage() {
       </p>
 
       {!isPremium && (
-        <p className="mt-4 rounded border border-yellow-600/40 bg-yellow-50 p-3 text-sm">
+        <p className="mt-4 border border-guild-yellow/40 p-3 text-sm">
           At-home booking is a <strong>premium</strong> feature.{" "}
           <Link href="/premium" className="font-medium underline">
             Upgrade for $19.99/month →
@@ -77,26 +77,26 @@ export default async function BarbersPage() {
             (a) => !a.ended_on
           )?.barbershops?.name;
           return (
-            <li key={b.profile_id} className="rounded border border-neutral-300 p-4">
+            <li key={b.profile_id} className="border border-neutral-800 p-4">
               <div className="flex items-start gap-4">
                 {b.photoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- signed URL
                   <img
                     src={b.photoUrl}
                     alt={name}
-                    className="h-16 w-16 shrink-0 rounded-full border border-neutral-300 object-cover"
+                    className="h-16 w-16 shrink-0 rounded-full border border-neutral-800 object-cover"
                   />
                 ) : (
-                  <div className="h-16 w-16 shrink-0 rounded-full border border-neutral-300 bg-neutral-100" />
+                  <div className="h-16 w-16 shrink-0 rounded-full border border-neutral-800 bg-neutral-800" />
                 )}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline justify-between gap-3">
                     <p className="font-medium">{name}</p>
-                    <p className="shrink-0 text-xs text-yellow-600">
+                    <p className="shrink-0 text-xs text-guild-yellow">
                       {b.services_fulfilled_count} services
                     </p>
                   </div>
-                  <p className="mt-0.5 text-sm text-neutral-600">
+                  <p className="mt-0.5 text-sm text-neutral-400">
                     {b.headline ??
                       (b.bio ? b.bio.slice(0, 80) : "Guild professional")}
                   </p>
@@ -122,7 +122,7 @@ export default async function BarbersPage() {
                       {b.specialties.slice(0, 4).map((s) => (
                         <span
                           key={s}
-                          className="rounded-full border border-neutral-300 px-2 py-0.5 text-xs text-neutral-600"
+                          className="rounded-full border border-neutral-800 px-2 py-0.5 text-xs text-neutral-400"
                         >
                           {s}
                         </span>
@@ -131,7 +131,7 @@ export default async function BarbersPage() {
                   )}
                   <Link
                     href={`/barbers/${b.profile_id}`}
-                    className="mt-2 inline-block rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white"
+                    className="mt-2 inline-block bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black"
                   >
                     View profile
                   </Link>

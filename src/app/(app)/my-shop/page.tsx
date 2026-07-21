@@ -58,7 +58,7 @@ export default async function MyShopPage({
         <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
           <BackLink />
           <h1 className="mt-2 text-2xl font-semibold">{staffShop?.name}</h1>
-          <p className="mt-1 text-sm text-neutral-600">
+          <p className="mt-1 text-sm text-neutral-400">
             You&apos;re on the team. Manage the shop&apos;s bookings below.
           </p>
           <ShopBookings bookings={bookings ?? []} />
@@ -70,7 +70,7 @@ export default async function MyShopPage({
       <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
         <BackLink />
         <h1 className="mt-2 text-2xl font-semibold">List your barbershop</h1>
-        <p className="mt-2 text-sm text-neutral-600">
+        <p className="mt-2 text-sm text-neutral-400">
           Tell us about your shop. The Guild team reviews every application
           before it goes live to clients.
         </p>
@@ -134,18 +134,18 @@ export default async function MyShopPage({
       <BackLink />
       <h1 className="mt-2 text-2xl font-semibold">{shop.name}</h1>
       {shop.status === "pending" && (
-        <p className="mt-3 rounded border border-yellow-600/40 bg-yellow-50 p-3 text-sm">
+        <p className="mt-3 border border-guild-yellow/40 p-3 text-sm">
           Application under review — your shop isn&apos;t visible to clients
           yet. You can set up locations, services, and staff meanwhile.
         </p>
       )}
       {shop.status === "suspended" && (
-        <p className="mt-3 rounded border border-red-300 bg-red-50 p-3 text-sm">
+        <p className="mt-3 border border-red-400/50 p-3 text-sm">
           This shop is suspended. Contact The Guild team.
         </p>
       )}
       {shop.status === "approved" && (
-        <p className="mt-1 text-sm text-neutral-600">
+        <p className="mt-1 text-sm text-neutral-400">
           Live · {shop.services_fulfilled_count} services fulfilled
         </p>
       )}

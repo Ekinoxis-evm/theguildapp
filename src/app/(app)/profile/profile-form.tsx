@@ -187,21 +187,21 @@ export function ProfileForm({
             <button
               type="submit"
               disabled={saving}
-              className="rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+              className="bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
             >
               {saving ? "Saving…" : "Save changes"}
             </button>
             {saved && (
-              <span className="ml-3 text-sm text-green-700">Saved.</span>
+              <span className="ml-3 text-sm text-green-400">Saved.</span>
             )}
-            {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+            {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
           </div>
         </form>
       </section>
 
       <section>
         <h2 className="text-lg font-medium">My Style</h2>
-        <p className="mt-1 text-sm text-neutral-600">
+        <p className="mt-1 text-sm text-neutral-400">
           Keep these four photos current — you&apos;ll confirm them each time
           you book.
         </p>

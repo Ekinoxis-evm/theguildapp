@@ -145,12 +145,12 @@ export function BarberProfileEditor({
         <button
           type="submit"
           disabled={saving}
-          className="rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
         >
           {saving ? "Saving…" : "Save profile"}
         </button>
-        {saved && <span className="ml-3 text-sm text-green-700">Saved.</span>}
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {saved && <span className="ml-3 text-sm text-green-400">Saved.</span>}
+        {error && <p className="text-sm text-red-400">{error}</p>}
       </form>
     </section>
   );
@@ -197,7 +197,7 @@ function PhotoSlot({
         type="button"
         onClick={() => inputRef.current?.click()}
         disabled={busy}
-        className="flex aspect-square w-full flex-col items-center justify-center overflow-hidden rounded border border-neutral-300 bg-neutral-100 text-sm disabled:opacity-50"
+        className="flex aspect-square w-full flex-col items-center justify-center overflow-hidden border border-neutral-800 bg-neutral-800 text-sm disabled:opacity-50"
       >
         {url ? (
           // eslint-disable-next-line @next/next/no-img-element -- signed/blob URLs
@@ -205,12 +205,12 @@ function PhotoSlot({
         ) : (
           <>
             <span className="text-2xl text-neutral-400">+</span>
-            <span className="mt-1 text-neutral-600">{busy ? "Uploading…" : label}</span>
+            <span className="mt-1 text-neutral-400">{busy ? "Uploading…" : label}</span>
           </>
         )}
       </button>
       <p className="mt-1 text-xs text-neutral-500">{label}</p>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-red-400">{error}</p>}
       <input
         ref={inputRef}
         type="file"

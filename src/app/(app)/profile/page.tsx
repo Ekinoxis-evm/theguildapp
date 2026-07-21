@@ -47,7 +47,7 @@ export default async function ProfilePage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-xs uppercase tracking-widest text-yellow-600">
+      <p className="text-xs uppercase tracking-widest text-guild-yellow">
         The Guild — Grooming Standard
       </p>
       <h1 className="mt-2 text-2xl font-semibold">Profile</h1>

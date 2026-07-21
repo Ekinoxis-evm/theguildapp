@@ -94,7 +94,7 @@ export function BarberServicesManager({
       </ul>
 
       {adding ? (
-        <form onSubmit={add} className="mt-4 space-y-3 rounded border border-neutral-300 p-4">
+        <form onSubmit={add} className="mt-4 space-y-3 border border-neutral-800 p-4">
           <label className="block text-sm">
             Service name
             <input
@@ -135,14 +135,14 @@ export function BarberServicesManager({
             <button
               type="submit"
               disabled={saving}
-              className="rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+              className="bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
             >
               {saving ? "Saving…" : "Add service"}
             </button>
             <button
               type="button"
               onClick={() => setAdding(false)}
-              className="rounded border border-neutral-300 px-4 py-2 text-sm"
+              className="border border-neutral-800 px-4 py-2 text-sm"
             >
               Cancel
             </button>
@@ -151,12 +151,12 @@ export function BarberServicesManager({
       ) : (
         <button
           onClick={() => setAdding(true)}
-          className="mt-4 rounded border border-neutral-300 px-4 py-2 text-sm"
+          className="mt-4 border border-neutral-800 px-4 py-2 text-sm"
         >
           + Add service
         </button>
       )}
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </section>
   );
 }

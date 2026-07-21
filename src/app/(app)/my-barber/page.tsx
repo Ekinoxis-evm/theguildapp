@@ -38,7 +38,7 @@ export default async function MyBarberPage({
       <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
         <BackLink />
         <h1 className="mt-2 text-2xl font-semibold">Become a Guild barber</h1>
-        <p className="mt-2 text-sm text-neutral-600">
+        <p className="mt-2 text-sm text-neutral-400">
           Build your professional profile — certifications, experience, shop
           enrollment — and optionally serve premium clients at their homes.
           The Guild team reviews every application.
@@ -119,13 +119,13 @@ export default async function MyBarberPage({
       <BackLink />
       <h1 className="mt-2 text-2xl font-semibold">Barber profile</h1>
       {barber.status === "pending" && (
-        <p className="mt-3 rounded border border-yellow-600/40 bg-yellow-50 p-3 text-sm">
+        <p className="mt-3 border border-guild-yellow/40 p-3 text-sm">
           Application under review — finish your profile (photos, prices,
           coverage) meanwhile.
         </p>
       )}
       {barber.status === "approved" && (
-        <p className="mt-1 text-sm text-neutral-600">
+        <p className="mt-1 text-sm text-neutral-400">
           Live · {barber.services_fulfilled_count} services fulfilled
         </p>
       )}

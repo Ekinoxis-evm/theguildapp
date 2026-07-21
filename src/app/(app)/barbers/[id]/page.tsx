@@ -67,9 +67,9 @@ export default async function BarberPage({
       </p>
       <h1 className="mt-2 text-2xl font-semibold">{name}</h1>
       {barber.headline && (
-        <p className="mt-1 text-sm text-neutral-600">{barber.headline}</p>
+        <p className="mt-1 text-sm text-neutral-400">{barber.headline}</p>
       )}
-      <p className="mt-1 text-sm text-yellow-600">
+      <p className="mt-1 text-sm text-guild-yellow">
         {barber.services_fulfilled_count} services fulfilled
         {barber.years_experience != null
           ? ` · ${barber.years_experience} yrs experience`
@@ -94,7 +94,7 @@ export default async function BarberPage({
               )}
               {a.role_title ? ` (${a.role_title})` : ""}
               {a.confirmed_at && (
-                <span className="ml-1 text-xs font-medium text-emerald-700">
+                <span className="ml-1 text-xs font-medium text-emerald-400">
                   ✓ shop-confirmed
                 </span>
               )}
@@ -108,7 +108,7 @@ export default async function BarberPage({
           {barber.specialties.map((s) => (
             <span
               key={s}
-              className="rounded-full border border-neutral-300 px-2.5 py-0.5 text-xs text-neutral-700"
+              className="rounded-full border border-neutral-800 px-2.5 py-0.5 text-xs text-neutral-300"
             >
               {s}
             </span>
@@ -116,19 +116,19 @@ export default async function BarberPage({
         </p>
       )}
 
-      {barber.bio && <p className="mt-3 text-sm text-neutral-600">{barber.bio}</p>}
+      {barber.bio && <p className="mt-3 text-sm text-neutral-400">{barber.bio}</p>}
 
       <div className="mt-4 grid grid-cols-2 gap-3">
         {selfUrl && (
           // eslint-disable-next-line @next/next/no-img-element -- signed URL
-          <img src={selfUrl} alt={name} className="aspect-square w-full rounded object-cover" />
+          <img src={selfUrl} alt={name} className="aspect-square w-full object-cover" />
         )}
         {setupUrl && (
           // eslint-disable-next-line @next/next/no-img-element -- signed URL
           <img
             src={setupUrl}
             alt="Mobile setup"
-            className="aspect-square w-full rounded object-cover"
+            className="aspect-square w-full object-cover"
           />
         )}
       </div>
@@ -138,10 +138,10 @@ export default async function BarberPage({
           <h2 className="mt-8 text-lg font-medium">Certifications</h2>
           <ul className="mt-3 space-y-2 text-sm">
             {certifications.map((c) => (
-              <li key={c.id} className="rounded border border-neutral-300 p-3">
+              <li key={c.id} className="border border-neutral-800 p-3">
                 <strong>{c.title}</strong>
                 {c.verified_at && (
-                  <span className="ml-2 text-xs font-medium text-emerald-700">
+                  <span className="ml-2 text-xs font-medium text-emerald-400">
                     ✓ Verified by The Guild
                   </span>
                 )}
@@ -158,7 +158,7 @@ export default async function BarberPage({
       {(serviceHistory ?? []).length > 0 && (
         <>
           <h2 className="mt-8 text-lg font-medium">Track record</h2>
-          <ul className="mt-3 space-y-1 text-sm text-neutral-600">
+          <ul className="mt-3 space-y-1 text-sm text-neutral-400">
             {(serviceHistory ?? []).map((h) => (
               <li key={h.service_name} className="flex justify-between gap-3">
                 <span>{h.service_name}</span>
@@ -174,7 +174,7 @@ export default async function BarberPage({
       {pastShops.length > 0 && (
         <>
           <h2 className="mt-8 text-lg font-medium">Work history</h2>
-          <ul className="mt-3 space-y-1 text-sm text-neutral-600">
+          <ul className="mt-3 space-y-1 text-sm text-neutral-400">
             {pastShops.map((a) => (
               <li key={a.id}>
                 {a.barbershops?.name ?? "Guild barbershop"}
@@ -191,7 +191,7 @@ export default async function BarberPage({
           <h2 className="mt-8 text-lg font-medium">Coverage</h2>
           <ul className="mt-3 space-y-2 text-sm">
             {barber.coverage_areas.map((c, i) => (
-              <li key={i} className="rounded border border-neutral-300 p-3">
+              <li key={i} className="border border-neutral-800 p-3">
                 {c.city}, {c.state}
                 {c.zip_codes.length > 0 && (
                   <span className="block text-neutral-500">Zips: {c.zip_codes.join(", ")}</span>
@@ -205,7 +205,7 @@ export default async function BarberPage({
 
           <h2 className="mt-8 text-lg font-medium">At-home services</h2>
           {!isPremium && (
-            <p className="mt-2 rounded border border-yellow-600/40 bg-yellow-50 p-3 text-sm">
+            <p className="mt-2 border border-guild-yellow/40 p-3 text-sm">
               At-home booking is a <strong>premium</strong> feature.{" "}
               <Link href="/premium" className="font-medium underline">
                 Upgrade for $19.99/month →
@@ -216,7 +216,7 @@ export default async function BarberPage({
             {services.map((s) => (
               <li
                 key={s.id}
-                className="flex items-center justify-between gap-3 rounded border border-neutral-300 p-3 text-sm"
+                className="flex items-center justify-between gap-3 border border-neutral-800 p-3 text-sm"
               >
                 <span>
                   {s.name}
@@ -228,7 +228,7 @@ export default async function BarberPage({
                 {isPremium && (
                   <Link
                     href={`/barbers/${barber.profile_id}/book?service=${s.id}`}
-                    className="shrink-0 rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white"
+                    className="shrink-0 bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black"
                   >
                     Book
                   </Link>
@@ -242,7 +242,7 @@ export default async function BarberPage({
         </>
       ) : (
         currentShops.length > 0 && (
-          <p className="mt-8 rounded border border-neutral-300 p-3 text-sm text-neutral-600">
+          <p className="mt-8 border border-neutral-800 p-3 text-sm text-neutral-400">
             Book {name} through{" "}
             {currentShops[0].barbershops ? (
               <Link

@@ -21,29 +21,29 @@ export function PayoutsSection({
         via Stripe.
       </p>
       {unavailable && (
-        <p className="mt-3 rounded border border-yellow-600/40 bg-yellow-50 p-3 text-sm">
+        <p className="mt-3 border border-guild-yellow/40 p-3 text-sm">
           Payout setup is temporarily unavailable — The Guild team is finishing
           the payments configuration. Your earnings are safe; try again soon.
         </p>
       )}
-      <div className="mt-3 rounded border border-neutral-300 p-4 text-sm">
+      <div className="mt-3 border border-neutral-800 p-4 text-sm">
         {ready ? (
           <p>
-            <span className="font-medium text-emerald-700">
+            <span className="font-medium text-emerald-400">
               ✓ Payouts active.
             </span>{" "}
             Earnings from paid bookings are transferred automatically.
           </p>
         ) : (
           <form action={action}>
-            <p className="text-neutral-600">
+            <p className="text-neutral-400">
               {hasAccount
                 ? "Your payout setup isn't finished — Stripe needs a few more details."
                 : "Set up payouts to receive your earnings automatically. Handled securely by Stripe."}
             </p>
             <button
               type="submit"
-              className="mt-3 rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
+              className="mt-3 bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
             >
               {hasAccount ? "Finish payout setup" : "Set up payouts"}
             </button>

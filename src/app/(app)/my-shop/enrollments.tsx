@@ -66,16 +66,16 @@ export function EnrollmentsManager({ initial }: { initial: Enrollment[] }) {
             return (
               <li
                 key={e.id}
-                className="flex items-baseline justify-between gap-3 rounded border border-neutral-300 p-3 text-sm"
+                className="flex items-baseline justify-between gap-3 border border-neutral-800 p-3 text-sm"
               >
                 <div>
                   <strong>{name}</strong>
                   {e.confirmed_at && (
-                    <span className="ml-2 text-xs font-medium text-emerald-700">
+                    <span className="ml-2 text-xs font-medium text-emerald-400">
                       ✓ Confirmed
                     </span>
                   )}
-                  <p className="text-neutral-600">
+                  <p className="text-neutral-400">
                     {e.role_title ? `${e.role_title} · ` : ""}since{" "}
                     {formatDate(e.started_on)}
                   </p>
@@ -100,7 +100,7 @@ export function EnrollmentsManager({ initial }: { initial: Enrollment[] }) {
           })}
         </ul>
       )}
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </section>
   );
 }

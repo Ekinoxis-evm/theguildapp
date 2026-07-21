@@ -33,7 +33,7 @@ export function LeadForm() {
 
   if (sent) {
     return (
-      <p className="mt-8 rounded border border-neutral-300 p-4 text-sm">
+      <p className="mt-8 border border-neutral-800 p-4 text-sm">
         Thanks — our team will contact you shortly.
       </p>
     );
@@ -92,11 +92,11 @@ export function LeadForm() {
       <button
         type="submit"
         disabled={saving}
-        className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+        className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
       >
         {saving ? "Sending…" : "Request a call"}
       </button>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
     </form>
   );
 }

@@ -46,14 +46,14 @@ export function AtHomeBookingForm({
 
   if (!photosComplete) {
     return (
-      <div className="mt-8 rounded border border-yellow-600/40 bg-yellow-50 p-4 text-sm">
+      <div className="mt-8 border border-guild-yellow/40 p-4 text-sm">
         <p className="font-medium">Your style photos are incomplete</p>
-        <p className="mt-1 text-neutral-600">
+        <p className="mt-1 text-neutral-400">
           Your barber needs your four current-style photos before you can book.
         </p>
         <Link
           href="/profile"
-          className="mt-3 inline-block rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
+          className="mt-3 inline-block bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
         >
           Update My Style
         </Link>
@@ -64,7 +64,7 @@ export function AtHomeBookingForm({
   if (!styleConfirmed) {
     return (
       <div className="mt-8">
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-neutral-400">
           Is your current style still accurate? Your barber will prepare based
           on these photos
           {oldestPhotoUpdate ? ` (last updated ${formatDate(oldestPhotoUpdate)})` : ""}.
@@ -76,20 +76,20 @@ export function AtHomeBookingForm({
               key={p.position}
               src={p.url}
               alt={`${p.position} style photo`}
-              className="aspect-square w-full rounded border border-neutral-300 object-cover"
+              className="aspect-square w-full border border-neutral-700 bg-transparent object-cover"
             />
           ))}
         </div>
         <div className="mt-6 space-y-2">
           <button
             onClick={() => setStyleConfirmed(true)}
-            className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
+            className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
           >
             Yes, photos are current
           </button>
           <Link
             href="/profile"
-            className="block w-full rounded border border-neutral-300 px-4 py-2 text-center text-sm"
+            className="block w-full border border-neutral-700 bg-transparent px-4 py-2 text-center text-sm"
           >
             No — update my photos first
           </Link>
@@ -120,14 +120,14 @@ export function AtHomeBookingForm({
 
   return (
     <form onSubmit={submit} className="mt-8 space-y-4">
-      <p className="rounded border border-neutral-300 p-3 text-sm">
+      <p className="border border-neutral-800 p-3 text-sm">
         {serviceName}
         <span className="block text-neutral-500">
           {formatPrice(priceCents, currency)} · {durationMinutes} min · paid online at booking
         </span>
       </p>
 
-      <fieldset className="space-y-3 rounded border border-neutral-300 p-3">
+      <fieldset className="space-y-3 border border-neutral-800 p-3">
         <legend className="px-1 text-sm font-medium">Service address</legend>
         <label className="block text-sm">
           Street address
@@ -176,7 +176,7 @@ export function AtHomeBookingForm({
             />
           </label>
         </div>
-        <label className="flex items-center gap-2 text-xs text-neutral-600">
+        <label className="flex items-center gap-2 text-xs text-neutral-400">
           <input
             type="checkbox"
             checked={saveAddress}
@@ -200,14 +200,14 @@ export function AtHomeBookingForm({
       <button
         type="submit"
         disabled={saving || !when}
-        className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+        className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
       >
         {saving ? "Redirecting to payment…" : "Book at-home & pay"}
       </button>
       <p className="text-xs text-neutral-500">
         Your address is shared only with this barber, only for this booking.
       </p>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
     </form>
   );
 }

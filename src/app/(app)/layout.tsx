@@ -12,7 +12,8 @@ export default async function AppLayout({
   } = await supabase.auth.getUser();
 
   // Unauthenticated visitors get redirected by each page; no shell for them.
-  if (!user) return <>{children}</>;
+  if (!user)
+    return <div className="flex min-h-full flex-1 flex-col bg-guild-black text-white">{children}</div>;
 
   const lang = await getLang();
   const n = dict(lang).nav;
@@ -51,7 +52,7 @@ export default async function AppLayout({
 
   return (
     <>
-      <div className="flex min-h-full flex-1 flex-col pb-12">{children}</div>
+      <div className="flex min-h-full flex-1 flex-col bg-guild-black pb-12 text-white">{children}</div>
       <BottomNav items={items} />
     </>
   );

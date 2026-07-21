@@ -43,14 +43,14 @@ export default async function ShopPage({
         </Link>
       </p>
       <h1 className="mt-2 text-2xl font-semibold">{shop.name}</h1>
-      <p className="mt-1 text-sm text-yellow-600">
+      <p className="mt-1 text-sm text-guild-yellow">
         {shop.services_fulfilled_count} services fulfilled
       </p>
       {shop.description && (
-        <p className="mt-3 text-sm text-neutral-600">{shop.description}</p>
+        <p className="mt-3 text-sm text-neutral-400">{shop.description}</p>
       )}
       {shop.phone && (
-        <p className="mt-1 text-sm text-neutral-600">{shop.phone}</p>
+        <p className="mt-1 text-sm text-neutral-400">{shop.phone}</p>
       )}
 
       <h2 className="mt-8 text-lg font-medium">Locations</h2>
@@ -58,7 +58,7 @@ export default async function ShopPage({
         {shop.barbershop_locations.map((l) => (
           <li
             key={l.id}
-            className="flex items-center justify-between gap-3 rounded border border-neutral-300 p-3"
+            className="flex items-center justify-between gap-3 border border-neutral-800 p-3"
           >
             <span>
               {l.formatted_address}
@@ -88,7 +88,7 @@ export default async function ShopPage({
             {barbers.map((b) => (
               <li
                 key={b.id}
-                className="flex items-center justify-between gap-3 rounded border border-neutral-300 p-3"
+                className="flex items-center justify-between gap-3 border border-neutral-800 p-3"
               >
                 <span>
                   {b.full_name}
@@ -119,7 +119,7 @@ export default async function ShopPage({
         {services.map((s) => (
           <li
             key={s.id}
-            className="flex items-center justify-between gap-3 rounded border border-neutral-300 p-3 text-sm"
+            className="flex items-center justify-between gap-3 border border-neutral-800 p-3 text-sm"
           >
             <span>
               {s.name}
@@ -129,7 +129,7 @@ export default async function ShopPage({
             </span>
             <Link
               href={`/shops/${shop.id}/book?service=${s.id}`}
-              className="shrink-0 rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white"
+              className="shrink-0 bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black"
             >
               Book
             </Link>

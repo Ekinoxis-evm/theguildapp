@@ -44,7 +44,7 @@ export function BarberApprovals({ initial }: { initial: PendingBarber[] }) {
               [b.profiles?.first_name, b.profiles?.last_name].filter(Boolean).join(" ") ||
               b.profile_id;
             return (
-              <li key={b.profile_id} className="rounded border border-neutral-300 p-4 text-sm">
+              <li key={b.profile_id} className="border border-neutral-800 p-4 text-sm">
                 <div className="flex items-start justify-between gap-3">
                   <span>
                     <strong>{name}</strong>
@@ -58,7 +58,7 @@ export function BarberApprovals({ initial }: { initial: PendingBarber[] }) {
                   <button
                     disabled={busy === b.profile_id}
                     onClick={() => approve(b)}
-                    className="shrink-0 rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50"
+                    className="shrink-0 bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
                   >
                     {busy === b.profile_id ? "Approving…" : "Approve"}
                   </button>
@@ -68,7 +68,7 @@ export function BarberApprovals({ initial }: { initial: PendingBarber[] }) {
           })}
         </ul>
       )}
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </section>
   );
 }

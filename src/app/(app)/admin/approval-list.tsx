@@ -39,7 +39,7 @@ export function ApprovalList({ initial }: { initial: PendingShop[] }) {
     <div>
       <ul className="mt-6 space-y-3">
         {shops.map((s) => (
-          <li key={s.id} className="rounded border border-neutral-300 p-4 text-sm">
+          <li key={s.id} className="border border-neutral-800 p-4 text-sm">
             <div className="flex items-start justify-between gap-3">
               <span>
                 <strong>{s.name}</strong>
@@ -52,7 +52,7 @@ export function ApprovalList({ initial }: { initial: PendingShop[] }) {
               <button
                 disabled={busy === s.id}
                 onClick={() => approve(s)}
-                className="shrink-0 rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50"
+                className="shrink-0 bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
               >
                 {busy === s.id ? "Approving…" : "Approve"}
               </button>
@@ -60,7 +60,7 @@ export function ApprovalList({ initial }: { initial: PendingShop[] }) {
           </li>
         ))}
       </ul>
-      {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-3 text-sm text-red-400">{error}</p>}
     </div>
   );
 }

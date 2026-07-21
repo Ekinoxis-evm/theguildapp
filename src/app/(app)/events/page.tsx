@@ -72,7 +72,7 @@ function EventList({
       {rows.map((r) => {
         const e = r.events!;
         return (
-          <li key={e.id} className="rounded border border-neutral-300 p-3 text-sm">
+          <li key={e.id} className="border border-neutral-800 p-3 text-sm">
             <div className="flex items-baseline justify-between gap-3">
               <strong>
                 {e.title}{" "}
@@ -82,7 +82,7 @@ function EventList({
                 {r.service_claimed_at ? "Service claimed" : e.status === "live" ? "Registered" : e.status}
               </span>
             </div>
-            <p className="mt-1 text-neutral-600">
+            <p className="mt-1 text-neutral-400">
               {e.venue} · {formatDateTime(e.starts_at)}
             </p>
             {e.status === "live" && !r.service_claimed_at && (

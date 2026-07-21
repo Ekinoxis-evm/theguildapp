@@ -40,12 +40,12 @@ export function TierManager() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="client@email.com"
-          className="w-full rounded border border-neutral-300 px-3 py-2 text-sm outline-none focus:border-neutral-900"
+          className="w-full border border-neutral-700 bg-transparent px-3 py-2 text-sm outline-none focus:border-guild-yellow"
         />
         <select
           value={tier}
           onChange={(e) => setTier(e.target.value as "premium" | "standard")}
-          className="shrink-0 rounded border border-neutral-300 px-2 py-2 text-sm"
+          className="shrink-0 border border-neutral-800 px-2 py-2 text-sm"
         >
           <option value="premium">premium</option>
           <option value="standard">standard</option>
@@ -53,7 +53,7 @@ export function TierManager() {
         <button
           type="submit"
           disabled={saving}
-          className="shrink-0 rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="shrink-0 bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
         >
           {saving ? "…" : "Set"}
         </button>

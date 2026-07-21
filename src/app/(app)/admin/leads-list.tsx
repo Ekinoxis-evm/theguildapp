@@ -36,14 +36,14 @@ export function LeadsList({ initial }: { initial: Lead[] }) {
       ) : (
         <ul className="mt-3 space-y-2">
           {leads.map((l) => (
-            <li key={l.id} className="rounded border border-neutral-300 p-3 text-sm">
+            <li key={l.id} className="border border-neutral-800 p-3 text-sm">
               <div className="flex items-baseline justify-between gap-3">
                 <strong>{l.company}</strong>
                 <span className="shrink-0 text-xs uppercase tracking-wide text-neutral-500">
                   {l.status}
                 </span>
               </div>
-              <p className="mt-1 text-neutral-600">
+              <p className="mt-1 text-neutral-400">
                 {l.contact_name} · {l.email}
                 {l.phone ? ` · ${l.phone}` : ""} · {formatDate(l.created_at)}
               </p>
@@ -53,7 +53,7 @@ export function LeadsList({ initial }: { initial: Lead[] }) {
                   <button
                     key={a.to}
                     onClick={() => transition(l, a.to)}
-                    className="rounded border border-neutral-300 px-2 py-1 text-xs"
+                    className="border border-neutral-800 px-2 py-1 text-xs"
                   >
                     {a.label}
                   </button>
@@ -63,7 +63,7 @@ export function LeadsList({ initial }: { initial: Lead[] }) {
           ))}
         </ul>
       )}
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </section>
   );
 }

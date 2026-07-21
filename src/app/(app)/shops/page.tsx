@@ -48,15 +48,15 @@ export default async function ShopsPage() {
             <li key={shop.id}>
               <Link
                 href={`/shops/${shop.id}`}
-                className="block rounded border border-neutral-300 p-4 hover:border-neutral-900"
+                className="block border border-neutral-800 p-4 hover:border-guild-yellow"
               >
                 <div className="flex items-baseline justify-between gap-3">
                   <p className="font-medium">{shop.name}</p>
-                  <p className="shrink-0 text-xs text-yellow-600">
+                  <p className="shrink-0 text-xs text-guild-yellow">
                     {shop.services_fulfilled_count} services fulfilled
                   </p>
                 </div>
-                {cities && <p className="mt-1 text-sm text-neutral-600">{cities}</p>}
+                {cities && <p className="mt-1 text-sm text-neutral-400">{cities}</p>}
                 {shop.description && (
                   <p className="mt-1 line-clamp-2 text-sm text-neutral-500">
                     {shop.description}

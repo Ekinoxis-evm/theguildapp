@@ -104,12 +104,12 @@ export function CertificationsManager({
           {certs.map((c) => (
             <li
               key={c.id}
-              className="flex items-baseline justify-between gap-3 rounded border border-neutral-300 p-3 text-sm"
+              className="flex items-baseline justify-between gap-3 border border-neutral-800 p-3 text-sm"
             >
               <div>
                 <strong>{c.title}</strong>
                 {c.verified_at ? (
-                  <span className="ml-2 text-xs font-medium text-emerald-700">
+                  <span className="ml-2 text-xs font-medium text-emerald-400">
                     ✓ Verified
                   </span>
                 ) : (
@@ -117,7 +117,7 @@ export function CertificationsManager({
                     Pending verification
                   </span>
                 )}
-                <p className="text-neutral-600">
+                <p className="text-neutral-400">
                   {c.issuer}
                   {c.issued_on ? ` · ${formatDate(c.issued_on)}` : ""}
                   {c.file_path ? " · document attached" : ""}
@@ -126,7 +126,7 @@ export function CertificationsManager({
               <button
                 disabled={busy}
                 onClick={() => remove(c)}
-                className="shrink-0 text-xs text-red-600 underline disabled:opacity-50"
+                className="shrink-0 text-xs text-red-400 underline disabled:opacity-50"
               >
                 Remove
               </button>
@@ -135,7 +135,7 @@ export function CertificationsManager({
         </ul>
       )}
 
-      <form onSubmit={add} className="mt-4 space-y-3 rounded border border-neutral-300 p-3">
+      <form onSubmit={add} className="mt-4 space-y-3 border border-neutral-800 p-3">
         <div className="grid grid-cols-2 gap-3">
           <label className="block text-sm">
             Title
@@ -183,11 +183,11 @@ export function CertificationsManager({
         <button
           type="submit"
           disabled={busy || !title.trim() || !issuer.trim()}
-          className="rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+          className="bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
         >
           {busy ? "Adding…" : "Add certification"}
         </button>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && <p className="text-sm text-red-400">{error}</p>}
       </form>
     </section>
   );

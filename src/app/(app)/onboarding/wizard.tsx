@@ -110,7 +110,7 @@ export function OnboardingWizard({
     <button
       type="submit"
       disabled={saving}
-      className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+      className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
     >
       {saving ? "Saving…" : "Continue"}
     </button>
@@ -118,7 +118,7 @@ export function OnboardingWizard({
 
   return (
     <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-6 py-16">
-      <p className="text-xs uppercase tracking-widest text-yellow-600">
+      <p className="text-xs uppercase tracking-widest text-guild-yellow">
         The Guild — Grooming Standard
       </p>
       <h1 className="mt-2 text-2xl font-semibold">{STEPS[step]}</h1>
@@ -136,7 +136,7 @@ export function OnboardingWizard({
           <button
             type="button"
             onClick={() => setStep(1)}
-            className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
+            className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
           >
             Continue
           </button>
@@ -290,7 +290,7 @@ export function OnboardingWizard({
 
       {step === 5 && (
         <div className="mt-8 space-y-6">
-          <p className="text-sm text-neutral-600">
+          <p className="text-sm text-neutral-400">
             Add four photos of your current haircut so your barber knows your
             style: front, left side, right side, and back.
           </p>
@@ -303,7 +303,7 @@ export function OnboardingWizard({
             type="button"
             onClick={finish}
             disabled={saving || !allStylePhotosSet}
-            className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
           >
             {saving ? "Finishing…" : "Finish"}
           </button>
@@ -320,7 +320,7 @@ export function OnboardingWizard({
         </button>
       )}
 
-      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
     </main>
   );
 }

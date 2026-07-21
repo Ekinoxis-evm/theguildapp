@@ -42,7 +42,7 @@ export function CertVerifications({ initial }: { initial: PendingCert[] }) {
       ) : (
         <ul className="mt-3 space-y-3">
           {certs.map((c) => (
-            <li key={c.id} className="rounded border border-neutral-300 p-4 text-sm">
+            <li key={c.id} className="border border-neutral-800 p-4 text-sm">
               <div className="flex items-start justify-between gap-3">
                 <span>
                   <strong>{c.title}</strong>
@@ -69,7 +69,7 @@ export function CertVerifications({ initial }: { initial: PendingCert[] }) {
                 <button
                   disabled={busy === c.id}
                   onClick={() => verify(c)}
-                  className="shrink-0 rounded bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white disabled:opacity-50"
+                  className="shrink-0 bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
                 >
                   {busy === c.id ? "Verifying…" : "Verify"}
                 </button>
@@ -78,7 +78,7 @@ export function CertVerifications({ initial }: { initial: PendingCert[] }) {
           ))}
         </ul>
       )}
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </section>
   );
 }

@@ -40,17 +40,17 @@ export default async function PremiumPage({
         </Link>
       </p>
       <h1 className="mt-2 text-2xl font-semibold">
-        {t.title} <span className="text-yellow-600">{t.titleAccent}</span>
+        {t.title} <span className="text-guild-yellow">{t.titleAccent}</span>
       </h1>
       <p className="mt-1 text-sm text-neutral-500">{t.tagline}</p>
 
       {params.upgraded === "1" && !isPremium && (
-        <p className="mt-4 rounded border border-emerald-600/40 bg-emerald-50 p-3 text-sm">
+        <p className="mt-4 border border-emerald-600/40 bg-emerald-50 p-3 text-sm">
           {t.paymentReceived}
         </p>
       )}
       {params.error === "checkout" && (
-        <p className="mt-4 rounded border border-red-600/40 bg-red-50 p-3 text-sm">
+        <p className="mt-4 border border-red-600/40 p-3 text-sm">
           {t.checkoutError}
         </p>
       )}
@@ -58,18 +58,18 @@ export default async function PremiumPage({
       <ul className="mt-6 space-y-2 text-sm">
         {t.perks.map((perk) => (
           <li key={perk} className="flex gap-2">
-            <span className="text-yellow-600">◆</span>
+            <span className="text-guild-yellow">◆</span>
             <span>{perk}</span>
           </li>
         ))}
       </ul>
 
       {isPremium ? (
-        <div className="mt-8 rounded border border-neutral-300 p-4 text-sm">
+        <div className="mt-8 border border-neutral-800 p-4 text-sm">
           <p className="font-medium">{t.youArePremium}</p>
           {hasSubscription ? (
             <>
-              <p className="mt-1 text-neutral-600">
+              <p className="mt-1 text-neutral-400">
                 {t.subscriptionStatus}{" "}
                 <span className="uppercase tracking-wide">
                   {profile?.subscription_status ?? "active"}
@@ -78,7 +78,7 @@ export default async function PremiumPage({
               <form action={openBillingPortal} className="mt-4">
                 <button
                   type="submit"
-                  className="rounded border border-neutral-900 px-4 py-2 text-sm font-medium"
+                  className="border border-neutral-900 px-4 py-2 text-sm font-medium"
                 >
                   {t.manage}
                 </button>
@@ -86,7 +86,7 @@ export default async function PremiumPage({
               <p className="mt-2 text-xs text-neutral-500">{t.manageBlurb}</p>
             </>
           ) : (
-            <p className="mt-1 text-neutral-600">{t.grantedByTeam}</p>
+            <p className="mt-1 text-neutral-400">{t.grantedByTeam}</p>
           )}
           <p className="mt-4 text-sm">
             <Link href="/barbers" className="underline">
@@ -95,7 +95,7 @@ export default async function PremiumPage({
           </p>
         </div>
       ) : (
-        <div className="mt-8 rounded border border-neutral-300 p-4">
+        <div className="mt-8 border border-neutral-800 p-4">
           <p className="text-2xl font-semibold">
             $19.99
             <span className="text-sm font-normal text-neutral-500">
@@ -105,7 +105,7 @@ export default async function PremiumPage({
           <form action={startPremiumCheckout} className="mt-4">
             <button
               type="submit"
-              className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white"
+              className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
             >
               {t.upgrade}
             </button>

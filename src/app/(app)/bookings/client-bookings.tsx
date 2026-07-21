@@ -86,7 +86,7 @@ export function ClientBookings({ bookings: initial }: { bookings: Booking[] }) {
           onPay={payNow}
         />
       )}
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-red-400">{error}</p>}
     </div>
   );
 }
@@ -117,12 +117,12 @@ function Section({
             const cancellable = ["pending", "confirmed"].includes(b.status);
             const payable = cancellable && !b.paid_at;
             return (
-              <li key={b.id} className="rounded border border-neutral-300 p-3 text-sm">
+              <li key={b.id} className="border border-neutral-800 p-3 text-sm">
                 <div className="flex items-baseline justify-between gap-3">
                   <strong>{b.services?.name ?? "Service"}</strong>
                   <span className="shrink-0 text-xs uppercase tracking-wide text-neutral-500">
                     {b.paid_at && (
-                      <span className="mr-2 text-emerald-700">
+                      <span className="mr-2 text-emerald-400">
                         Paid
                         {b.amount_cents != null
                           ? ` ${formatPrice(b.amount_cents, b.currency ?? "USD")}`
@@ -132,7 +132,7 @@ function Section({
                     {STATUS_LABEL[b.status] ?? b.status}
                   </span>
                 </div>
-                <p className="mt-1 text-neutral-600">
+                <p className="mt-1 text-neutral-400">
                   {b.barbershops?.name}
                   {b.barbershop_staff?.full_name
                     ? ` · with ${b.barbershop_staff.full_name}`
@@ -150,7 +150,7 @@ function Section({
                     <button
                       disabled={busy === b.id}
                       onClick={() => onPay(b)}
-                      className="rounded bg-neutral-900 px-3 py-1 font-medium text-white disabled:opacity-50"
+                      className="bg-guild-yellow px-3 py-1 font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
                     >
                       {busy === b.id ? "Opening checkout…" : "Pay now"}
                     </button>
@@ -171,7 +171,7 @@ function Section({
                       <button
                         disabled={busy === b.id}
                         onClick={() => onCancel(b)}
-                        className="text-red-600 underline disabled:opacity-50"
+                        className="text-red-400 underline disabled:opacity-50"
                       >
                         {busy === b.id ? "Cancelling…" : "Cancel"}
                       </button>

@@ -5,7 +5,7 @@ export const metadata = { title: "Privacy Policy — The Guild" };
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
+    <main className="mx-auto w-full max-w-2xl flex-1 bg-guild-bone px-6 py-16">
       <p className="text-xs uppercase tracking-widest text-yellow-600">
         The Guild — Grooming Standard
       </p>

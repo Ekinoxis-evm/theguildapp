@@ -35,11 +35,11 @@ export function RegisterButton({
       <button
         onClick={register}
         disabled={saving}
-        className="w-full rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+        className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
       >
         {saving ? "Registering…" : "Register for this event"}
       </button>
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </div>
   );
 }

@@ -91,12 +91,12 @@ export function AffiliationsManager({
           {current.map((a) => (
             <li
               key={a.id}
-              className="flex items-baseline justify-between gap-3 rounded border border-neutral-300 p-3 text-sm"
+              className="flex items-baseline justify-between gap-3 border border-neutral-800 p-3 text-sm"
             >
               <div>
                 <strong>{a.barbershops?.name ?? "Barbershop"}</strong>
                 {a.confirmed_at ? (
-                  <span className="ml-2 text-xs font-medium text-emerald-700">
+                  <span className="ml-2 text-xs font-medium text-emerald-400">
                     ✓ Confirmed by shop
                   </span>
                 ) : (
@@ -104,7 +104,7 @@ export function AffiliationsManager({
                     Awaiting shop confirmation
                   </span>
                 )}
-                <p className="text-neutral-600">
+                <p className="text-neutral-400">
                   {a.role_title ? `${a.role_title} · ` : ""}since{" "}
                   {formatDate(a.started_on)}
                 </p>
@@ -112,7 +112,7 @@ export function AffiliationsManager({
               <button
                 disabled={busy}
                 onClick={() => end(a)}
-                className="shrink-0 text-xs text-red-600 underline disabled:opacity-50"
+                className="shrink-0 text-xs text-red-400 underline disabled:opacity-50"
               >
                 End enrollment
               </button>
@@ -134,7 +134,7 @@ export function AffiliationsManager({
       )}
 
       {shops.length > 0 ? (
-        <form onSubmit={add} className="mt-4 space-y-3 rounded border border-neutral-300 p-3">
+        <form onSubmit={add} className="mt-4 space-y-3 border border-neutral-800 p-3">
           <div className="grid grid-cols-2 gap-3">
             <label className="block text-sm">
               Barbershop
@@ -164,11 +164,11 @@ export function AffiliationsManager({
           <button
             type="submit"
             disabled={busy || !shopId}
-            className="rounded bg-neutral-900 px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
+            className="bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
           >
             {busy ? "Adding…" : "Add enrollment"}
           </button>
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="text-sm text-red-400">{error}</p>}
         </form>
       ) : (
         <p className="mt-3 text-sm text-neutral-500">

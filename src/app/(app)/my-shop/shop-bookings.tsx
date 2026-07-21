@@ -63,11 +63,11 @@ export function ShopBookings({ bookings: initial }: { bookings: Booking[] }) {
       />
       {past.length > 0 && (
         <>
-          <h3 className="mt-6 text-sm font-medium text-neutral-600">History</h3>
+          <h3 className="mt-6 text-sm font-medium text-neutral-400">History</h3>
           <BookingList bookings={past} emptyText="" busy={busy} onTransition={transition} />
         </>
       )}
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
     </section>
   );
 }
@@ -93,7 +93,7 @@ function BookingList({
           [b.profiles?.first_name, b.profiles?.last_name].filter(Boolean).join(" ") ||
           "Client";
         return (
-          <li key={b.id} className="rounded border border-neutral-300 p-3 text-sm">
+          <li key={b.id} className="border border-neutral-800 p-3 text-sm">
             <div className="flex items-center justify-between gap-3">
               <span>
                 <strong>{formatDateTime(b.scheduled_at)}</strong> — {client}
@@ -103,7 +103,7 @@ function BookingList({
                     ? ` · with ${b.barbershop_staff.full_name}`
                     : ""}{" "}
                   · <span className="uppercase">{b.status.replace("_", " ")}</span>
-                  {b.paid_at && <span className="text-emerald-700"> · PAID</span>}
+                  {b.paid_at && <span className="text-emerald-400"> · PAID</span>}
                 </span>
               </span>
               <span className="flex shrink-0 gap-2">
@@ -112,7 +112,7 @@ function BookingList({
                     key={a.to}
                     disabled={busy === b.id}
                     onClick={() => onTransition(b, a.to)}
-                    className="rounded border border-neutral-300 px-2 py-1 text-xs disabled:opacity-50"
+                    className="border border-neutral-800 px-2 py-1 text-xs disabled:opacity-50"
                   >
                     {a.label}
                   </button>
