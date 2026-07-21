@@ -12,14 +12,18 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createClient } from "@supabase/supabase-js";
 
-function loadEnvLocal() {
-  const file = readFileSync(resolve(process.cwd(), ".env.local"), "utf8");
+// Target ambient = whatever env file ENV_FILE points at (default .env.local).
+// Demo ambient: ENV_FILE=.env.demo pnpm seed:test-users  (alias: pnpm seed:demo)
+function loadEnvFile() {
+  const envFile = process.env.ENV_FILE ?? ".env.local";
+  const file = readFileSync(resolve(process.cwd(), envFile), "utf8");
   for (const line of file.split("\n")) {
     const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
     if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim();
   }
+  console.log(`Seeding against ${envFile} → ${process.env.NEXT_PUBLIC_SUPABASE_URL}`);
 }
-loadEnvLocal();
+loadEnvFile();
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const secret = process.env.SUPABASE_SECRET_KEY;
@@ -290,6 +294,57 @@ async function main() {
     if (error) throw error;
   }
   console.log("event manager ready (1 live event: /e/guild-test-activation)");
+
+  // ── Completed booking history: makes the demo look alive (shop counter,
+  //    barber track record). Service role writes bypass the payment guards. ──
+  const clientId = ids["ekinoxis.evm+client@gmail.com"];
+  const { count: doneCount } = await admin
+    .from("bookings")
+    .select("id", { count: "exact", head: true })
+    .eq("client_id", clientId)
+    .eq("status", "completed");
+  if (!doneCount) {
+    const { data: svc } = await admin
+      .from("services")
+      .select("id, price_cents, duration_minutes")
+      .eq("barbershop_id", shop.id)
+      .limit(1)
+      .single();
+    const { data: locRow } = await admin
+      .from("barbershop_locations")
+      .select("id")
+      .eq("barbershop_id", shop.id)
+      .limit(1)
+      .single();
+    if (svc && locRow) {
+      const rows = [21, 14, 7].map((daysAgo) => {
+        const when = new Date();
+        when.setDate(when.getDate() - daysAgo);
+        when.setHours(15, 0, 0, 0);
+        return {
+          client_id: clientId,
+          barbershop_id: shop.id,
+          location_id: locRow.id,
+          service_id: svc.id,
+          scheduled_at: when.toISOString(),
+          duration_minutes: svc.duration_minutes,
+          status: "completed",
+          style_confirmed_at: when.toISOString(),
+          amount_cents: svc.price_cents,
+          currency: "USD",
+          paid_at: when.toISOString(),
+        };
+      });
+      const { error } = await admin.from("bookings").insert(rows);
+      if (error) throw error;
+      await admin
+        .from("barbershops")
+        .update({ services_fulfilled_count: rows.length })
+        .eq("id", shop.id)
+        .eq("services_fulfilled_count", 0);
+      console.log("booking history ready (3 completed, paid bookings)");
+    }
+  }
 
   console.log("\nAll test users seeded. Sign in with any alias — OTP codes arrive at ekinoxis.evm@gmail.com.");
 }

@@ -1,5 +1,22 @@
 # Environment & Tooling Setup
 
+## Environments (the ambient architecture)
+
+Two deployed ambients, one Vercel project, env vars scoped per environment:
+
+| Ambient | URL | Git | Supabase project | Stripe | Data |
+|---|---|---|---|---|---|
+| **Production** | theguildapp.vercel.app | `main` | `jkpxoasqextvneuixzmz` (prod) | test mode now → **live keys at launch** | real users only |
+| **Demo** | stable preview URL of the `demo` branch (aliasable to e.g. `demo-theguildapp.vercel.app`) | `demo` | `theguildapp-demo` (separate project) | **always test mode** | seeded dummies — safe to reset/trash |
+| Local dev | localhost:3000 | any | demo project by default | test mode | same seed |
+
+Rules:
+
+- **Vercel env scoping is the switch**: Production-scoped vars point at the prod Supabase + (later) live Stripe; Preview-scoped vars point at the demo Supabase + test Stripe. `vercel env add <NAME> production` / `vercel env add <NAME> preview`. Code never branches on environment — it just reads its env.
+- **Migrations flow demo-first**: apply every migration to the demo project, verify, then to prod (`supabase link --project-ref <ref>` per target, `supabase db push`; MCP `apply_migration` fallback). Both projects always share the same schema version.
+- **Seeding**: `pnpm seed:test-users` targets whatever `ENV_FILE` points at (default `.env.local`). Demo: keep a `.env.demo` (never committed) with the demo project's URL/keys and run `pnpm seed:demo`. Once the demo ambient exists, the role test accounts live THERE — prod gets cleaned of them before launch.
+- Stripe live keys only ever enter **Production** env vars. The demo ambient stays on test mode forever — demo checkout uses card `4242 4242 4242 4242`.
+
 ## Prerequisites (already installed on the founder's machine)
 
 - Node 24 + pnpm 10 · Supabase CLI · Vercel CLI · Stripe CLI · gh CLI — all authenticated.
