@@ -1,11 +1,11 @@
 # CLAUDE.md — The Guild App
 
-Premium barbershop platform, **barber-centric**: barbers are self-managed professional profiles (certifications, shop enrollment, at-home service); B2C bookings are paid in full upfront via Stripe; B2B event activations. Read `docs/PRODUCT.md` before building any feature — it is the source of truth for requirements. Track all work against `docs/ROADMAP.md`. Production: https://theguildapp.vercel.app (Phases 0–4 + Stripe + barber-centric MVP live).
+Premium barbershop platform, **barber-centric**: barbers are self-managed professional profiles (certifications, shop enrollment, at-home service); B2C bookings are paid in full upfront via Stripe; B2B event activations. Read `docs/PRODUCT.md` before building any feature — it is the source of truth for requirements. Track all work against `docs/ROADMAP.md`. Production: https://theguildapp.vercel.app (Phases 0–4 + Stripe + barber-centric MVP + **full brand pass** live: branded landing, role-choice entry at `/welcome`, role-aware mobile bottom nav, every surface on brand tokens).
 
 ## Stack
 
 - **Next.js** (App Router, TypeScript, Tailwind CSS, `src/` dir, `@/*` imports) on **Vercel**
-- **Supabase**: Postgres + RLS, Auth (email OTP live; Google coded behind `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED`), Storage (style photos, avatars, barber photos, cert documents — all private buckets)
+- **Supabase**: Postgres + RLS, Auth (email OTP live; optional password sign-in on /login — only the seeded test accounts have passwords; Google coded behind `NEXT_PUBLIC_GOOGLE_AUTH_ENABLED`), Storage (style photos, avatars, barber photos, cert documents — all private buckets)
 - **Stripe** (live, test mode): hosted Checkout Sessions only — bookings paid upfront, premium $19.99/mo subscription, Customer Portal, signature-verified webhook at `src/app/api/stripe/webhook`. **Always load the `stripe:stripe-best-practices` skill before touching Stripe code.**
 - **Google Maps Platform**: places autocomplete, shop map, navigation links
 - **Resend**: transactional email (payment/booking confirmations + ICS, lead alerts), best-effort via `src/lib/email.ts`. **Privy**: deferred.
@@ -46,8 +46,10 @@ supabase gen types typescript --linked > src/lib/database.types.ts   # or MCP ge
 - Roles: a user has one account, `profiles.role` ∈ `client | barbershop_owner | private_barber | event_manager | admin`; clients have `tier` ∈ `standard | premium` (premium = Stripe subscription via `/premium`, or manual admin grant — webhook downgrade never touches manual grants).
 - **Barber-centric model** (2026-07-14): `private_barbers` is the general professional profile (headline, specialties, certifications, optional `barber_affiliations` shop enrollment, `offers_home_service` flag). Barber directory/profiles are open to all signed-in users; premium gates only the at-home booking action.
 - Mutations are client-side under RLS (browser Supabase client) with SECURITY DEFINER RPCs for privileged ops; there are no server actions in `my-barber/`/`admin/`. The Stripe flows (booking actions, `/premium`, webhook) are the server-side exception.
-- Minimal, monochrome UI for now (black/white/gold accent) — real branding lands later via Figma MCP. Do not invest in decorative styling yet.
-- English-only copy for MVP, but no hardcoded strings in components deeper than page level where practical — keeps the later ES translation cheap.
+- **Brand doctrine is law** (package received 2026-07-20; sources in `../BRANDING/` outside the repo — never commit them; web logos in `public/brand/`): guild-black `#0B0B0C` dominates, white structures, guild-yellow `#FFC300` intervenes (never dominates), bone `#E6E1D8` for light reading surfaces. Sharp corners (no `rounded` except `rounded-full` avatars), yellow primary buttons with black uppercase type, `.guild-cut` diagonal section edges. Display type via `--font-display` token — swap to KUMO with one `@font-face` when Diana sends files. Voice: direct, specific, declarative (see doctrine PDF).
+- Authenticated shell: `(app)/layout.tsx` renders the dark base + role-aware `BottomNav` (hidden on /welcome and /onboarding). New (app) pages inherit dark — style for it.
+- Test accounts: `pnpm seed:test-users` (idempotent) — one per role via founder-inbox plus-aliases (+client, +premium, +shop, +barber, +events, +admin); passwords in `.env.local` (`TEST_USER_PASSWORD`, admin separate). Tester creds are documented in the founder's Notion demo page.
+- i18n: cookie locale (EN default, ES switcher) with typed dictionaries in `src/lib/dictionaries.ts` — the `Dict` type forces ES to match EN. Landing, login-adjacent, dashboard, welcome, premium are translated; inner surfaces still EN-only (extend the dict per page as you touch them).
 
 ## MCP servers (`.mcp.json`)
 

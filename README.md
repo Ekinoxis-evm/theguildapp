@@ -17,7 +17,7 @@ The Guild is a premium men's grooming brand (Miami-born, black & gold, industria
 - **B2C** — Clients discover barbershops on a map and browse the **barber directory** — every Guild barber has a self-managed, LinkedIn-style professional profile (headline, specialties, certifications with a Guild-verified badge, shop enrollment history). Clients book and **pay in full upfront via Stripe**; premium subscribers ($19.99/mo) can book at-home service from barbers who offer it. Everyone manages a haircut style profile (4 reference photos of their current cut).
 - **B2B** — Brands hire The Guild for event activations (e.g. Inter Miami match-day pop-ups). Event managers create QR check-in forms; attendees sign up to claim their grooming service. Public lead form at `/partners`.
 
-**Status:** Phases 0–4 + Stripe payments + barber-centric profiles are live in production (test-mode payments). See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the item-by-item state.
+**Status:** Phases 0–4 + Stripe payments + barber-centric profiles + the **full brand pass** are live in production (test-mode payments). The app is role-complete: branded landing → role-choice entry (`/welcome`) → per-role dashboards with mobile bottom navigation, every surface on the black/gold brand system. One seeded test account per role exists for end-to-end testing (`pnpm seed:test-users`; credentials in `.env.local` and the team Notion). See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the item-by-item state and what's next.
 
 Full product spec: [`docs/PRODUCT.md`](docs/PRODUCT.md) · Roadmap: [`docs/ROADMAP.md`](docs/ROADMAP.md)
 
