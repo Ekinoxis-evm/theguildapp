@@ -66,6 +66,16 @@ export default async function BookPage({
     if (data) photoUrls.push({ position: photo.position, url: data.signedUrl });
   }
 
+  // Locations that have configured opening hours get the real slot picker.
+  const { data: hoursRows } = await supabase
+    .from("location_hours")
+    .select("location_id")
+    .in(
+      "location_id",
+      shop.barbershop_locations.map((l: { id: string }) => l.id)
+    );
+  const hoursLocationIds = [...new Set((hoursRows ?? []).map((h) => h.location_id))];
+
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
       <p className="text-sm">
@@ -87,6 +97,7 @@ export default async function BookPage({
         photosComplete={photosComplete}
         oldestPhotoUpdate={oldestUpdate}
         photoUrls={photoUrls}
+        hoursLocationIds={hoursLocationIds}
       />
     </main>
   );

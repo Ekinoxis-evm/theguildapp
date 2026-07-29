@@ -32,3 +32,5 @@ The founder's requirement: client data (photos, addresses, phones) must have **m
 
 - Account deletion: cascade profile, photos (storage objects included), addresses; keep anonymized booking rows for accounting.
 - Data export on request (GDPR/CCPA-style) — manual is acceptable at MVP, documented here.
+
+- Accepted advisor WARN (2026-07-29): `btree_gist` extension lives in the `public` schema (needed by the booking exclusion constraints). Low risk; revisit if Supabase adds first-class extension-schema migration.

@@ -1,6 +1,7 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import Link from "next/link";
 import { formatDate, formatPrice } from "@/lib/format";
 import { createBooking } from "./actions";
@@ -21,7 +22,7 @@ type StaffOption = {
 };
 
 const inputClass =
-  "mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900";
+  "mt-1 w-full border border-neutral-700 bg-transparent px-3 py-2 text-base outline-none focus:border-guild-yellow";
 
 export function BookingForm({
   shopId,
@@ -35,6 +36,7 @@ export function BookingForm({
   photosComplete,
   oldestPhotoUpdate,
   photoUrls,
+  hoursLocationIds,
 }: {
   shopId: string;
   serviceId: string;
@@ -47,6 +49,7 @@ export function BookingForm({
   photosComplete: boolean;
   oldestPhotoUpdate: string | null;
   photoUrls: { position: string; url: string }[];
+  hoursLocationIds: string[];
 }) {
   // Style gate first: the client confirms their four photos are current
   // before picking a slot (PRODUCT.md "style check on every booking").
@@ -54,8 +57,42 @@ export function BookingForm({
   const [locationId, setLocationId] = useState(locations[0]?.id ?? null);
   const [staffId, setStaffId] = useState<string | null>(null);
   const [when, setWhen] = useState("");
+  const [day, setDay] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().slice(0, 10);
+  });
+  const [slots, setSlots] = useState<string[] | null>(null);
+  const [slot, setSlot] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const usesSlots = locationId != null && hoursLocationIds.includes(locationId);
+
+  useEffect(() => {
+    if (!usesSlots || !locationId || !day) return;
+    let cancelled = false;
+    const supabase = createClient();
+    Promise.resolve().then(() => {
+      if (!cancelled) {
+        setSlots(null);
+        setSlot(null);
+      }
+    });
+    supabase
+      .rpc("available_slots", {
+        p_location_id: locationId,
+        p_service_id: serviceId,
+        p_day: day,
+        p_staff_id: staffId ?? undefined,
+      })
+      .then(({ data, error: rpcError }) => {
+        if (!cancelled) setSlots(rpcError ? [] : ((data as string[]) ?? []));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [usesSlots, locationId, staffId, day, serviceId]);
 
   if (!photosComplete) {
     return (
@@ -117,12 +154,13 @@ export function BookingForm({
     e.preventDefault();
     setError(null);
     setSaving(true);
+    const scheduledAt = usesSlots && slot ? slot : new Date(when).toISOString();
     const result = await createBooking({
       shopId,
       serviceId,
       locationId,
       staffId,
-      scheduledAt: new Date(when).toISOString(),
+      scheduledAt,
     });
     if (!result.ok) {
       setSaving(false);
@@ -179,20 +217,66 @@ export function BookingForm({
         </label>
       )}
 
-      <label className="block text-sm">
-        Date &amp; time
-        <input
-          type="datetime-local"
-          required
-          value={when}
-          onChange={(e) => setWhen(e.target.value)}
-          className={inputClass}
-        />
-      </label>
+      {usesSlots ? (
+        <div className="text-sm">
+          <label className="block">
+            Date
+            <input
+              type="date"
+              required
+              min={new Date().toISOString().slice(0, 10)}
+              value={day}
+              onChange={(e) => setDay(e.target.value)}
+              className={inputClass}
+            />
+          </label>
+          <div className="mt-3">
+            {slots === null ? (
+              <p className="text-neutral-500">Checking availability…</p>
+            ) : slots.length === 0 ? (
+              <p className="text-neutral-500">
+                No open times that day — try another date
+                {staffId ? " or another barber" : ""}.
+              </p>
+            ) : (
+              <div className="grid grid-cols-3 gap-2">
+                {slots.map((iso) => (
+                  <button
+                    key={iso}
+                    type="button"
+                    onClick={() => setSlot(iso)}
+                    className={
+                      slot === iso
+                        ? "bg-guild-yellow px-2 py-2 text-sm font-bold text-guild-black"
+                        : "border border-neutral-700 px-2 py-2 text-sm hover:border-guild-yellow"
+                    }
+                  >
+                    {new Date(iso).toLocaleTimeString([], {
+                      hour: "numeric",
+                      minute: "2-digit",
+                    })}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ) : (
+        <label className="block text-sm">
+          Date &amp; time
+          <input
+            type="datetime-local"
+            required={!usesSlots}
+            value={when}
+            onChange={(e) => setWhen(e.target.value)}
+            className={inputClass}
+          />
+        </label>
+      )}
 
       <button
         type="submit"
-        disabled={saving || !when}
+        disabled={saving || (usesSlots ? !slot : !when)}
         className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black disabled:opacity-50"
       >
         {saving ? "Redirecting to payment…" : "Book & pay"}

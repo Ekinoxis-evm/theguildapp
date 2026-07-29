@@ -91,6 +91,26 @@ connect_accounts             -- Stripe Connect payouts (3.5): one per user,
   -- destination charges minus the 15% platform fee at checkout
 ```
 
+## Availability (7.1)
+
+```
+barbershop_locations.timezone   -- IANA tz, default America/New_York; hours are local
+
+location_hours                  -- one open/close range per weekday; no row = closed
+  location_id → barbershop_locations
+  weekday 0-6, opens_at time, closes_at time (unique per location+weekday)
+  -- RLS: owner manages; signed-in users read approved shops' hours
+
+-- bookings hard guards (btree_gist exclusion constraints — race-proof):
+--   same staff_id can never overlap; same private_barber_id can never overlap
+--   (active statuses only; ranges via immutable timezone('utc', …) tsrange)
+-- enforce_booking_slot() trigger (client writes only): booking must fall inside
+--   location hours (only if the location configured any) and concurrent shop
+--   bookings must stay below roster size (capacity)
+-- available_slots(location, service, day, staff?) SECURITY DEFINER RPC:
+--   30-min grid of open UTC start times; times only, no PII; authenticated only
+```
+
 ## Bookings
 
 ```

@@ -86,6 +86,17 @@ The app is **role-complete and testable end-to-end**: every role has a branded, 
 | 6.6 | Shop-enrolled barbers may also offer private services | done (2026-07-15) — founder: barbers fully independent, no shop approval/cut; enrollment badge is informational |
 | 6.7 | Booking flow: pick a specific barber at a shop (optional "Any available barber" default) | done (2026-07-15) — `bookings.staff_id` validated to shop, staff picker in booking form, barber shown in all booking lists, shop page Barbers section with Guild-profile links |
 
+## Phase 7 — Booking depth _(Squire-parity where it counts; approved 2026-07-29)_
+
+| # | Item | Status |
+|---|---|---|
+| 7.1 | Availability engine: location opening hours (+timezone), hours editor in /my-shop, slot picker in booking flow, DB-level double-booking prevention (exclusion constraints + capacity/within-hours trigger), `available_slots` RPC | done (2026-07-29) — verified E2E vs live DB: slots respect hours/tz, Sunday closed, overlap physically rejected |
+| 7.2 | Waitlist: join when a day is full; notify on cancellation | todo |
+| 7.3 | Reviews & ratings: stars + comment after completed paid bookings only | todo |
+| 7.4 | One-tap rebook + cadence nudge email ("time for your next cut") | todo |
+| 7.5 | Shareable public booking links for shops & barbers (IG bio ready) | todo |
+| 7.6 | Per-shop memberships (shop subscription via Stripe + Connect) | todo — after volume |
+
 ## Phase 5 — Brand & expansion
 
 | # | Item | Status |

@@ -128,6 +128,31 @@ describe("anonymous writes are rejected", () => {
     expect(error).not.toBeNull();
     expect(data ?? []).toHaveLength(0);
   });
+
+  it("cannot read location hours (signed-in only)", async () => {
+    const { data } = await anon.from("location_hours").select("*");
+    expect(data ?? []).toHaveLength(0);
+  });
+
+  it("cannot write location hours", async () => {
+    const { error } = await anon.from("location_hours").insert({
+      location_id: "00000000-0000-0000-0000-000000000000",
+      weekday: 1,
+      opens_at: "10:00",
+      closes_at: "19:00",
+    });
+    expect(error).not.toBeNull();
+  });
+
+  it("cannot call available_slots (signed-in only)", async () => {
+    const { data, error } = await anon.rpc("available_slots", {
+      p_location_id: "00000000-0000-0000-0000-000000000000",
+      p_service_id: "00000000-0000-0000-0000-000000000000",
+      p_day: "2026-08-01",
+    });
+    expect(error).not.toBeNull();
+    expect(data ?? []).toHaveLength(0);
+  });
 });
 
 describe("storage buckets stay private", () => {

@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       b2b_leads: {
@@ -96,6 +121,13 @@ export type Database = {
             referencedRelation: "barbershops"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "barber_affiliations_confirmed_by_fkey"
+            columns: ["confirmed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       barber_certifications: {
@@ -161,6 +193,7 @@ export type Database = {
           lat: number | null
           lng: number | null
           state: string
+          timezone: string
           zip_code: string
         }
         Insert: {
@@ -174,6 +207,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           state: string
+          timezone?: string
           zip_code: string
         }
         Update: {
@@ -187,6 +221,7 @@ export type Database = {
           lat?: number | null
           lng?: number | null
           state?: string
+          timezone?: string
           zip_code?: string
         }
         Relationships: [
@@ -632,6 +667,41 @@ export type Database = {
           },
         ]
       }
+      location_hours: {
+        Row: {
+          closes_at: string
+          created_at: string
+          id: string
+          location_id: string
+          opens_at: string
+          weekday: number
+        }
+        Insert: {
+          closes_at: string
+          created_at?: string
+          id?: string
+          location_id: string
+          opens_at: string
+          weekday: number
+        }
+        Update: {
+          closes_at?: string
+          created_at?: string
+          id?: string
+          location_id?: string
+          opens_at?: string
+          weekday?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "location_hours_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "barbershop_locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       private_barbers: {
         Row: {
           base_price_cents: number
@@ -841,6 +911,15 @@ export type Database = {
         Args: { barber_id: string }
         Returns: undefined
       }
+      available_slots: {
+        Args: {
+          p_day: string
+          p_location_id: string
+          p_service_id: string
+          p_staff_id?: string
+        }
+        Returns: string[]
+      }
       barber_service_history: {
         Args: { p_barber_id: string }
         Returns: {
@@ -874,8 +953,8 @@ export type Database = {
         Args: { p_shop_id: string }
         Returns: {
           full_name: string
-          guild_headline: string | null
-          guild_profile_id: string | null
+          guild_headline: string
+          guild_profile_id: string
           id: string
           skills: string[]
         }[]
@@ -1027,6 +1106,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       barbershop_status: ["pending", "approved", "suspended"],

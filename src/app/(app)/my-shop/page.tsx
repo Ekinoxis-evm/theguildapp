@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { RegisterShopForm } from "./register-form";
 import { LocationsManager } from "./locations";
+import { HoursEditor } from "./hours";
 import { ServicesManager } from "./services";
 import { StaffManager } from "./staff";
 import { ShopBookings } from "./shop-bookings";
@@ -85,6 +86,7 @@ export default async function MyShopPage({
     { data: staff },
     { data: bookings },
     { data: enrollments },
+    { data: hours },
   ] = await Promise.all([
     supabase
       .from("barbershop_locations")
@@ -116,6 +118,10 @@ export default async function MyShopPage({
       .eq("barbershop_id", shop.id)
       .is("ended_on", null)
       .order("started_on", { ascending: false }),
+    supabase
+      .from("location_hours")
+      .select("*, barbershop_locations!inner(barbershop_id)")
+      .eq("barbershop_locations.barbershop_id", shop.id),
   ]);
 
   const { data: connectRow } = await supabase
@@ -159,6 +165,14 @@ export default async function MyShopPage({
           unavailable={payouts === "unavailable"}
         />
         <LocationsManager shopId={shop.id} initial={locations ?? []} />
+        {(locations ?? []).map((loc) => (
+          <HoursEditor
+            key={loc.id}
+            locationId={loc.id}
+            label={loc.city ? `${loc.city}` : loc.formatted_address}
+            initial={(hours ?? []).filter((h) => h.location_id === loc.id)}
+          />
+        ))}
         <ServicesManager shopId={shop.id} initial={services ?? []} />
         <StaffManager shopId={shop.id} initial={staff ?? []} />
         <EnrollmentsManager initial={enrollments ?? []} />
