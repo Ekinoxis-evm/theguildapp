@@ -92,7 +92,7 @@ The app is **role-complete and testable end-to-end**: every role has a branded, 
 |---|---|---|
 | 7.1 | Availability engine: location opening hours (+timezone), hours editor in /my-shop, slot picker in booking flow, DB-level double-booking prevention (exclusion constraints + capacity/within-hours trigger), `available_slots` RPC | done (2026-07-29) — verified E2E vs live DB: slots respect hours/tz, Sunday closed, overlap physically rejected |
 | 7.2 | Waitlist: join when a day is full; notify on cancellation | done (2026-08-02) — `booking_waitlist` + join button when zero slots; cancellations (client or shop) ping `/api/waitlist/notify`, which re-verifies real availability then emails via Resend (best-effort, once per entry) |
-| 7.3 | Reviews & ratings: stars + comment after completed paid bookings only | todo |
+| 7.3 | Reviews & ratings: stars + comment after completed paid bookings only | done (2026-08-03) — verified-purchase trigger, rate/edit on /bookings history, ★ badge + review list on shop page, barber profile, and shops list; **migration pending prod apply (project was paused mid-work — apply on restore)** |
 | 7.4 | One-tap rebook + cadence nudge email ("time for your next cut") | todo |
 | 7.5 | Shareable public booking links for shops & barbers (IG bio ready) | done (2026-08-02) — copy-link cards on /my-shop and /my-barber (approved only); login preserves destination via ?next= |
 | 7.6 | Per-shop memberships (shop subscription via Stripe + Connect) | todo — after volume |

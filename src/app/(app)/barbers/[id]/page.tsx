@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { RatingBadge, ReviewList } from "@/components/rating";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
@@ -58,6 +59,13 @@ export default async function BarberPage({
     signedUrl(barber.setup_photo_path),
   ]);
 
+  const { data: barberReviews } = await supabase
+    .from("reviews")
+    .select("rating, comment, created_at")
+    .eq("private_barber_id", barber.profile_id)
+    .order("created_at", { ascending: false })
+    .limit(30);
+
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <p className="text-sm">
@@ -70,7 +78,8 @@ export default async function BarberPage({
         <p className="mt-1 text-sm text-neutral-400">{barber.headline}</p>
       )}
       <p className="mt-1 text-sm text-guild-yellow">
-        {barber.services_fulfilled_count} services fulfilled
+        {barber.services_fulfilled_count} services fulfilled{" "}
+        · <RatingBadge reviews={barberReviews ?? []} />
         {barber.years_experience != null
           ? ` · ${barber.years_experience} yrs experience`
           : ""}
@@ -258,6 +267,7 @@ export default async function BarberPage({
           </p>
         )
       )}
+      <ReviewList reviews={barberReviews ?? []} />
     </main>
   );
 }

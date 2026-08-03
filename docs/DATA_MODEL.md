@@ -122,6 +122,20 @@ booking_waitlist               -- one entry per client+location+day
   --   available_slots, then emails un-notified entries once (Resend, best-effort)
 ```
 
+## Reviews (7.3)
+
+```
+reviews                        -- verified purchase only, one per booking
+  booking_id UNIQUE → bookings, client_id → profiles
+  barbershop_id / private_barber_id / staff_id   -- stamped by trigger from the
+                                 -- booking; clients can never forge the target
+  rating 1-5, comment ≤1000
+  -- validate_review(): booking must belong to the reviewer, be completed AND
+  --   paid (service-role path skips ownership for seeds)
+  -- guard_review_update(): edits touch rating/comment only
+  -- RLS: signed-in read all (anonymous display — no names); owner insert/update/delete
+```
+
 ## Bookings
 
 ```

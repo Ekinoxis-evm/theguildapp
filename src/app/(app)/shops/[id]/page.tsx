@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { formatPrice } from "@/lib/format";
 import { navigationUrl } from "@/lib/maps";
+import { RatingBadge, ReviewList } from "@/components/rating";
 
 export const metadata = { title: "Barbershop — The Guild" };
 
@@ -35,6 +36,13 @@ export default async function ShopPage({
   const services = shop.services.filter((s) => s.active);
   const barbers = staff ?? [];
 
+  const { data: shopReviews } = await supabase
+    .from("reviews")
+    .select("rating, comment, created_at")
+    .eq("barbershop_id", shop.id)
+    .order("created_at", { ascending: false })
+    .limit(30);
+
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <p className="text-sm">
@@ -44,7 +52,8 @@ export default async function ShopPage({
       </p>
       <h1 className="mt-2 text-2xl font-semibold">{shop.name}</h1>
       <p className="mt-1 text-sm text-guild-yellow">
-        {shop.services_fulfilled_count} services fulfilled
+        {shop.services_fulfilled_count} services fulfilled{" "}
+        · <RatingBadge reviews={shopReviews ?? []} />
       </p>
       {shop.description && (
         <p className="mt-3 text-sm text-neutral-400">{shop.description}</p>
@@ -139,6 +148,7 @@ export default async function ShopPage({
           <li className="text-sm text-neutral-500">No bookable services yet.</li>
         )}
       </ul>
+      <ReviewList reviews={shopReviews ?? []} />
     </main>
   );
 }

@@ -21,6 +21,14 @@ export default async function BookingsPage() {
     .eq("client_id", user.id)
     .order("scheduled_at", { ascending: false });
 
+  const { data: myReviews } = await supabase
+    .from("reviews")
+    .select("booking_id, rating, comment")
+    .eq("client_id", user.id);
+  const reviewByBooking = Object.fromEntries(
+    (myReviews ?? []).map((rv) => [rv.booking_id, { rating: rv.rating, comment: rv.comment }])
+  );
+
   const withCalendar = (bookings ?? []).map((b) => ({
     ...b,
     googleCalendarUrl: googleCalendarUrl({
@@ -41,7 +49,7 @@ export default async function BookingsPage() {
         </Link>
       </p>
       <h1 className="mt-2 text-2xl font-semibold">Bookings</h1>
-      <ClientBookings bookings={withCalendar} />
+      <ClientBookings bookings={withCalendar} reviews={reviewByBooking} clientId={user.id} />
       <p className="mt-8 text-sm">
         <Link href="/shops" className="underline">
           Book a new appointment →

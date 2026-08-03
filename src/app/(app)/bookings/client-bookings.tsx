@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { ReviewForm, type ReviewSummary } from "./review-form";
 import type { Database } from "@/lib/database.types";
 import { formatDateTime, formatPrice } from "@/lib/format";
 import { payBooking } from "./actions";
@@ -26,7 +27,7 @@ const STATUS_LABEL: Record<string, string> = {
   no_show: "No-show",
 };
 
-export function ClientBookings({ bookings: initial }: { bookings: Booking[] }) {
+export function ClientBookings({ bookings: initial, reviews, clientId }: { bookings: Booking[]; reviews: Record<string, NonNullable<ReviewSummary>>; clientId: string }) {
   const [bookings, setBookings] = useState(initial);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -93,6 +94,8 @@ export function ClientBookings({ bookings: initial }: { bookings: Booking[] }) {
           busy={busy}
           onCancel={cancel}
           onPay={payNow}
+          reviews={reviews}
+          clientId={clientId}
         />
       )}
       {error && <p className="text-sm text-red-400">{error}</p>}
@@ -107,6 +110,8 @@ function Section({
   busy,
   onCancel,
   onPay,
+  reviews,
+  clientId,
 }: {
   title: string;
   bookings: Booking[];
@@ -114,6 +119,8 @@ function Section({
   busy: string | null;
   onCancel: (b: Booking) => void;
   onPay: (b: Booking) => void;
+  reviews?: Record<string, { rating: number; comment: string | null }>;
+  clientId?: string;
 }) {
   return (
     <section>
@@ -187,6 +194,13 @@ function Section({
                     </>
                   )}
                 </div>
+                {clientId && b.status === "completed" && b.paid_at && (
+                  <ReviewForm
+                    bookingId={b.id}
+                    clientId={clientId}
+                    existing={reviews?.[b.id] ?? null}
+                  />
+                )}
               </li>
             );
           })}

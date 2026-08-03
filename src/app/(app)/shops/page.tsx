@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ShopsMap, type ShopPin } from "@/components/maps/shops-map";
+import { RatingBadge } from "@/components/rating";
 
 export const metadata = { title: "Barbershops — The Guild" };
 
@@ -25,6 +26,18 @@ export default async function ShopsPage() {
       .filter((l) => l.lat !== null && l.lng !== null)
       .map((l) => ({ shopId: shop.id, name: shop.name, lat: l.lat!, lng: l.lng! }))
   );
+
+  const { data: allReviews } = await supabase
+    .from("reviews")
+    .select("barbershop_id, rating")
+    .not("barbershop_id", "is", null);
+  const reviewsByShop = new Map<string, { rating: number }[]>();
+  for (const r of allReviews ?? []) {
+    if (!r.barbershop_id) continue;
+    const list = reviewsByShop.get(r.barbershop_id) ?? [];
+    list.push({ rating: r.rating });
+    reviewsByShop.set(r.barbershop_id, list);
+  }
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
@@ -53,7 +66,8 @@ export default async function ShopsPage() {
                 <div className="flex items-baseline justify-between gap-3">
                   <p className="font-medium">{shop.name}</p>
                   <p className="shrink-0 text-xs text-guild-yellow">
-                    {shop.services_fulfilled_count} services fulfilled
+                    {shop.services_fulfilled_count} services fulfilled{" "}
+                    <RatingBadge reviews={reviewsByShop.get(shop.id) ?? []} />
                   </p>
                 </div>
                 {cities && <p className="mt-1 text-sm text-neutral-400">{cities}</p>}

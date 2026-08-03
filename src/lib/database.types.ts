@@ -883,6 +883,81 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          barbershop_id: string | null
+          booking_id: string
+          client_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          private_barber_id: string | null
+          rating: number
+          staff_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          barbershop_id?: string | null
+          booking_id: string
+          client_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          private_barber_id?: string | null
+          rating: number
+          staff_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          barbershop_id?: string | null
+          booking_id?: string
+          client_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          private_barber_id?: string | null
+          rating?: number
+          staff_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_barbershop_id_fkey"
+            columns: ["barbershop_id"]
+            isOneToOne: false
+            referencedRelation: "barbershops"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: true
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_private_barber_id_fkey"
+            columns: ["private_barber_id"]
+            isOneToOne: false
+            referencedRelation: "private_barbers"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "reviews_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "barbershop_staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       services: {
         Row: {
           active: boolean

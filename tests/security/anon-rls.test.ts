@@ -159,6 +159,20 @@ describe("anonymous writes are rejected", () => {
     expect(error).not.toBeNull();
   });
 
+  it("cannot read reviews (signed-in only)", async () => {
+    const { data } = await anon.from("reviews").select("*");
+    expect(data ?? []).toHaveLength(0);
+  });
+
+  it("cannot write reviews", async () => {
+    const { error } = await anon.from("reviews").insert({
+      booking_id: "00000000-0000-0000-0000-000000000000",
+      client_id: "00000000-0000-0000-0000-000000000000",
+      rating: 5,
+    });
+    expect(error).not.toBeNull();
+  });
+
   it("cannot call available_slots (signed-in only)", async () => {
     const { data, error } = await anon.rpc("available_slots", {
       p_location_id: "00000000-0000-0000-0000-000000000000",
