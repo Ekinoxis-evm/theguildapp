@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { ShareLink } from "@/components/share-link";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
 import { ApplyBarberForm } from "./apply-form";
 import { BarberProfileEditor } from "./profile-editor";
@@ -128,6 +129,9 @@ export default async function MyBarberPage({
         <p className="mt-1 text-sm text-neutral-400">
           Live · {barber.services_fulfilled_count} services fulfilled
         </p>
+      )}
+      {barber.status === "approved" && (
+        <ShareLink path={`/barbers/${barber.profile_id}`} label="Your profile link" />
       )}
 
       <div className="mt-10 space-y-12">

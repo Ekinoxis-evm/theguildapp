@@ -326,6 +326,68 @@ export type Database = {
           },
         ]
       }
+      booking_waitlist: {
+        Row: {
+          client_id: string
+          created_at: string
+          day: string
+          id: string
+          location_id: string
+          notified_at: string | null
+          service_id: string
+          staff_id: string | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          day: string
+          id?: string
+          location_id: string
+          notified_at?: string | null
+          service_id: string
+          staff_id?: string | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          day?: string
+          id?: string
+          location_id?: string
+          notified_at?: string | null
+          service_id?: string
+          staff_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_waitlist_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_waitlist_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "barbershop_locations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_waitlist_service_id_fkey"
+            columns: ["service_id"]
+            isOneToOne: false
+            referencedRelation: "services"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_waitlist_staff_id_fkey"
+            columns: ["staff_id"]
+            isOneToOne: false
+            referencedRelation: "barbershop_staff"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           address_snapshot: Json | null

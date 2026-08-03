@@ -111,6 +111,17 @@ location_hours                  -- one open/close range per weekday; no row = cl
 --   30-min grid of open UTC start times; times only, no PII; authenticated only
 ```
 
+## Waitlist (7.2)
+
+```
+booking_waitlist               -- one entry per client+location+day
+  client_id → profiles, location_id, service_id, staff_id NULLABLE, day date
+  notified_at                  -- stamped by the service-role notifier
+  -- RLS: client inserts/reads/deletes own rows only
+  -- /api/waitlist/notify (signed-in callers): re-verifies availability via
+  --   available_slots, then emails un-notified entries once (Resend, best-effort)
+```
+
 ## Bookings
 
 ```

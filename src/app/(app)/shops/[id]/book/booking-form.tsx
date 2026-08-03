@@ -66,6 +66,7 @@ export function BookingForm({
   const [slot, setSlot] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [waitlistState, setWaitlistState] = useState<"idle" | "joining" | "joined">("idle");
 
   const usesSlots = locationId != null && hoursLocationIds.includes(locationId);
 
@@ -77,6 +78,7 @@ export function BookingForm({
       if (!cancelled) {
         setSlots(null);
         setSlot(null);
+        setWaitlistState("idle");
       }
     });
     supabase
@@ -148,6 +150,31 @@ export function BookingForm({
         </div>
       </div>
     );
+  }
+
+  async function joinWaitlist() {
+    if (!locationId) return;
+    setWaitlistState("joining");
+    setError(null);
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    const { error: wlError } = await supabase.from("booking_waitlist").insert({
+      client_id: user.id,
+      location_id: locationId,
+      service_id: serviceId,
+      day,
+      staff_id: staffId,
+    });
+    // Unique violation = already on the list for that day; treat as joined.
+    if (wlError && !wlError.message.includes("duplicate key")) {
+      setWaitlistState("idle");
+      setError(wlError.message);
+      return;
+    }
+    setWaitlistState("joined");
   }
 
   async function submit(e: FormEvent) {
@@ -234,10 +261,26 @@ export function BookingForm({
             {slots === null ? (
               <p className="text-neutral-500">Checking availability…</p>
             ) : slots.length === 0 ? (
-              <p className="text-neutral-500">
-                No open times that day — try another date
-                {staffId ? " or another barber" : ""}.
-              </p>
+              <div>
+                <p className="text-neutral-500">
+                  No open times that day — try another date
+                  {staffId ? " or another barber" : ""}.
+                </p>
+                {waitlistState === "joined" ? (
+                  <p className="mt-2 text-sm text-emerald-400">
+                    You&apos;re on the waitlist — we&apos;ll email you if a time opens up.
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={joinWaitlist}
+                    disabled={waitlistState === "joining"}
+                    className="mt-2 border border-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-yellow disabled:opacity-50"
+                  >
+                    {waitlistState === "joining" ? "Joining…" : "Join the waitlist for this day"}
+                  </button>
+                )}
+              </div>
             ) : (
               <div className="grid grid-cols-3 gap-2">
                 {slots.map((iso) => (

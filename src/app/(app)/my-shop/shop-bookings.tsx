@@ -29,6 +29,18 @@ export function ShopBookings({ bookings: initial }: { bookings: Booking[] }) {
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Fire-and-forget: a freed slot may unlock someone's waitlist entry.
+  function pingWaitlist(booking: { location_id: string | null; scheduled_at: string }) {
+  if (!booking.location_id) return;
+  fetch("/api/waitlist/notify", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      locationId: booking.location_id,
+      day: booking.scheduled_at.slice(0, 10),
+    }),
+  }).catch(() => {});
+}
   async function transition(booking: Booking, to: Status) {
     setError(null);
     setBusy(booking.id);
@@ -43,6 +55,7 @@ export function ShopBookings({ bookings: initial }: { bookings: Booking[] }) {
       return;
     }
     setBookings(bookings.map((b) => (b.id === booking.id ? { ...b, status: to } : b)));
+    if (to === "cancelled") pingWaitlist(booking);
   }
 
   const upcoming = bookings.filter((b) =>

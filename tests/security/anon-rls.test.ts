@@ -144,6 +144,21 @@ describe("anonymous writes are rejected", () => {
     expect(error).not.toBeNull();
   });
 
+  it("cannot read the waitlist", async () => {
+    const { data } = await anon.from("booking_waitlist").select("*");
+    expect(data ?? []).toHaveLength(0);
+  });
+
+  it("cannot join a waitlist", async () => {
+    const { error } = await anon.from("booking_waitlist").insert({
+      client_id: "00000000-0000-0000-0000-000000000000",
+      location_id: "00000000-0000-0000-0000-000000000000",
+      service_id: "00000000-0000-0000-0000-000000000000",
+      day: "2026-08-10",
+    });
+    expect(error).not.toBeNull();
+  });
+
   it("cannot call available_slots (signed-in only)", async () => {
     const { data, error } = await anon.rpc("available_slots", {
       p_location_id: "00000000-0000-0000-0000-000000000000",

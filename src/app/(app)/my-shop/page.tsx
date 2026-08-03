@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { RegisterShopForm } from "./register-form";
 import { LocationsManager } from "./locations";
 import { HoursEditor } from "./hours";
+import { ShareLink } from "@/components/share-link";
 import { ServicesManager } from "./services";
 import { StaffManager } from "./staff";
 import { ShopBookings } from "./shop-bookings";
@@ -154,6 +155,9 @@ export default async function MyShopPage({
         <p className="mt-1 text-sm text-neutral-400">
           Live · {shop.services_fulfilled_count} services fulfilled
         </p>
+      )}
+      {shop.status === "approved" && (
+        <ShareLink path={`/shops/${shop.id}`} label="Your booking link" />
       )}
 
       <div className="mt-10 space-y-12">
