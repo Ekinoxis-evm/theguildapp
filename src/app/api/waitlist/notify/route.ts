@@ -13,16 +13,29 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ ok: false }, { status: 401 });
 
-  let body: { locationId?: string; day?: string };
+  let body: { bookingId?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
-  const { locationId, day } = body;
-  if (!locationId || !day || !/^\d{4}-\d{2}-\d{2}$/.test(day)) {
+  if (!body.bookingId) {
     return NextResponse.json({ ok: false }, { status: 400 });
   }
+
+  // The caller must be able to see the booking (RLS: its client, or the
+  // shop side) and it must genuinely be cancelled — the freed slot is the
+  // only event that justifies notifying the waitlist.
+  const { data: booking } = await supabase
+    .from("bookings")
+    .select("location_id, scheduled_at, status")
+    .eq("id", body.bookingId)
+    .maybeSingle();
+  if (!booking || booking.status !== "cancelled" || !booking.location_id) {
+    return NextResponse.json({ ok: false }, { status: 403 });
+  }
+  const locationId = booking.location_id;
+  const day = booking.scheduled_at.slice(0, 10);
 
   const admin = createAdminClient();
   const { data: entries } = await admin

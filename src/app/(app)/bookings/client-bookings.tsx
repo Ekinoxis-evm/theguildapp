@@ -44,17 +44,13 @@ export function ClientBookings({ bookings: initial }: { bookings: Booking[] }) {
   }
 
   // Fire-and-forget: a freed slot may unlock someone's waitlist entry.
-  function pingWaitlist(booking: { location_id: string | null; scheduled_at: string }) {
-  if (!booking.location_id) return;
-  fetch("/api/waitlist/notify", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      locationId: booking.location_id,
-      day: booking.scheduled_at.slice(0, 10),
-    }),
-  }).catch(() => {});
-}
+  function pingWaitlist(booking: { id: string }) {
+    fetch("/api/waitlist/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingId: booking.id }),
+    }).catch(() => {});
+  }
   async function cancel(booking: Booking) {
     setError(null);
     setBusy(booking.id);
