@@ -43,11 +43,6 @@ export default async function BookingsPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-sm">
-        <Link href="/dashboard" className="underline">
-          ← Dashboard
-        </Link>
-      </p>
       <h1 className="mt-2 text-2xl font-semibold">Bookings</h1>
       <ClientBookings bookings={withCalendar} reviews={reviewByBooking} clientId={user.id} />
       <p className="mt-8 text-sm">

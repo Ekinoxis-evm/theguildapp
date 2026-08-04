@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { RegisterShopForm } from "./register-form";
@@ -59,7 +58,6 @@ export default async function MyShopPage({
 
       return (
         <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-          <BackLink />
           <h1 className="mt-2 text-2xl font-semibold">{staffShop?.name}</h1>
           <p className="mt-1 text-sm text-neutral-400">
             You&apos;re on the team. Manage the shop&apos;s bookings below.
@@ -71,7 +69,6 @@ export default async function MyShopPage({
 
     return (
       <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
-        <BackLink />
         <h1 className="mt-2 text-2xl font-semibold">List your barbershop</h1>
         <p className="mt-2 text-sm text-neutral-400">
           Tell us about your shop. The Guild team reviews every application
@@ -139,7 +136,6 @@ export default async function MyShopPage({
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <BackLink />
       <h1 className="mt-2 text-2xl font-semibold">{shop.name}</h1>
       {shop.status === "pending" && (
         <p className="mt-3 border border-guild-yellow/40 p-3 text-sm">
@@ -221,12 +217,3 @@ export default async function MyShopPage({
   );
 }
 
-function BackLink() {
-  return (
-    <p className="text-sm">
-      <Link href="/dashboard" className="underline">
-        ← Dashboard
-      </Link>
-    </p>
-  );
-}

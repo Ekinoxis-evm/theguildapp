@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Tabs } from "@/components/tabs";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
@@ -82,11 +81,6 @@ export default async function AdminPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-sm">
-        <Link href="/dashboard" className="underline">
-          ← Dashboard
-        </Link>
-      </p>
       <h1 className="mt-2 text-2xl font-semibold">Admin</h1>
       <Tabs
         items={[

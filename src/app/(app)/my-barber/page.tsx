@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ShareLink } from "@/components/share-link";
@@ -39,7 +38,6 @@ export default async function MyBarberPage({
   if (!barber) {
     return (
       <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
-        <BackLink />
         <h1 className="mt-2 text-2xl font-semibold">Become a Guild barber</h1>
         <p className="mt-2 text-sm text-neutral-400">
           Build your professional profile — certifications, experience, shop
@@ -124,7 +122,6 @@ export default async function MyBarberPage({
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <BackLink />
       <h1 className="mt-2 text-2xl font-semibold">Barber profile</h1>
       {barber.status === "pending" && (
         <p className="mt-3 border border-guild-yellow/40 p-3 text-sm">
@@ -201,12 +198,3 @@ export default async function MyBarberPage({
   );
 }
 
-function BackLink() {
-  return (
-    <p className="text-sm">
-      <Link href="/dashboard" className="underline">
-        ← Dashboard
-      </Link>
-    </p>
-  );
-}

@@ -41,11 +41,6 @@ export default async function ShopsPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-sm">
-        <Link href="/dashboard" className="underline">
-          ← Dashboard
-        </Link>
-      </p>
       <h1 className="mt-2 text-2xl font-semibold">Barbershops</h1>
 
       <ShopsMap pins={pins} />

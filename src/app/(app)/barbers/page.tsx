@@ -88,11 +88,6 @@ export default async function BarbersPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-sm">
-        <Link href="/dashboard" className="underline">
-          ← Dashboard
-        </Link>
-      </p>
       <h1 className="mt-2 text-2xl font-semibold">Barbers</h1>
       <p className="mt-1 text-sm text-neutral-500">
         The professionals of The Guild — browse profiles, certifications, and

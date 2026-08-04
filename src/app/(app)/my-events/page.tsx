@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import QRCode from "qrcode";
 import { createClient } from "@/lib/supabase/server";
@@ -47,11 +46,6 @@ export default async function MyEventsPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-sm">
-        <Link href="/dashboard" className="underline">
-          ← Dashboard
-        </Link>
-      </p>
       <h1 className="mt-2 text-2xl font-semibold">My events</h1>
 
       <CreateEventForm managerId={user.id} />

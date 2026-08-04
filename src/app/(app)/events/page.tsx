@@ -24,11 +24,6 @@ export default async function EventsPage() {
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-sm">
-        <Link href="/dashboard" className="underline">
-          ← Dashboard
-        </Link>
-      </p>
       <h1 className="mt-2 text-2xl font-semibold">Events</h1>
 
       <h2 className="mt-8 text-lg font-medium">Current</h2>

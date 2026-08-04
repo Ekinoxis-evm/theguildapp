@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getLang } from "@/lib/i18n";
 import { dict } from "@/lib/dictionaries";
 import { LangSwitcher } from "../../lang-switcher";
+import Image from "next/image";
 
 export const metadata = { title: "Dashboard — The Guild" };
 
@@ -221,66 +222,58 @@ export default async function DashboardPage() {
   const s = t.sections;
   const shops = { href: "/shops", ...s.shops };
   const barbers = { href: "/barbers", ...s.barbers };
-  const bookings = { href: "/bookings", ...s.bookings };
   const events = { href: "/events", ...s.events };
-  const profileCard = { href: "/profile", ...s.profile };
   const myBarber = { href: "/my-barber", ...s.myBarber };
-  const myEvents = { href: "/my-events", ...s.myEvents };
   const myShop = ownShop
     ? { href: "/my-shop", ...s.myShop }
     : isStaff
       ? { href: "/my-shop", ...s.myShopStaff }
       : { href: "/my-shop", ...s.listShop };
 
+  // The bottom nav already covers each role's primary surfaces — the home
+  // shows only what the nav doesn't, so it reads as a home, not a site map.
   let sections;
   switch (role) {
     case "barbershop_owner":
-      sections = [myShop, bookings, shops, barbers, events, profileCard];
-      if (ownBarber) sections.splice(1, 0, myBarber);
+      sections = [events];
+      if (ownBarber) sections.unshift(myBarber);
       break;
     case "private_barber":
-      sections = [myBarber, bookings, barbers, shops, events, profileCard];
-      if (ownShop || isStaff) sections.splice(1, 0, myShop);
+      sections = [barbers, events];
+      if (ownShop || isStaff) sections.unshift(myShop);
       break;
     case "event_manager":
-      sections = [myEvents, events, shops, barbers, bookings, profileCard];
+      sections = [shops, barbers];
       if (ownBarber) sections.push(myBarber);
       break;
     case "admin":
-      sections = [
-        { href: "/admin", ...s.admin },
-        myEvents,
-        shops,
-        barbers,
-        bookings,
-        events,
-        profileCard,
-      ];
+      sections = [shops, barbers, events];
       break;
     default: {
-      sections = [shops, barbers, bookings, events, profileCard];
-      if (profile?.tier !== "premium") sections.push({ href: "/premium", ...s.premium });
+      sections = [events];
+      if (profile?.tier !== "premium") sections.unshift({ href: "/premium", ...s.premium });
       if (ownBarber) sections.push(myBarber);
-      sections.push(myShop);
+      if (!ownBarber) sections.push(myShop);
     }
   }
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 bg-guild-black px-6 py-16 text-white">
-      <div className="flex items-baseline justify-between gap-3">
-        <p className="text-xs uppercase tracking-widest text-guild-yellow">
-          The Guild — Grooming Standard
-        </p>
+      <div className="flex items-center justify-between gap-3">
+        <Image
+          src="/brand/logo-on-dark.png"
+          alt="The Guild"
+          width={1005}
+          height={362}
+          priority
+          className="h-6 w-auto"
+        />
         <LangSwitcher current={lang} />
       </div>
       <h1 className="mt-2 text-2xl font-semibold">
         {t.welcome}
         {profile?.first_name ? `, ${profile.first_name}` : ""}
       </h1>
-      <p className="mt-2 text-sm text-neutral-400">
-        {t.signedInAs} {user.email} · {role}
-        {role === "client" ? ` (${profile?.tier})` : ""}
-      </p>
 
       {!profile?.onboarding_completed_at ? (
         <div className="mt-8 border border-guild-yellow/40 p-4 text-sm">
@@ -314,14 +307,6 @@ export default async function DashboardPage() {
         </>
       )}
 
-      <form action="/auth/signout" method="post" className="mt-10">
-        <button
-          type="submit"
-          className="border border-neutral-700 px-4 py-2 text-sm text-neutral-300 hover:border-white"
-        >
-          {t.signOut}
-        </button>
-      </form>
     </main>
   );
 }

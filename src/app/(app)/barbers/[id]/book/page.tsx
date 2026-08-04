@@ -78,7 +78,7 @@ export default async function AtHomeBookPage({
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
       <p className="text-sm">
-        <Link href={`/barbers/${barber.profile_id}`} className="underline">
+        <Link href={`/barbers/${barber.profile_id}`} className="btn btn-ghost -ml-3 px-3 py-1 text-xs normal-case tracking-normal">
           ← {barberName}
         </Link>
       </p>

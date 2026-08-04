@@ -51,17 +51,17 @@ export default async function ProfilePage() {
         The Guild — Grooming Standard
       </p>
       <h1 className="mt-2 text-2xl font-semibold">Profile</h1>
-      <p className="mt-2 text-sm">
-        <Link href="/dashboard" className="underline">
-          ← Back to dashboard
-        </Link>
-      </p>
       <ProfileForm
         userId={user.id}
         profile={profile}
         avatarUrl={avatarUrl}
         initialStylePhotos={initialStylePhotos}
       />
+      <form action="/auth/signout" method="post" className="mt-12">
+        <button type="submit" className="btn btn-outline">
+          Sign out
+        </button>
+      </form>
     </main>
   );
 }

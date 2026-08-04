@@ -34,11 +34,6 @@ export default async function PremiumPage({
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
-      <p className="text-sm">
-        <Link href="/dashboard" className="underline">
-          {t.backToDashboard}
-        </Link>
-      </p>
       <h1 className="mt-2 text-2xl font-semibold">
         {t.title} <span className="text-guild-yellow">{t.titleAccent}</span>
       </h1>

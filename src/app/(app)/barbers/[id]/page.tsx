@@ -75,7 +75,7 @@ export default async function BarberPage({
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <p className="text-sm">
-        <Link href="/barbers" className="underline">
+        <Link href="/barbers" className="btn btn-ghost -ml-3 px-3 py-1 text-xs normal-case tracking-normal">
           ← All barbers
         </Link>
       </p>
@@ -102,7 +102,7 @@ export default async function BarberPage({
             <span key={a.id}>
               {i > 0 && " · "}
               {a.barbershops ? (
-                <Link href={`/shops/${a.barbershops.id}`} className="underline">
+                <Link href={`/shops/${a.barbershops.id}`} className="btn btn-ghost -ml-3 px-3 py-1 text-xs normal-case tracking-normal">
                   {a.barbershops.name}
                 </Link>
               ) : (
@@ -263,7 +263,7 @@ export default async function BarberPage({
             {currentShops[0].barbershops ? (
               <Link
                 href={`/shops/${currentShops[0].barbershops.id}`}
-                className="underline"
+                className="btn btn-ghost -ml-3 px-3 py-1 text-xs normal-case tracking-normal"
               >
                 {currentShops[0].barbershops.name}
               </Link>

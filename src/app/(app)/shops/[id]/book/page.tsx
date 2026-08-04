@@ -79,7 +79,7 @@ export default async function BookPage({
   return (
     <main className="mx-auto w-full max-w-md flex-1 px-6 py-16">
       <p className="text-sm">
-        <Link href={`/shops/${shop.id}`} className="underline">
+        <Link href={`/shops/${shop.id}`} className="btn btn-ghost -ml-3 px-3 py-1 text-xs normal-case tracking-normal">
           ← {shop.name}
         </Link>
       </p>
