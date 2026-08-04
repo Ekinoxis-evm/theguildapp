@@ -5,6 +5,7 @@ import { RegisterShopForm } from "./register-form";
 import { LocationsManager } from "./locations";
 import { HoursEditor } from "./hours";
 import { ShareLink } from "@/components/share-link";
+import { Tabs } from "@/components/tabs";
 import { ServicesManager } from "./services";
 import { StaffManager } from "./staff";
 import { ShopBookings } from "./shop-bookings";
@@ -156,31 +157,66 @@ export default async function MyShopPage({
           Live · {shop.services_fulfilled_count} services fulfilled
         </p>
       )}
-      {shop.status === "approved" && (
-        <ShareLink path={`/shops/${shop.id}`} label="Your booking link" />
-      )}
 
-      <div className="mt-10 space-y-12">
-        <ShopBookings bookings={bookings ?? []} />
-        <PayoutsSection
-          ready={payoutsReady}
-          hasAccount={Boolean(connectRow)}
-          action={startShopPayoutOnboarding}
-          unavailable={payouts === "unavailable"}
-        />
-        <LocationsManager shopId={shop.id} initial={locations ?? []} />
-        {(locations ?? []).map((loc) => (
-          <HoursEditor
-            key={loc.id}
-            locationId={loc.id}
-            label={loc.city ? `${loc.city}` : loc.formatted_address}
-            initial={(hours ?? []).filter((h) => h.location_id === loc.id)}
-          />
-        ))}
-        <ServicesManager shopId={shop.id} initial={services ?? []} />
-        <StaffManager shopId={shop.id} initial={staff ?? []} />
-        <EnrollmentsManager initial={enrollments ?? []} />
-      </div>
+
+      <Tabs
+        items={[
+          {
+            id: "bookings",
+            label: "Bookings",
+            content: <ShopBookings bookings={bookings ?? []} />,
+          },
+          {
+            id: "locations",
+            label: "Locations & hours",
+            content: (
+              <div className="space-y-12">
+                <LocationsManager shopId={shop.id} initial={locations ?? []} />
+                {(locations ?? []).map((loc) => (
+                  <HoursEditor
+                    key={loc.id}
+                    locationId={loc.id}
+                    label={loc.city ? `${loc.city}` : loc.formatted_address}
+                    initial={(hours ?? []).filter((h) => h.location_id === loc.id)}
+                  />
+                ))}
+              </div>
+            ),
+          },
+          {
+            id: "services",
+            label: "Services",
+            content: <ServicesManager shopId={shop.id} initial={services ?? []} />,
+          },
+          {
+            id: "staff",
+            label: "Staff",
+            content: (
+              <div className="space-y-12">
+                <StaffManager shopId={shop.id} initial={staff ?? []} />
+                <EnrollmentsManager initial={enrollments ?? []} />
+              </div>
+            ),
+          },
+          {
+            id: "links",
+            label: "Links & payouts",
+            content: (
+              <div className="space-y-12">
+                {shop.status === "approved" && (
+                  <ShareLink path={`/shops/${shop.id}`} label="Your booking link" />
+                )}
+                <PayoutsSection
+                  ready={payoutsReady}
+                  hasAccount={Boolean(connectRow)}
+                  action={startShopPayoutOnboarding}
+                  unavailable={payouts === "unavailable"}
+                />
+              </div>
+            ),
+          },
+        ]}
+      />
     </main>
   );
 }

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ShareLink } from "@/components/share-link";
 import { SocialLinks } from "./social-links";
+import { Tabs } from "@/components/tabs";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
 import { ApplyBarberForm } from "./apply-form";
 import { BarberProfileEditor } from "./profile-editor";
@@ -136,29 +137,66 @@ export default async function MyBarberPage({
           Live · {barber.services_fulfilled_count} services fulfilled
         </p>
       )}
-      {barber.status === "approved" && (
-        <ShareLink path={`/barbers/${barber.profile_id}`} label="Your profile link" />
-      )}
 
-      <div className="mt-10 space-y-12">
-        <ShopBookings bookings={bookings ?? []} />
-        <SocialLinks barberId={user.id} initial={socialLinks ?? []} />
-        <PayoutsSection
-          ready={payoutsReady}
-          hasAccount={Boolean(connectRow)}
-          action={startBarberPayoutOnboarding}
-          unavailable={payouts === "unavailable"}
-        />
-        <BarberProfileEditor barber={barber} selfUrl={selfUrl} setupUrl={setupUrl} />
-        <CertificationsManager barberId={user.id} initial={certifications ?? []} />
-        <AffiliationsManager
-          barberId={user.id}
-          shops={approvedShops ?? []}
-          initial={affiliations ?? []}
-        />
-        <BarberServicesManager barberId={user.id} initial={services ?? []} />
-        <CoverageManager barberId={user.id} initial={coverage ?? []} />
-      </div>
+
+      <Tabs
+        items={[
+          {
+            id: "bookings",
+            label: "Bookings",
+            content: <ShopBookings bookings={bookings ?? []} />,
+          },
+          {
+            id: "profile",
+            label: "Profile",
+            content: (
+              <BarberProfileEditor barber={barber} selfUrl={selfUrl} setupUrl={setupUrl} />
+            ),
+          },
+          {
+            id: "services",
+            label: "Services",
+            content: (
+              <div className="space-y-12">
+                <BarberServicesManager barberId={user.id} initial={services ?? []} />
+                <CoverageManager barberId={user.id} initial={coverage ?? []} />
+              </div>
+            ),
+          },
+          {
+            id: "credentials",
+            label: "Credentials",
+            content: (
+              <div className="space-y-12">
+                <CertificationsManager barberId={user.id} initial={certifications ?? []} />
+                <AffiliationsManager
+                  barberId={user.id}
+                  shops={approvedShops ?? []}
+                  initial={affiliations ?? []}
+                />
+              </div>
+            ),
+          },
+          {
+            id: "links",
+            label: "Links & payouts",
+            content: (
+              <div className="space-y-12">
+                {barber.status === "approved" && (
+                  <ShareLink path={`/barbers/${barber.profile_id}`} label="Your profile link" />
+                )}
+                <SocialLinks barberId={user.id} initial={socialLinks ?? []} />
+                <PayoutsSection
+                  ready={payoutsReady}
+                  hasAccount={Boolean(connectRow)}
+                  action={startBarberPayoutOnboarding}
+                  unavailable={payouts === "unavailable"}
+                />
+              </div>
+            ),
+          },
+        ]}
+      />
     </main>
   );
 }

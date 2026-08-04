@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Tabs } from "@/components/tabs";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
@@ -87,13 +88,33 @@ export default async function AdminPage() {
         </Link>
       </p>
       <h1 className="mt-2 text-2xl font-semibold">Admin</h1>
-      <h2 className="mt-8 text-lg font-medium">Barbershop applications</h2>
-      <ApprovalList initial={pending ?? []} />
-      <BarberApprovals initial={pendingBarbers ?? []} />
-      <CertVerifications initial={certsWithDocs} />
-      <LeadsList initial={leads ?? []} />
-      <TierManager />
-      <PromoteManager />
+      <Tabs
+        items={[
+          {
+            id: "shops",
+            label: "Shops",
+            content: (
+              <div>
+                <h2 className="text-lg font-medium">Barbershop applications</h2>
+                <ApprovalList initial={pending ?? []} />
+              </div>
+            ),
+          },
+          { id: "barbers", label: "Barbers", content: <BarberApprovals initial={pendingBarbers ?? []} /> },
+          { id: "certs", label: "Certifications", content: <CertVerifications initial={certsWithDocs} /> },
+          { id: "leads", label: "Leads", content: <LeadsList initial={leads ?? []} /> },
+          {
+            id: "team",
+            label: "Team & tiers",
+            content: (
+              <div className="space-y-12">
+                <TierManager />
+                <PromoteManager />
+              </div>
+            ),
+          },
+        ]}
+      />
     </main>
   );
 }
