@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { StyleChips } from "@/components/style-chips";
 import type { Database } from "@/lib/database.types";
 import {
   AvatarField,
@@ -48,6 +49,9 @@ export function ProfileForm({
   const [haircutMethod, setHaircutMethod] = useState<HaircutMethod | null>(
     profile.haircut_method
   );
+  const [stylePrefs, setStylePrefs] = useState<string[]>(
+    profile.style_preferences ?? []
+  );
 
   async function save(e: FormEvent) {
     e.preventDefault();
@@ -66,6 +70,7 @@ export function ProfileForm({
         city: city.trim(),
         zip_code: zipCode.trim(),
         haircut_method: haircutMethod,
+        style_preferences: stylePrefs,
       })
       .eq("id", userId);
     setSaving(false);
@@ -207,6 +212,13 @@ export function ProfileForm({
         </p>
         <div className="mt-4 max-w-sm">
           <StylePhotoGrid userId={userId} initial={initialStylePhotos} />
+        </div>
+
+        <div>
+          <p className="text-sm font-medium">Styles you like</p>
+          <div className="mt-2">
+            <StyleChips selected={stylePrefs} onChange={setStylePrefs} />
+          </div>
         </div>
       </section>
     </div>

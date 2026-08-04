@@ -12,6 +12,7 @@ auth.users (Supabase managed)
        first_name, last_name, phone, avatar_path
        haircut_method   scissors | machine | mixed   -- clients only
        country, state, city, zip_code
+       style_preferences text[]   -- taste tags (STYLE_TAGS vocabulary, matching 8.3)
        onboarding_completed_at
        stripe_customer_id UNIQUE, stripe_subscription_id UNIQUE, subscription_status
          -- written only by the Stripe webhook (service role); triggers strip

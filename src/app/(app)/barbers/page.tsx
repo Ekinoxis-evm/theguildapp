@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
 import { formatPrice } from "@/lib/format";
+import { STYLE_TAGS } from "@/lib/style-tags";
+import { Stars } from "@/components/rating";
 
 export const metadata = { title: "Barbers — The Guild" };
 
@@ -16,7 +18,7 @@ export default async function BarbersPage() {
   // Barber-centric directory (2026-07-14): every approved barber is listed
   // and viewable; premium only gates the at-home booking itself.
   const [{ data: profile }, { data: barbers }] = await Promise.all([
-    supabase.from("profiles").select("tier").eq("id", user.id).single(),
+    supabase.from("profiles").select("tier, city, style_preferences").eq("id", user.id).single(),
     supabase
       .from("private_barbers")
       .select(
@@ -27,6 +29,50 @@ export default async function BarbersPage() {
   ]);
 
   const isPremium = profile?.tier === "premium";
+
+  // Matching v1 (roadmap 8.3): rank barbers for this client by shared style
+  // tags, verified rating, city coverage, and track record. Transparent
+  // scoring — each match says why.
+  const { data: barberReviews } = await supabase
+    .from("reviews")
+    .select("private_barber_id, rating")
+    .not("private_barber_id", "is", null);
+  const ratingByBarber = new Map<string, { sum: number; n: number }>();
+  for (const r of barberReviews ?? []) {
+    if (!r.private_barber_id) continue;
+    const cur = ratingByBarber.get(r.private_barber_id) ?? { sum: 0, n: 0 };
+    cur.sum += r.rating;
+    cur.n += 1;
+    ratingByBarber.set(r.private_barber_id, cur);
+  }
+  const prefs = (profile?.style_preferences ?? []).map((v) => v.toLowerCase());
+  const tagLabel = (v: string) => STYLE_TAGS.find((t) => t.value === v)?.label ?? v;
+  const matches = prefs.length
+    ? (barbers ?? [])
+        .map((b) => {
+          const specs = (b.specialties ?? []).map((v: string) => v.toLowerCase());
+          const shared = prefs.filter((t) => specs.includes(t));
+          const rating = ratingByBarber.get(b.profile_id);
+          const avg = rating ? rating.sum / rating.n : 0;
+          const cityMatch = Boolean(
+            profile?.city &&
+              b.coverage_areas?.some(
+                (c: { city: string }) =>
+                  c.city.toLowerCase() === profile.city!.toLowerCase()
+              )
+          );
+          const score =
+            shared.length * 3 +
+            avg * 2 +
+            (cityMatch ? 2 : 0) +
+            Math.log10((b.services_fulfilled_count ?? 0) + 1);
+          return { barber: b, shared, avg, ratingCount: rating?.n ?? 0, cityMatch, score };
+        })
+        .filter((m) => m.shared.length > 0)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 3)
+    : [];
+
 
   const enriched = [];
   for (const barber of barbers ?? []) {
@@ -60,6 +106,43 @@ export default async function BarbersPage() {
             Upgrade for $19.99/month →
           </Link>
         </p>
+      )}
+
+      {matches.length > 0 && (
+        <section className="mt-6">
+          <h2 className="text-xs font-bold uppercase tracking-[0.25em] text-guild-yellow">
+            For you
+          </h2>
+          <div className="mt-3 space-y-2">
+            {matches.map(({ barber, shared, avg, ratingCount, cityMatch }) => (
+              <Link
+                key={barber.profile_id}
+                href={`/barbers/${barber.profile_id}`}
+                className="block border border-guild-yellow/40 p-3 hover:border-guild-yellow"
+              >
+                <div className="flex items-baseline justify-between gap-3">
+                  <strong className="text-sm">
+                    {[barber.profiles?.first_name, barber.profiles?.last_name]
+                      .filter(Boolean)
+                      .join(" ") || "Guild barber"}
+                  </strong>
+                  {ratingCount > 0 && (
+                    <span className="text-xs">
+                      <Stars value={avg} /> {avg.toFixed(1)}
+                    </span>
+                  )}
+                </div>
+                {barber.headline && (
+                  <p className="mt-0.5 text-xs text-neutral-400">{barber.headline}</p>
+                )}
+                <p className="mt-1.5 text-xs text-neutral-500">
+                  Matches {shared.map(tagLabel).join(" · ")}
+                  {cityMatch ? " · covers your city" : ""}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
       )}
 
       <ul className="mt-8 space-y-3">

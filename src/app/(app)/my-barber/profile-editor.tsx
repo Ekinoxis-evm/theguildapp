@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { StyleChips } from "@/components/style-chips";
 import type { Database } from "@/lib/database.types";
 import { uploadBarberPhoto } from "@/lib/storage";
 
@@ -24,7 +25,7 @@ export function BarberProfileEditor({
   const [years, setYears] = useState(
     barber.years_experience != null ? String(barber.years_experience) : ""
   );
-  const [specialties, setSpecialties] = useState(barber.specialties.join(", "));
+  const [specialties, setSpecialties] = useState<string[]>(barber.specialties);
   const [offersHome, setOffersHome] = useState(barber.offers_home_service);
   const [price, setPrice] = useState((barber.base_price_cents / 100).toFixed(2));
   const [saving, setSaving] = useState(false);
@@ -43,10 +44,7 @@ export function BarberProfileEditor({
         bio: bio.trim() || null,
         headline: headline.trim() || null,
         years_experience: years === "" ? null : Math.round(Number(years)),
-        specialties: specialties
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean),
+        specialties,
         offers_home_service: offersHome,
         base_price_cents: Math.round(parseFloat(price || "0") * 100),
       })
@@ -111,16 +109,12 @@ export function BarberProfileEditor({
               className={inputClass}
             />
           </label>
-          <label className="block text-sm">
-            Specialties (comma-separated)
-            <input
-              type="text"
-              placeholder="fades, beard sculpting"
-              value={specialties}
-              onChange={(e) => setSpecialties(e.target.value)}
-              className={inputClass}
-            />
-          </label>
+          <div className="text-sm">
+            <p>Specialties</p>
+            <div className="mt-2">
+              <StyleChips selected={specialties} onChange={setSpecialties} />
+            </div>
+          </div>
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input

@@ -868,6 +868,7 @@ export type Database = {
           onboarding_completed_at: string | null
           phone: string | null
           role: Database["public"]["Enums"]["user_role"]
+          style_preferences: string[]
           state: string | null
           stripe_customer_id: string | null
           stripe_subscription_id: string | null
@@ -888,6 +889,7 @@ export type Database = {
           onboarding_completed_at?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          style_preferences?: string[]
           state?: string | null
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null
@@ -908,6 +910,7 @@ export type Database = {
           onboarding_completed_at?: string | null
           phone?: string | null
           role?: Database["public"]["Enums"]["user_role"]
+          style_preferences?: string[]
           state?: string | null
           stripe_customer_id?: string | null
           stripe_subscription_id?: string | null

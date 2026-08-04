@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { StyleChips } from "@/components/style-chips";
 import type { Database } from "@/lib/database.types";
 import { PHOTO_POSITIONS } from "@/lib/storage";
 import {
@@ -30,7 +31,7 @@ const STEPS = [
 ] as const;
 
 const inputClass =
-  "mt-1 w-full rounded border border-neutral-300 px-3 py-2 text-base outline-none focus:border-neutral-900";
+  "mt-1 w-full rounded border border-neutral-700 px-3 py-2 text-base outline-none focus:border-guild-yellow";
 
 export function OnboardingWizard({
   userId,
@@ -57,6 +58,9 @@ export function OnboardingWizard({
   const [zipCode, setZipCode] = useState(profile.zip_code ?? "");
   const [haircutMethod, setHaircutMethod] = useState<HaircutMethod | null>(
     profile.haircut_method
+  );
+  const [stylePrefs, setStylePrefs] = useState<string[]>(
+    profile.style_preferences ?? []
   );
   const [stylePhotos, setStylePhotos] =
     useState<StylePhotoState>(initialStylePhotos);
@@ -260,7 +264,9 @@ export function OnboardingWizard({
 
       {step === 4 && (
         <form
-          onSubmit={(e) => saveStep({ haircut_method: haircutMethod }, e)}
+          onSubmit={(e) =>
+            saveStep({ haircut_method: haircutMethod, style_preferences: stylePrefs }, e)
+          }
           className="mt-8 space-y-4"
         >
           <div className="space-y-2">
@@ -269,8 +275,8 @@ export function OnboardingWizard({
                 key={m.value}
                 className={`flex cursor-pointer items-center gap-3 rounded border px-4 py-3 text-sm ${
                   haircutMethod === m.value
-                    ? "border-neutral-900"
-                    : "border-neutral-300"
+                    ? "border-guild-yellow"
+                    : "border-neutral-700"
                 }`}
               >
                 <input
@@ -283,6 +289,15 @@ export function OnboardingWizard({
                 {m.label}
               </label>
             ))}
+          </div>
+          <div>
+            <p className="text-sm font-medium">Styles you like</p>
+            <p className="mt-1 text-xs text-neutral-500">
+              Pick a few — we use them to match you with the right barbers.
+            </p>
+            <div className="mt-2">
+              <StyleChips selected={stylePrefs} onChange={setStylePrefs} />
+            </div>
           </div>
           {continueButton}
         </form>
