@@ -97,6 +97,15 @@ The app is **role-complete and testable end-to-end**: every role has a branded, 
 | 7.5 | Shareable public booking links for shops & barbers (IG bio ready) | done (2026-08-02) — copy-link cards on /my-shop and /my-barber (approved only); login preserves destination via ?next= |
 | 7.6 | Per-shop memberships (shop subscription via Stripe + Connect) | todo — after volume |
 
+## Phase 8 — Matching & barber social hub _(planned 2026-08-04; partnership counterparties' priority)_
+
+| # | Item | Status |
+|---|---|---|
+| 8.1 | Barber social hub: profile links (Instagram, YouTube, TikTok, external booking incl. Squire) — "one link in the bio"; Guild profile as the barber's professional identity, native booking optional | todo |
+| 8.2 | Taste-first client onboarding: pick looks you like (visual cards) → stored style preferences alongside the 4 style photos | todo |
+| 8.3 | Matching v1 (rules): specialties × style preference × distance/coverage × verified rating × track record → ranked barber matches on a "For you" surface | todo |
+| 8.4 | Matching v2 (AI visual): style-photo similarity — the data moat; needs 8.2/8.3 signals + volume | todo — after v1 learnings |
+
 ## Phase 5 — Brand & expansion
 
 | # | Item | Status |
