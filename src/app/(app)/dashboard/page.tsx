@@ -252,8 +252,9 @@ export default async function DashboardPage() {
     default: {
       sections = [events];
       if (profile?.tier !== "premium") sections.unshift({ href: "/premium", ...s.premium });
-      if (ownBarber) sections.push(myBarber);
-      if (!ownBarber) sections.push(myShop);
+      // ownBarber / shop-staff clients get those surfaces in the bottom nav —
+      // only plain clients see the "list your shop" invitation here.
+      if (!ownBarber && !ownShop && !isStaff) sections.push(myShop);
     }
   }
 

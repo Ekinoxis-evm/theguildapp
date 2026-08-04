@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
 import type { StylePhotoState } from "@/components/profile/photo-fields";

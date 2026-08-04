@@ -31,7 +31,7 @@ function TabsInner({ items, paramName = "tab" }: { items: TabItem[]; paramName?:
             <button
               key={t.id}
               onClick={() => select(t.id)}
-              aria-selected={active === t.id}
+              aria-pressed={active === t.id}
               className={`relative shrink-0 px-3 py-3 text-xs font-bold uppercase tracking-[0.15em] transition-colors ${
                 active === t.id ? "text-white" : "text-neutral-500 hover:text-neutral-300"
               }`}
