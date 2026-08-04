@@ -37,7 +37,7 @@ export function ShareLink({ path, label }: { path: string; label: string }) {
       <p className="mt-1 break-all text-sm text-neutral-400">{url}</p>
       <button
         onClick={copy}
-        className="mt-3 bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
+        className="btn btn-primary mt-3"
       >
         {copied ? "Copied ✓" : "Copy link"}
       </button>

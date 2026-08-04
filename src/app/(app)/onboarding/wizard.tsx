@@ -136,7 +136,7 @@ export function OnboardingWizard({
           <button
             type="button"
             onClick={() => setStep(1)}
-            className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
+            className="btn btn-primary w-full"
           >
             Continue
           </button>

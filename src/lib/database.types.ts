@@ -130,6 +130,41 @@ export type Database = {
           },
         ]
       }
+      barber_links: {
+        Row: {
+          barber_id: string
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["barber_link_kind"]
+          label: string | null
+          url: string
+        }
+        Insert: {
+          barber_id: string
+          created_at?: string
+          id?: string
+          kind: Database["public"]["Enums"]["barber_link_kind"]
+          label?: string | null
+          url: string
+        }
+        Update: {
+          barber_id?: string
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["barber_link_kind"]
+          label?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "barber_links_barber_id_fkey"
+            columns: ["barber_id"]
+            isOneToOne: false
+            referencedRelation: "private_barbers"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
       barber_certifications: {
         Row: {
           barber_id: string
@@ -1099,6 +1134,7 @@ export type Database = {
       verify_certification: { Args: { cert_id: string }; Returns: undefined }
     }
     Enums: {
+      barber_link_kind: "instagram" | "youtube" | "tiktok" | "x" | "website" | "booking"
       barbershop_status: "pending" | "approved" | "suspended"
       booking_status:
         | "pending"

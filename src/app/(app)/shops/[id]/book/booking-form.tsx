@@ -106,7 +106,7 @@ export function BookingForm({
         </p>
         <Link
           href="/profile"
-          className="mt-3 inline-block bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
+          className="btn btn-primary mt-3"
         >
           Update My Style
         </Link>
@@ -137,13 +137,13 @@ export function BookingForm({
         <div className="mt-6 space-y-2">
           <button
             onClick={() => setStyleConfirmed(true)}
-            className="w-full bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
+            className="btn btn-primary w-full"
           >
             Yes, photos are current
           </button>
           <Link
             href="/profile"
-            className="block w-full border border-neutral-700 bg-transparent px-4 py-2 text-center text-sm"
+            className="btn btn-outline w-full"
           >
             No — update my photos first
           </Link>
@@ -275,7 +275,7 @@ export function BookingForm({
                     type="button"
                     onClick={joinWaitlist}
                     disabled={waitlistState === "joining"}
-                    className="mt-2 border border-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-yellow disabled:opacity-50"
+                    className="btn btn-outline mt-2 border-guild-yellow text-guild-yellow"
                   >
                     {waitlistState === "joining" ? "Joining…" : "Join the waitlist for this day"}
                   </button>

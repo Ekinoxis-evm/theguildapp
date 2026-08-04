@@ -47,7 +47,7 @@ export function ReviewForm({
     return (
       <button
         onClick={() => setOpen(true)}
-        className="mt-2 text-sm font-bold uppercase tracking-wide text-guild-yellow"
+        className="btn btn-outline mt-2 border-guild-yellow/60 px-3 py-1.5 text-xs text-guild-yellow"
       >
         {saved ? `Your review: ${"★".repeat(saved.rating)} — edit` : "Rate your cut →"}
       </button>

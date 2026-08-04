@@ -47,7 +47,7 @@ export function CreateEventForm({ managerId }: { managerId: string }) {
     return (
       <button
         onClick={() => setOpen(true)}
-        className="mt-6 bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
+        className="btn btn-primary mt-6"
       >
         + Create event
       </button>

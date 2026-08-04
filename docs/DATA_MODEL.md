@@ -136,6 +136,15 @@ reviews                        -- verified purchase only, one per booking
   -- RLS: signed-in read all (anonymous display — no names); owner insert/update/delete
 ```
 
+## Barber social hub (8.1)
+
+```
+barber_links                   -- one link per kind per barber
+  barber_id → private_barbers, kind (instagram|youtube|tiktok|x|website|booking)
+  url (https-only, ≤300), label (booking button text, ≤60)
+  -- RLS: owner manages; signed-in read approved barbers only
+```
+
 ## Bookings
 
 ```

@@ -159,6 +159,20 @@ describe("anonymous writes are rejected", () => {
     expect(error).not.toBeNull();
   });
 
+  it("cannot read barber links (signed-in only)", async () => {
+    const { data } = await anon.from("barber_links").select("*");
+    expect(data ?? []).toHaveLength(0);
+  });
+
+  it("cannot write barber links", async () => {
+    const { error } = await anon.from("barber_links").insert({
+      barber_id: "00000000-0000-0000-0000-000000000000",
+      kind: "instagram",
+      url: "https://example.com",
+    });
+    expect(error).not.toBeNull();
+  });
+
   it("cannot read reviews (signed-in only)", async () => {
     const { data } = await anon.from("reviews").select("*");
     expect(data ?? []).toHaveLength(0);

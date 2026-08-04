@@ -131,7 +131,7 @@ export default async function BarbersPage() {
                   )}
                   <Link
                     href={`/barbers/${b.profile_id}`}
-                    className="mt-2 inline-block bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black"
+                    className="btn btn-primary mt-2 px-3 py-1.5 text-xs"
                   >
                     View profile
                   </Link>

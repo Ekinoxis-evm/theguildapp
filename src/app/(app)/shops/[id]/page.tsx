@@ -138,7 +138,7 @@ export default async function ShopPage({
             </span>
             <Link
               href={`/shops/${shop.id}/book?service=${s.id}`}
-              className="shrink-0 bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black"
+              className="btn btn-primary shrink-0 px-3 py-1.5 text-xs"
             >
               Book
             </Link>

@@ -43,7 +43,7 @@ export function PayoutsSection({
             </p>
             <button
               type="submit"
-              className="mt-3 bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
+              className="btn btn-primary mt-3"
             >
               {hasAccount ? "Finish payout setup" : "Set up payouts"}
             </button>

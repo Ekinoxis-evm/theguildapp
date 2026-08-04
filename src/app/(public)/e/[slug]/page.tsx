@@ -59,7 +59,7 @@ export default async function EventLandingPage({
           </p>
           <Link
             href={`/login?next=/e/${slug}`}
-            className="mt-4 block w-full bg-guild-yellow px-4 py-2 text-center text-sm font-bold uppercase tracking-wide text-guild-black"
+            className="btn btn-primary mt-4 w-full"
           >
             Sign up / Sign in
           </Link>

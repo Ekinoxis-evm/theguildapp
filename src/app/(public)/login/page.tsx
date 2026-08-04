@@ -169,7 +169,7 @@ function LoginForm() {
             <button
               type="button"
               onClick={signInWithGoogle}
-              className="w-full border border-neutral-700 px-4 py-2.5 text-sm font-bold uppercase tracking-widest hover:border-white"
+              className="btn btn-outline w-full"
             >
               Continue with Google
             </button>

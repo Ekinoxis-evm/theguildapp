@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ShareLink } from "@/components/share-link";
+import { SocialLinks } from "./social-links";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
 import { ApplyBarberForm } from "./apply-form";
 import { BarberProfileEditor } from "./profile-editor";
@@ -115,6 +116,11 @@ export default async function MyBarberPage({
       ? await refreshPayoutReadiness(user.id)
       : false;
 
+  const { data: socialLinks } = await supabase
+    .from("barber_links")
+    .select("*")
+    .eq("barber_id", user.id);
+
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <BackLink />
@@ -136,6 +142,7 @@ export default async function MyBarberPage({
 
       <div className="mt-10 space-y-12">
         <ShopBookings bookings={bookings ?? []} />
+        <SocialLinks barberId={user.id} initial={socialLinks ?? []} />
         <PayoutsSection
           ready={payoutsReady}
           hasAccount={Boolean(connectRow)}

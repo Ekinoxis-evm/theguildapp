@@ -41,13 +41,13 @@ export default async function Home() {
         <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
             href="/login"
-            className="bg-guild-yellow px-8 py-3.5 text-center text-sm font-bold uppercase tracking-widest text-guild-black"
+            className="btn btn-primary px-8 py-3.5"
           >
             {t.ctaBook}
           </Link>
           <Link
             href="/login?next=/my-barber"
-            className="border border-neutral-700 px-8 py-3.5 text-center text-sm font-bold uppercase tracking-widest text-white hover:border-white"
+            className="btn btn-outline px-8 py-3.5 text-white"
           >
             {t.ctaBarber}
           </Link>

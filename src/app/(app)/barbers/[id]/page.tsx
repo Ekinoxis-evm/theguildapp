@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { RatingBadge, ReviewList } from "@/components/rating";
+import { LinkHub } from "@/components/link-hub";
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SIGNED_URL_TTL_SECONDS } from "@/lib/storage";
@@ -66,6 +67,11 @@ export default async function BarberPage({
     .order("created_at", { ascending: false })
     .limit(30);
 
+  const { data: barberLinks } = await supabase
+    .from("barber_links")
+    .select("kind, url, label")
+    .eq("barber_id", barber.profile_id);
+
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-6 py-16">
       <p className="text-sm">
@@ -87,6 +93,7 @@ export default async function BarberPage({
           ? ` · at-home from ${formatPrice(barber.base_price_cents)}`
           : ""}
       </p>
+      <LinkHub links={barberLinks ?? []} />
 
       {currentShops.length > 0 && (
         <p className="mt-2 text-sm">
@@ -237,7 +244,7 @@ export default async function BarberPage({
                 {isPremium && (
                   <Link
                     href={`/barbers/${barber.profile_id}/book?service=${s.id}`}
-                    className="shrink-0 bg-guild-yellow px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-guild-black"
+                    className="btn btn-primary shrink-0 px-3 py-1.5 text-xs"
                   >
                     Book
                   </Link>

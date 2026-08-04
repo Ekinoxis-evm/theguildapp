@@ -39,3 +39,50 @@ body {
   clip-path: polygon(0 3.5rem, 100% 0, 100% 100%, 0 100%);
   margin-top: -3.5rem;
 }
+
+/* Button system — every tappable action looks tappable. Sharp corners per
+   the doctrine; press feedback makes the app feel native on phones. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.06s ease, background-color 0.15s ease,
+    border-color 0.15s ease, color 0.15s ease;
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.btn-primary {
+  background: #ffc300;
+  color: #0b0b0c;
+}
+.btn-primary:hover {
+  background: #ffd23f;
+}
+.btn-outline {
+  border: 1px solid #404040;
+  color: inherit;
+}
+.btn-outline:hover {
+  border-color: #ffc300;
+  color: #ffc300;
+}
+.btn-ghost {
+  padding: 0.5rem 0.75rem;
+  color: #a3a3a3;
+}
+.btn-ghost:hover {
+  color: #ffffff;
+}

@@ -97,7 +97,7 @@ export default async function DashboardPage() {
         ) : (
           <div className="mt-2">
             <p className="text-sm text-neutral-400">{c.client.noUpcoming}</p>
-            <Link href="/shops" className="mt-1 inline-block text-sm font-bold uppercase tracking-wide underline decoration-guild-yellow decoration-2 underline-offset-4">
+            <Link href="/shops" className="btn btn-outline mt-2 border-guild-yellow/60 px-3 py-1.5 text-xs text-guild-yellow">
               {c.client.bookCta}
             </Link>
           </div>
@@ -288,7 +288,7 @@ export default async function DashboardPage() {
           <p className="mt-1 text-neutral-400">{t.finishProfileBlurb}</p>
           <Link
             href="/onboarding"
-            className="mt-3 inline-block bg-guild-yellow px-4 py-2 text-sm font-bold uppercase tracking-wide text-guild-black"
+            className="btn btn-primary mt-3"
           >
             {t.finishProfileCta}
           </Link>
@@ -303,7 +303,10 @@ export default async function DashboardPage() {
                 href={sec.href}
                 className="border border-neutral-800 p-4 hover:border-guild-yellow"
               >
-                <p className="font-bold uppercase tracking-wide">{sec.title}</p>
+                <p className="flex items-center justify-between font-bold uppercase tracking-wide">
+                {sec.title}
+                <span aria-hidden className="text-neutral-600">→</span>
+              </p>
                 <p className="mt-1 text-sm text-neutral-400">{sec.blurb}</p>
               </Link>
             ))}
