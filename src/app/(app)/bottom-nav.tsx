@@ -24,7 +24,7 @@ export function BottomNav({ items }: { items: NavItem[] }) {
             <Link
               key={item.href}
               href={item.href}
-              className={`relative flex-1 px-1 py-3.5 text-center text-[10px] font-bold uppercase tracking-wide ${
+              className={`relative flex-1 whitespace-nowrap px-1 py-3.5 text-center text-[10px] font-bold uppercase tracking-wide ${
                 active ? "text-white" : "text-neutral-500 hover:text-neutral-300"
               }`}
             >
