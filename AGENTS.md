@@ -4,6 +4,7 @@ Instructions for AI coding agents. The canonical, detailed version is [`CLAUDE.m
 
 - **Product spec**: `docs/PRODUCT.md` (source of truth) · **Plan**: `docs/ROADMAP.md` · **Schema**: `docs/DATA_MODEL.md` · **Security rules**: `docs/SECURITY.md` · **Env/tooling**: `docs/SETUP.md`
 - Stack: Next.js App Router + TypeScript + Tailwind, Supabase (Postgres/Auth/Storage), Vercel, Stripe (live, test mode — hosted Checkout + $19.99/mo premium subscription + webhook), Google Maps, Resend.
+- **Phases 7–8 live** (2026-08-04): real scheduling (no double-booking), waitlist, verified-purchase reviews, barber social hub (incl. Squire links), taste-based matching ("For you"), tabbed consoles. UI system: `.btn` classes, `<Tabs>`, `STYLE_TAGS` chips; bottom nav owns navigation (no back-to-dashboard links). Next focus: design/UX-UI — read `docs/UX_BACKLOG.md` first.
 - **Brand is live** (2026-07-20): guild-black `#0B0B0C` dominates, guild-yellow `#FFC300` intervenes, bone for light reading; sharp corners; role-aware bottom nav in `(app)/layout.tsx`; display font behind `--font-display` (KUMO pending). Brand sources live in `../BRANDING/` outside the repo — never commit them.
 - Test accounts: `pnpm seed:test-users` — one per role (founder-inbox plus-aliases); passwords in `.env.local`. Role-choice entry for new users at `/welcome`.
 - Barber-centric: `private_barbers` is a self-managed professional profile (certifications, optional shop enrollment, at-home flag); premium gates only at-home booking.

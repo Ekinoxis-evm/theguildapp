@@ -2,15 +2,14 @@
 
 > Product-management tracker. Statuses: `todo` · `in-progress` · `done` · `blocked`. Update when work lands. One PR should reference one item where possible.
 
-## Up next (state at end of 2026-07-20 session)
+## Up next (state at end of 2026-08-05 session)
 
-The app is **role-complete and testable end-to-end**: every role has a branded, mobile-first surface and a seeded test account. Remaining, in rough priority order:
+**Next session = design & UX/UI focus.** Start by reading `docs/UX_BACKLOG.md` and loading the `ui-system` skill. Functional state: Phases 0–4, 6, 7, 8 live; proposal presented, counterparty reviewing.
 
-1. **Founder QA pass** — walk each role on a phone with the test accounts; log anything off.
-2. **Blocked on Diana**: KUMO font files (licensed .otf/.woff2 — one-line swap at `--font-display`) and the GU isotype PNG/SVG (favicon + app icon + PWA manifest).
-3. **ES localization sweep (5.2)** — inner surfaces (shops, bookings, my-shop, my-barber, admin, onboarding) still EN-only; extend `src/lib/dictionaries.ts` per page.
-4. **Launch checklist (founder)**: Stripe live keys + live-mode price/webhook, Google OAuth client (0.8), Supabase dashboard toggles (leaked-password protection, MFA — 1.7).
-5. Later: PWA install polish, B2B reporting (5.4), Privy (5.3), staff↔barber-profile roster merge (6.1 note).
+1. **UX/UI pass** — work `docs/UX_BACKLOG.md` top-down (light-theme leftovers, empty/loading states, toasts, photos on cards, nav icons, onboarding polish).
+2. **Chase Diana**: KUMO font files + GU isotype (→ favicon, PWA manifest) — they unlock the final brand fidelity.
+3. Parallel founder items: Google OAuth client (0.8), Stripe live keys at launch, proposal markup when it arrives.
+4. Later: WhatsApp reminders, ES sweep (5.2), rebook/cadence (7.4), shop memberships (7.6), AI matching (8.4).
 
 ## Phase 0 — Workspace & foundations _(2026-07-08)_
 
